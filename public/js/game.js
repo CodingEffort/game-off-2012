@@ -9,7 +9,8 @@ Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.sprite(50, "assets/back.png", {
 	space: [0,0, 16, 12], // the space background
 	ship: [0, 12], // the spaceship
-	fireball: [1, 12] // the fireball
+	fireball: [1, 12] ,// the fireball
+	enemy1: [2, 12] // the first enemy
 	});
 	
 // Represents an image that will reset up the screen once it reached the bottom
@@ -36,6 +37,26 @@ Crafty.c("GoUp", {
 	}
 });
 
+// Makes a component that follows a path specified by a mathematical function that returns the y based on a x.
+Crafty.c("FollowPath", {
+	_path: function(x) { return x; },
+	_deltaX: 5,
+	init: function() {
+		this.bind("EnterFrame", function() {
+			this.x += this.deltaX;
+			this.y = this.path(this.x);
+
+			if (this.x - this.width < 0 ||
+				this.y - this.height < 0 ||
+				this.x > SCREEN_W ||
+				this.y > SCREEN_H)
+				this.destroy();
+		});
+	},
+	followPath: function(func) { this.path = func; return this; },
+	setDeltaX: function(delta) { this.deltaX = delta; return this; }
+});
+
 
 // Makes the player go towards the mouse when the mouse moves on this
 // component
@@ -44,7 +65,6 @@ Crafty.c("MakePlayerMoveOnMouseMove", {
 		this.requires("Mouse");
 		// Update the player according to the movement
 		this.bind("MouseMove", function(e) {
-			player.requires("Tween");
 			var targetX = Crafty.math.clamp(e.x - 30, 0, SCREEN_W - 50);
 			var targetY = Crafty.math.clamp(e.y - 30, 0, SCREEN_H - 50);
 			player.x = targetX;
@@ -71,3 +91,6 @@ Crafty.e("2D, Canvas, space, ScreenScrolldown, MakePlayerMoveOnMouseMove").y = -
 
 // Create the player space shit
 var player = Crafty.e("2D, Canvas, ship, Spaceship");
+
+// Create the first enemy
+var enemy = Crafty.e("2D, Canvas, enemy1, FollowPath").followPath(function(x) { return 300; }).setDeltaX(10).rotation = 90;
