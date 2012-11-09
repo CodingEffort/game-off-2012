@@ -11,6 +11,7 @@
     "hogan.js": "*",
     "mongoose": "*",
     "connect-redis": "*",
-    "Array.prototype.forEachAsync": "*"
+    "Array.prototype.forEachAsync": "*",
+    "socket.io": "*"
   }
 }

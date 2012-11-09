@@ -6,6 +6,7 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     cons = require('consolidate'),
+    socketio = require('socket.io'),
     db = require('./models');
 
 var config = require('./config');
@@ -43,6 +44,13 @@ app.configure('development', function(){
 // http://madhums.me/2012/07/19/breaking-down-app-js-file-nodejs-express-mongoose/
 require('./controllers')(app, db, config.prefix);
 
-http.createServer(app).listen(config.port || 3000, config.host || '0.0.0.0', function() {
+var server = http.createServer(app).listen(config.port || 3000, config.host || '0.0.0.0', function() {
   console.log("Project Nixie worker listening on " + (config.host || '0.0.0.0') + ":" + (config.port || 3000));
 });
+
+var io = socketio.listen(server);
+
+io.sockets.on('connection', function(socket) {
+  socket.emit('fuck', { val: 'you' });
+});
+

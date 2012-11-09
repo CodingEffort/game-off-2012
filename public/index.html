@@ -9,6 +9,14 @@
   </style>
 </head>
 <body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io.connect();
+    socket.on('fuck', function(data) {
+      console.log(data.v);
+    });
+  </script>
+
 	<script src="js/game.js"></script>
 </body>
 
