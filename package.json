@@ -1,12 +1,16 @@
 {
-  "name": "application-name",
+  "name": "nixie",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node server"
   },
   "dependencies": {
     "express": "3.0.2",
-    "hjs": "*"
+    "consolidate": "git://github.com/simov/consolidate.js.git#hogan-partials",
+    "hogan.js": "*",
+    "mongoose": "*",
+    "connect-redis": "*",
+    "Array.prototype.forEachAsync": "*"
   }
 }
