@@ -7,7 +7,8 @@ Crafty.init(SCREEN_W, SCREEN_H);
 
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {
-	space: [0,0, 16, 12] // the space background
+	space: [0,0, 16, 12], // the space background
+	ship: [0, 12] // the spaceship
 	});
 	
 // Represents an image that will reset up the screen once it reached the bottom
@@ -22,7 +23,15 @@ Crafty.c("ScreenScrolldown", {
 	}
 });
 
+Crafty.c("Spaceship", {
+	init: function() {
+	}
+});
+
 
 // Create an infinite background illusion with 2 images moving
 Crafty.e("2D, DOM, space, ScreenScrolldown");
 Crafty.e("2D, DOM, space, ScreenScrolldown").y = -SCREEN_H;
+
+// Create the player space shit
+var player = Crafty.e("2D, DOM, ship, Spaceship");
