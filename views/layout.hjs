@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<head>
+  <title>{{title}}</title>
+</head>
+<body>
+  <!-- My body is ready -->
+{{>content}}
+</body>
+
