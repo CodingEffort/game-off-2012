@@ -9,7 +9,7 @@ Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.sprite(50, "assets/back.png", {
 	space: [0,0, 16, 12], // the space background
 	ship: [0, 12], // the spaceship
-	fireball: [1, 12] ,// the fireball
+	pewpewlazors: [1, 12] ,// the pewpew
 	enemy1: [2, 12] // the first enemy
 	});
 	
@@ -30,7 +30,7 @@ Crafty.c("ScreenScrolldown", {
 Crafty.c("GoUp", {
 	init: function() {
 		this.bind("EnterFrame", function() {
-			this.y -= 10;
+			this.y -= 15;
 			if (this.y + this.height < 0)
 				this.destroy();
 		});
@@ -46,8 +46,8 @@ Crafty.c("FollowPath", {
 			this.x += this.deltaX;
 			this.y = this.path(this.x);
 
-			if (this.x - this.width < 0 ||
-				this.y - this.height < 0 ||
+			if (this.x + this.w < 0 ||
+				this.y + this.h < 0 ||
 				this.x > SCREEN_W ||
 				this.y > SCREEN_H)
 				this.destroy();
@@ -65,15 +65,18 @@ Crafty.c("MakePlayerMoveOnMouseMove", {
 		this.requires("Mouse");
 		// Update the player according to the movement
 		this.bind("MouseMove", function(e) {
-			var targetX = Crafty.math.clamp(e.x - 30, 0, SCREEN_W - 50);
-			var targetY = Crafty.math.clamp(e.y - 30, 0, SCREEN_H - 50);
+			var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w);
+			var targetY = Crafty.math.clamp(e.y - player.h/2, 0, SCREEN_H - player.h);
 			player.x = targetX;
 			player.y = targetY;
 		});
 
 		// Check to fire for the player.
 		this.bind("Click", function(e) {
-			Crafty.e("2D, Canvas, fireball, GoUp").attr({x: player.x, y: player.y});
+			var pew = Crafty.e("2D, Canvas, pewpewlazors, GoUp");
+			// Spawn it above the player's center, to shoot them pewpews
+			pew.x = player.x + player.w/2 - pew.w/2;
+			pew.y = player.y - 0.6*pew.h;
 		});
 	}
 });
@@ -82,6 +85,8 @@ Crafty.c("MakePlayerMoveOnMouseMove", {
 // Main spaceship object
 Crafty.c("Spaceship", {
 	init: function() {
+		this.x = SCREEN_W/2 - this.w/2;
+		this.y = SCREEN_H/2 - this.h/2;
 	}
 });
 
@@ -93,4 +98,4 @@ Crafty.e("2D, Canvas, space, ScreenScrolldown, MakePlayerMoveOnMouseMove").y = -
 var player = Crafty.e("2D, Canvas, ship, Spaceship");
 
 // Create the first enemy
-var enemy = Crafty.e("2D, Canvas, enemy1, FollowPath").followPath(function(x) { return 300; }).setDeltaX(10).rotation = 90;
+var enemy = Crafty.e("2D, Canvas, enemy1, FollowPath").followPath(function(x) { return 300; }).setDeltaX(10);
