@@ -140,19 +140,13 @@ Crafty.c("Spaceship", {
 	},
 	reload: function() {
 		this.canShoot = false;
-		console.log(this.canShoot);
-		console.log("reload");
 
-		setTimeout(function() {
-			console.log("reloaded");
+		this.timeout(function() {
 			this.canShoot = true;
-			console.log(this.canShoot);
-		}, 1000);
+		}, 150);
 	},
 	shoot: function() {
-		console.log("shoot");
 		if (this.canShoot) {
-			console.log("shooting");
 			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35);
 			// Spawn it above the player's center, to shoot them pewpews
 			pew.x = player.x + player.w/2 - pew.w/2;
