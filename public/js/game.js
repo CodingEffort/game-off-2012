@@ -2,6 +2,25 @@
 var SCREEN_W = 800;
 var SCREEN_H = 600;
 
+// Enemy constants
+
+// ENEMY1
+// Goes from a corner of the screen to the lower part of the screen on the other part
+var E1_FRAMES = 90; // frames required for the whole path
+var E1_STARTX = -50; // starting x and y coords
+var E1_STARTY = -50;
+var E1_TARGETX = SCREEN_W+50; // target x and y coords
+var E1_TARGETY = SCREEN_H+50;
+// function parameters calculated with the specified start&target parameters
+// at+b for the x coord, where b is the starting x pos
+var E1_X_B = E1_STARTX;
+var E1_X_A = (E1_TARGETX - E1_X_B) / E1_FRAMES;
+// a t^2 + k for the y coord, where k is the starting y pos
+var E1_Y_K = E1_STARTY;
+var E1_Y_A = (E1_TARGETY - E1_Y_K) / (E1_FRAMES * E1_FRAMES);
+// final result
+function enemy1Func(t) { return {x: E1_X_A * t + E1_X_B, y: E1_Y_A * t * t + E1_Y_K}; }
+
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
 
@@ -26,43 +45,10 @@ Crafty.c("ScreenScrolldown", {
 	}
 });
 
-// Makes a component go up until it reaches the top of the screen, then disapears
-Crafty.c("GoUp", {
+Crafty.c("ParralaxBackground", {
 	init: function() {
-		this.bind("EnterFrame", function() {
-			this.y -= 15;
-			if (this.y + this.height < 0)
-				this.destroy();
-		});
-	}
-});
+		this.requires("2D, Canvas, Mouse, space, ScreenScrolldown");
 
-// Makes a component that follows a path specified by a mathematical function that returns the y based on a x.
-Crafty.c("FollowPath", {
-	_path: function(x) { return x; },
-	_deltaX: 5,
-	init: function() {
-		this.bind("EnterFrame", function() {
-			this.x += this.deltaX;
-			this.y = this.path(this.x);
-
-			if (this.x + this.w < 0 ||
-				this.y + this.h < 0 ||
-				this.x > SCREEN_W ||
-				this.y > SCREEN_H)
-				this.destroy();
-		});
-	},
-	followPath: function(func) { this.path = func; return this; },
-	setDeltaX: function(delta) { this.deltaX = delta; return this; }
-});
-
-
-// Makes the player go towards the mouse when the mouse moves on this
-// component
-Crafty.c("MakePlayerMoveOnMouseMove", {
-	init: function() {
-		this.requires("Mouse");
 		// Update the player according to the movement
 		this.bind("MouseMove", function(e) {
 			var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w);
@@ -73,29 +59,141 @@ Crafty.c("MakePlayerMoveOnMouseMove", {
 
 		// Check to fire for the player.
 		this.bind("Click", function(e) {
-			var pew = Crafty.e("2D, Canvas, pewpewlazors, GoUp");
-			// Spawn it above the player's center, to shoot them pewpews
-			pew.x = player.x + player.w/2 - pew.w/2;
-			pew.y = player.y - 0.6*pew.h;
+			player.shoot();
 		});
 	}
 });
 
+// Makes a component go up until it reaches the top of the screen, then disapears
+Crafty.c("GoUp", {
+	init: function() {
+		this.bind("EnterFrame", function() {
+			this.y -= 15;
+			if (this.y + this.h < 0)
+				this.destroy();
+		});
+	}
+});
+
+// Represents a player pewpew
+Crafty.c("Pewpew", {
+	init: function() {
+		this.requires("2D, Canvas, GoUp, Collision");
+	}
+});
+
+// Makes a component that follows a path specified by a mathematical function that returns the y based on a x.
+Crafty.c("FollowPath", {
+	_path: function(x) { return x; },
+	_deltaT: 0,
+	_reflexionY: false,
+	init: function() {
+		this.deltaT = 0;
+
+		this.bind("EnterFrame", function() {
+			var newPos = this.path(this.deltaT);
+			this.x = newPos.x;
+			this.y = newPos.y;
+			if (this.reflexionY)
+				this.x = -this.x + SCREEN_W;
+
+			this.deltaT++;
+
+			// find the orientation that we should have based on our next position
+			var nextPos = this.path(this.deltaT);
+			this.rotation = Crafty.math.radToDeg(Math.atan2(nextPos.y - newPos.y, nextPos.x - newPos.x));
+			if (this.reflexionY) this.rotation = -this.rotation + 180;
+
+
+			// Is going out of screen? Destroy it.
+			if (this.x + this.w * 2 < 0 ||
+				this.y + this.h * 2 < 0 ||
+				this.x - this.w * 2 > SCREEN_W ||
+				this.y - this.h * 2 > SCREEN_H)
+			{
+				this.destroy();
+			}
+		});
+	},
+	followPath: function(func) { this.path = func; return this; },
+	reflectY: function(reflect) { this.reflexionY = reflect; }
+});
+
+// Called when an enemy is hit by a pewpewlazors
+function hitEnemy(e) {
+	this.destroy(); // kill the pew pew lazor
+	for (var i = 0; i < e.length; ++i)
+	{
+		e[i].obj.hurt(1); // hurt the enemy
+	}
+}
+
 
 // Main spaceship object
 Crafty.c("Spaceship", {
+	canShoot: true,
 	init: function() {
+		this.requires("2D, Canvas, ship");
 		this.x = SCREEN_W/2 - this.w/2;
 		this.y = SCREEN_H/2 - this.h/2;
+		this.canShoot = true;
+	},
+	reload: function() {
+		this.canShoot = false;
+		console.log(this.canShoot);
+		console.log("reload");
+
+		setTimeout(function() {
+			console.log("reloaded");
+			this.canShoot = true;
+			console.log(this.canShoot);
+		}, 1000);
+	},
+	shoot: function() {
+		console.log("shoot");
+		if (this.canShoot) {
+			console.log("shooting");
+			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35);
+			// Spawn it above the player's center, to shoot them pewpews
+			pew.x = player.x + player.w/2 - pew.w/2;
+			pew.y = player.y - 0.6*pew.h;
+			this.reload();
+		}
+	}
+});
+
+// Enemy component
+Crafty.c("Enemy", {
+	init: function() {
+		this.requires("2D, Canvas, FollowPath, Collision");
+	},
+
+	hurt: function(dmg) {
+		this.destroy();
 	}
 });
 
 // Create an infinite background illusion with 2 images moving
-Crafty.e("2D, Canvas, space, ScreenScrolldown, MakePlayerMoveOnMouseMove");
-Crafty.e("2D, Canvas, space, ScreenScrolldown, MakePlayerMoveOnMouseMove").y = -SCREEN_H;
+var background1 = Crafty.e("ParralaxBackground");
+var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
 
 // Create the player space shit
-var player = Crafty.e("2D, Canvas, ship, Spaceship");
+var player = Crafty.e("Spaceship");
+console.log(player);
 
-// Create the first enemy
-var enemy = Crafty.e("2D, Canvas, enemy1, FollowPath").followPath(function(x) { return 300; }).setDeltaX(10);
+// Spawns the specified enemy.
+function spawnEnemy(name) {
+	var enemy;
+
+	if (name == 'EasyEnemyNoShootTopRight')
+		enemy = Crafty.e("Enemy, enemy1").followPath(enemy1Func).crop(7,5,35,37);
+
+	enemy.reflectY(Crafty.math.randomInt(0, 1) === 0);
+
+	return enemy;
+}
+
+// TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
+setInterval(function() {
+	spawnEnemy("EasyEnemyNoShootTopRight");
+}, 2000);
