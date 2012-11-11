@@ -46,16 +46,15 @@ Crafty.c("ScreenScrolldown", {
 	}
 });
 
+//TODO: fadeout component
 Crafty.c("Explosion", {
 	init: function() {
 		this.requires("2D, Canvas, SpriteAnimation, explosion, Tween")
 			.animate('explosion', 3, 12, 7)
 			.animate('explosion', 10, 0)
-			.attr({alpha:1.0})
-			.tween({alpha:0.0}, 100)
 			.timeout(function() {
 				this.destroy();
-			}, 400);
+			}, 350);
 	}
 });
 
@@ -147,9 +146,33 @@ function hitEnemy(e) {
 	}
 }
 
+Crafty.c("HealthBar" , {
+	init: function() {
+		this.bar = Crafty.e("2D, Canvas, Text").textColor("#FFFFFF");
+
+		this.bind("EnterFrame", function() {
+			this.bar.text(this.health);
+			this.bar.x = this.x;
+			this.bar.y = this.y;
+			var percent = this.health / this.maxHealth;
+			if (percent >= 0.7)
+				this.bar.textColor("#00FF00");
+			else if (percent >= 0.3)
+				this.bar.textColor("#FFFF00");
+			else
+				this.bar.textColor("#FF0000");
+		});
+
+		this.bind("Remove", function() {
+			this.bar.destroy();
+		});
+	}
+});
+
 
 Crafty.c("Living", {
 	init: function() {
+		this.requires("HealthBar");
 		this.health = 0;
 		this.maxHealth = 0;
 	},
@@ -190,7 +213,7 @@ Crafty.c("Spaceship", {
 	},
 	shoot: function() {
 		if (this.canShoot) {
-			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35).setDamage(1);
+			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35).setDamage(10);
 			// Spawn it above the player's center, to shoot them pewpews
 			pew.x = player.x + player.w/2 - pew.w/2;
 			pew.y = player.y - 0.6*pew.h;
@@ -203,9 +226,8 @@ Crafty.c("Spaceship", {
 Crafty.c("Enemy", {
 	init: function() {
 		this.requires("2D, Canvas, FollowPath, Collision, Living")
-			.setMaxHealth(2)
+			.setMaxHealth(20)
 			.origin("center");
-
 	}
 });
 
