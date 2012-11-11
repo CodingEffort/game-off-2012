@@ -6,7 +6,7 @@ var SCREEN_H = 600;
 
 // ENEMY1
 // Goes from a corner of the screen to the lower part of the screen on the other part
-var E1_FRAMES = 90; // frames required for the whole path
+var E1_FRAMES = 120; // frames required for the whole path
 var E1_STARTX = -50; // starting x and y coords
 var E1_STARTY = -50;
 var E1_TARGETX = SCREEN_W+50; // target x and y coords
@@ -28,8 +28,9 @@ Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.sprite(50, "assets/back.png", {
 	space: [0,0, 16, 12], // the space background
 	ship: [0, 12], // the spaceship
-	pewpewlazors: [1, 12] ,// the pewpew
-	enemy1: [2, 12] // the first enemy
+	pewpewlazors: [1, 12], // the pewpew
+	enemy1: [2, 12], // the first enemy
+	explosion: [3, 12]
 	});
 	
 // Represents an image that will reset up the screen once it reached the bottom
@@ -42,6 +43,19 @@ Crafty.c("ScreenScrolldown", {
 				this.y = -SCREEN_H;
 		});
 		
+	}
+});
+
+Crafty.c("Explosion", {
+	init: function() {
+		this.requires("2D, Canvas, SpriteAnimation, explosion, Tween")
+			.animate('explosion', 3, 12, 7)
+			.animate('explosion', 10, 0)
+			.attr({alpha:1.0})
+			.tween({alpha:0.0}, 100)
+			.timeout(function() {
+				this.destroy();
+			}, 400);
 	}
 });
 
@@ -70,7 +84,7 @@ Crafty.c("GoUp", {
 	init: function() {
 		this.bind("EnterFrame", function() {
 			this.y -= 15;
-			if (this.y + this.h < 0)
+			if (this.y + this.h * 2 < 0)
 				this.destroy();
 		});
 	}
@@ -151,6 +165,9 @@ Crafty.c("Living", {
 			this.onDeath();
 	},
 	onDeath: function() {
+		var explosion = Crafty.e("Explosion").attr({z:9000});
+		explosion.x = this.x - explosion.w/2;
+		explosion.y = this.y - explosion.h/2;
 		this.destroy();
 	}
 });
@@ -185,7 +202,10 @@ Crafty.c("Spaceship", {
 // Enemy component
 Crafty.c("Enemy", {
 	init: function() {
-		this.requires("2D, Canvas, FollowPath, Collision, Living").setMaxHealth(2);
+		this.requires("2D, Canvas, FollowPath, Collision, Living")
+			.setMaxHealth(2)
+			.origin("center");
+
 	}
 });
 
@@ -195,7 +215,6 @@ var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
 
 // Create the player space shit
 var player = Crafty.e("Spaceship");
-console.log(player);
 
 // Spawns the specified enemy.
 function spawnEnemy(name) {
