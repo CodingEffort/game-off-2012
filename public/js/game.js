@@ -58,6 +58,7 @@ Crafty.c("ParralaxBackground", {
 		});
 
 		// Check to fire for the player.
+		//TODO: shoot on mouse down.
 		this.bind("Click", function(e) {
 			player.shoot();
 		});
@@ -79,6 +80,10 @@ Crafty.c("GoUp", {
 Crafty.c("Pewpew", {
 	init: function() {
 		this.requires("2D, Canvas, GoUp, Collision");
+	},
+	setDamage: function(dmg) {
+		this.damage = dmg;
+		return this;
 	}
 });
 
@@ -121,17 +126,38 @@ Crafty.c("FollowPath", {
 
 // Called when an enemy is hit by a pewpewlazors
 function hitEnemy(e) {
-	this.destroy(); // kill the pew pew lazor
+	this.destroy(); // remove the pew pew lazor
 	for (var i = 0; i < e.length; ++i)
 	{
-		e[i].obj.hurt(1); // hurt the enemy
+		e[i].obj.hurt(this.damage); // hurt the enemy
 	}
 }
 
 
+Crafty.c("Living", {
+	init: function() {
+		this.health = 0;
+		this.maxHealth = 0;
+	},
+	setMaxHealth: function(amount) {
+		this.maxHealth = amount;
+		this.health = amount;
+		return this;
+	},
+	hurt: function(amount) {
+		this.health -= amount;
+		this.health = Crafty.math.clamp(this.health, 0, this.maxHealth);
+		if (this.health === 0)
+			this.onDeath();
+	},
+	onDeath: function() {
+		this.destroy();
+	}
+});
+
+
 // Main spaceship object
 Crafty.c("Spaceship", {
-	canShoot: true,
 	init: function() {
 		this.requires("2D, Canvas, ship");
 		this.x = SCREEN_W/2 - this.w/2;
@@ -147,7 +173,7 @@ Crafty.c("Spaceship", {
 	},
 	shoot: function() {
 		if (this.canShoot) {
-			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35);
+			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35).setDamage(1);
 			// Spawn it above the player's center, to shoot them pewpews
 			pew.x = player.x + player.w/2 - pew.w/2;
 			pew.y = player.y - 0.6*pew.h;
@@ -159,11 +185,7 @@ Crafty.c("Spaceship", {
 // Enemy component
 Crafty.c("Enemy", {
 	init: function() {
-		this.requires("2D, Canvas, FollowPath, Collision");
-	},
-
-	hurt: function(dmg) {
-		this.destroy();
+		this.requires("2D, Canvas, FollowPath, Collision, Living").setMaxHealth(2);
 	}
 });
 
