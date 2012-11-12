@@ -138,8 +138,9 @@ Crafty.c("HealthBar" , {
 
 		this.bind("EnterFrame", function() {
 			this.bar.text(this.health);
-			this.bar.x = this.x;
-			this.bar.y = this.y;
+			var rect = this.mbr();
+			this.bar.x = rect._x + rect._w/2 - this.bar.w/2;
+			this.bar.y = rect._y - this.bar.h - 10;
 			var percent = this.health / this.maxHealth;
 			if (percent >= 0.7)
 				this.bar.textColor("#00FF00");
