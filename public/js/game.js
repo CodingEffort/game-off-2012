@@ -228,7 +228,7 @@ Crafty.c("Enemy", {
 });
 
 function startGame() {
-	// Create an infinite background illusion with 2 images moving
+  // Create an infinite background illusion with 2 images moving
 	var background1 = Crafty.e("ParralaxBackground");
 	var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
 
@@ -274,8 +274,3 @@ function spawnEnemy(name) {
 	return enemy;
 }
 
-
-
-
-
-startGame();
