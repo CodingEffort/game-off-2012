@@ -46,15 +46,30 @@ Crafty.c("ScreenScrolldown", {
 	}
 });
 
+Crafty.c("FadeOut", {
+	init: function() {
+		this.requires("2D");
+		this.bind("EnterFrame", this._updateFade);
+	},
+	_updateFade: function() {
+		this.alpha = Math.max(this.alpha - this._fadeSpeed, 0.0);
+		if (this.alpha < 0.05) {
+			this.destroy();
+		}
+	},
+	fadeOut: function(speed) {
+		this._fadeSpeed = speed;
+		return this;
+	}
+});
+
 //TODO: fadeout component
 Crafty.c("Explosion", {
 	init: function() {
-		this.requires("2D, Canvas, SpriteAnimation, explosion, Tween")
+		this.requires("2D, Canvas, SpriteAnimation, explosion, FadeOut")
 			.animate('explosion', 3, 12, 7)
 			.animate('explosion', 10, 0)
-			.timeout(function() {
-				this.destroy();
-			}, 350);
+			.fadeOut(0.05);
 	}
 });
 
