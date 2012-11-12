@@ -1,3 +1,9 @@
+/*
+TODO list:
+
+*/
+
+
 // Game constants not-so-constant
 var SCREEN_W = 800;
 var SCREEN_H = 600;
