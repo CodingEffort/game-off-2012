@@ -62,6 +62,8 @@ Crafty.c("ParralaxBackground", {
 	init: function() {
 		this.requires("2D, Canvas, Mouse, space, ScreenScrolldown");
 
+		this.shooting = false;
+
 		// Update the player according to the movement
 		this.bind("MouseMove", function(e) {
 			var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w);
@@ -70,10 +72,18 @@ Crafty.c("ParralaxBackground", {
 			player.y = targetY;
 		});
 
+		this.bind("EnterFrame", function() {
+			if (this.shooting)
+				player.shoot();
+		});
+
 		// Check to fire for the player.
-		//TODO: shoot on mouse down.
-		this.bind("Click", function(e) {
-			player.shoot();
+		this.bind("MouseDown", function(e) {
+			this.shooting = true;
+		});
+
+		this.bind("MouseUp", function(e) {
+			this.shooting = false;
 		});
 	}
 });
