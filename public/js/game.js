@@ -59,36 +59,8 @@ Crafty.c("Explosion", {
 });
 
 Crafty.c("ParralaxBackground", {
-	_shooting: false,
-
 	init: function() {
-		this.requires("2D, Canvas, Mouse, space, ScreenScrolldown");
-
-		this.shooting = false;
-
-		// Update the player according to the movement
-		this.bind("MouseMove", function(e) {
-			var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w);
-			var targetY = Crafty.math.clamp(e.y - player.h/2, 0, SCREEN_H - player.h);
-			player.x = targetX;
-			player.y = targetY;
-		});
-
-		this.bind("EnterFrame", function() {
-			if (this.shooting)
-			{
-				player.shoot();
-			}
-		});
-
-		// Check to fire for the player.
-		this.bind("MouseDown", function(e) {
-			this.shooting = true;
-		});
-
-		this.bind("MouseUp", function(e) {
-			this.shooting = false;
-		});
+		this.requires("2D, Canvas, space, ScreenScrolldown");
 	}
 });
 
@@ -212,12 +184,20 @@ Crafty.c("Living", {
 
 // Main spaceship object
 Crafty.c("Spaceship", {
+	_shooting: false,
+
 	init: function() {
 		this.requires("2D, Canvas, ship, Living")
 			.setMaxHealth(100);
 		this.x = SCREEN_W/2 - this.w/2;
 		this.y = SCREEN_H/2 - this.h/2;
 		this.canShoot = true;
+
+		this.bind("EnterFrame", function() {
+			if (this.shooting) {
+				this.shoot();
+			}
+		});
 	},
 	reload: function() {
 		this.canShoot = false;
@@ -230,8 +210,8 @@ Crafty.c("Spaceship", {
 		if (this.canShoot) {
 			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35).setDamage(10);
 			// Spawn it above the player's center, to shoot them pewpews
-			pew.x = player.x + player.w/2 - pew.w/2;
-			pew.y = player.y - 0.6*pew.h;
+			pew.x = this.x + this.w/2 - pew.w/2;
+			pew.y = this.y - 0.6*pew.h;
 			this.reload();
 		}
 	}
@@ -246,12 +226,40 @@ Crafty.c("Enemy", {
 	}
 });
 
-// Create an infinite background illusion with 2 images moving
-var background1 = Crafty.e("ParralaxBackground");
-var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
+function startGame() {
+	// Create an infinite background illusion with 2 images moving
+	var background1 = Crafty.e("ParralaxBackground");
+	var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
 
-// Create the player space shit
-var player = Crafty.e("Spaceship");
+	// Create the player space shit
+	var player = Crafty.e("Spaceship");
+
+	// TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
+	setInterval(function() {
+		spawnEnemy("EasyEnemyNoShootTopRight");
+	}, 2000);
+
+	// Update the player according to the movement
+	Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
+		var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w);
+		var targetY = Crafty.math.clamp(e.y - player.h/2, 0, SCREEN_H - player.h);
+		player.x = targetX;
+		player.y = targetY;
+	});
+
+	// Check to fire for the player.
+	Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
+		player.shooting = true;
+	});
+
+	Crafty.addEvent(this, Crafty.stage.elem, "mouseup", function(e) {
+		player.shooting = false;
+	});
+
+	Crafty.addEvent(this, Crafty.stage.elem, "mouseout", function(e) {
+		player.shooting = false;
+	});
+}
 
 // Spawns the specified enemy.
 function spawnEnemy(name) {
@@ -265,7 +273,8 @@ function spawnEnemy(name) {
 	return enemy;
 }
 
-// TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
-setInterval(function() {
-	spawnEnemy("EasyEnemyNoShootTopRight");
-}, 2000);
+
+
+
+
+startGame();
