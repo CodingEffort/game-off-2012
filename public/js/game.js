@@ -139,12 +139,21 @@ Crafty.c("FollowPath", {
 });
 
 // Called when an enemy is hit by a pewpewlazors
-function hitEnemy(e) {
+function onLazorHitEnemy(e) {
 	this.destroy(); // remove the pew pew lazor
 	for (var i = 0; i < e.length; ++i)
 	{
 		e[i].obj.hurt(this.damage); // hurt the enemy
 	}
+}
+
+function onPlayerHitEnemy(e) {
+	// hurt the player by our current health value
+	for (var i = 0; i < e.length; ++i)
+	{
+		e[i].obj.hurt(this.health);
+	}
+	this.hurt(this.maxHealth); // kill the enemy
 }
 
 Crafty.c("HealthBar" , {
@@ -225,7 +234,7 @@ Crafty.c("Spaceship", {
 	},
 	shoot: function() {
 		if (this.canShoot) {
-			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", hitEnemy).crop(22,15,4,35).setDamage(10);
+			var pew = Crafty.e("Pewpew, pewpewlazors").collision().onHit("Enemy", onLazorHitEnemy).crop(22,15,4,35).setDamage(10);
 			// Spawn it above the player's center, to shoot them pewpews
 			pew.x = this.x + this.w/2 - pew.w/2;
 			pew.y = this.y - 0.6*pew.h;
@@ -239,7 +248,9 @@ Crafty.c("Enemy", {
 	init: function() {
 		this.requires("2D, Canvas, FollowPath, Collision, Living")
 			.setMaxHealth(20)
-			.origin("center");
+			.origin("center")
+			.collision()
+			.onHit("Spaceship", onPlayerHitEnemy);
 	}
 });
 
