@@ -134,7 +134,7 @@ function hitEnemy(e) {
 
 Crafty.c("HealthBar" , {
 	init: function() {
-		this.bar = Crafty.e("2D, Canvas, Text").textColor("#FFFFFF");
+		this.bar = Crafty.e("2D, Canvas, Text").textColor("#FFFFFF").attr({z:10000});
 
 		this.bind("EnterFrame", function() {
 			this.bar.text(this.health);
@@ -174,9 +174,10 @@ Crafty.c("Living", {
 			this.onDeath();
 	},
 	onDeath: function() {
+		var rect = this.mbr();
 		var explosion = Crafty.e("Explosion").attr({z:9000});
-		explosion.x = this.x - explosion.w/2;
-		explosion.y = this.y - explosion.h/2;
+		explosion.x = rect._x + rect._w/2 - explosion.w/2;
+		explosion.y = rect._y + rect._h/2 - explosion.h/2;
 		this.destroy();
 	}
 });
