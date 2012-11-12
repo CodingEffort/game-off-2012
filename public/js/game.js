@@ -59,6 +59,8 @@ Crafty.c("Explosion", {
 });
 
 Crafty.c("ParralaxBackground", {
+	_shooting: false,
+
 	init: function() {
 		this.requires("2D, Canvas, Mouse, space, ScreenScrolldown");
 
@@ -74,7 +76,9 @@ Crafty.c("ParralaxBackground", {
 
 		this.bind("EnterFrame", function() {
 			if (this.shooting)
+			{
 				player.shoot();
+			}
 		});
 
 		// Check to fire for the player.
@@ -209,7 +213,8 @@ Crafty.c("Living", {
 // Main spaceship object
 Crafty.c("Spaceship", {
 	init: function() {
-		this.requires("2D, Canvas, ship");
+		this.requires("2D, Canvas, ship, Living")
+			.setMaxHealth(100);
 		this.x = SCREEN_W/2 - this.w/2;
 		this.y = SCREEN_H/2 - this.h/2;
 		this.canShoot = true;
