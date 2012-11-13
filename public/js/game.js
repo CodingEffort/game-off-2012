@@ -328,7 +328,7 @@ Crafty.c("Spawner", {
     },
     startSpawning: function() {
         this.spawnFunction();
-        this.timeout(this.startSpawning, 1000); //TODO: random intervals
+        //this.timeout(this.startSpawning, 1000); //TODO: random intervals
     }
 });
 
