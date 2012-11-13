@@ -12,9 +12,10 @@
   <script src="js/game.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io.connect();
-    socket.on('fuck', function(data) {
-      if (data.val == "you") startGame();
+    // LOL Global because fuck it, really
+    socket = io.connect();
+    socket.on('connect', function() {
+      startGame();
     });
   </script>
 </body>

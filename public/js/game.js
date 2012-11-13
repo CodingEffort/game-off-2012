@@ -39,7 +39,7 @@ Crafty.sprite(50, "assets/back.png", {
     explosion: [3, 12], // the explosion animation
     fireball: [8, 12] // the fireball
     });
-    
+
 // Represents an image that will reset up the screen once it reached the bottom
 // Use 2 of those to create a vertical scrolling background
 Crafty.c("ScreenScrolldown", {
@@ -49,7 +49,6 @@ Crafty.c("ScreenScrolldown", {
             if (this.y >= SCREEN_H)
                 this.y = -SCREEN_H;
         });
-        
     }
 });
 
@@ -373,14 +372,17 @@ function startGame() {
     // Check to fire for the player.
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
         player.shooting = true;
+        socket.emit('shooting', true);
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseup", function(e) {
         player.shooting = false;
+        socket.emit('shooting', false);
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseout", function(e) {
         player.shooting = false;
+        socket.emit('shooting', false);
     });
 
     // We bring the enemies
