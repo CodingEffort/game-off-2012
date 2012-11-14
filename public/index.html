@@ -14,12 +14,14 @@
 <body>
   <script src="js/game.js"></script>
   <script src="/socket.io/socket.io.js"></script>
+
+  <script src="js/enemy_paths.js"></script>
+
   <script>
-    // LOL Global because fuck it, really
-    socket = io.connect();
-    socket.on('connect', function() {
-      startGame();
-    });
+    /*var socket = io.connect();
+    socket.on('fuck', function(data) {
+      if (data.val == "you")*/ startGame();/*
+    });*/
   </script>
 </body>
 

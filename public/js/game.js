@@ -1,31 +1,14 @@
-/*
-TODO list:
+/**
+ * game.js
+ * Jesse Emond and William Turner
+ * 12/11/2012
 
-*/
-
+ The main file of the game. All the components are mixed together here.
+ */
 
 // Game constants not-so-constant
 var SCREEN_W = 800;
 var SCREEN_H = 600;
-
-// Enemy constants
-
-// ENEMY1
-// Goes from a corner of the screen to the lower part of the screen on the other part
-var E1_FRAMES = 120; // frames required for the whole path
-var E1_STARTX = -50; // starting x and y coords
-var E1_STARTY = -50;
-var E1_TARGETX = SCREEN_W+50; // target x and y coords
-var E1_TARGETY = SCREEN_H+50;
-// function parameters calculated with the specified start&target parameters
-// at+b for the x coord, where b is the starting x pos
-var E1_X_B = E1_STARTX;
-var E1_X_A = (E1_TARGETX - E1_X_B) / E1_FRAMES;
-// a t^2 + k for the y coord, where k is the starting y pos
-var E1_Y_K = E1_STARTY;
-var E1_Y_A = (E1_TARGETY - E1_Y_K) / (E1_FRAMES * E1_FRAMES);
-// final result
-function enemy1Func(t) { return {x: E1_X_A * t + E1_X_B, y: E1_Y_A * t * t + E1_Y_K}; }
 
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
@@ -35,9 +18,9 @@ Crafty.sprite(50, "assets/back.png", {
     space: [0,0, 16, 12], // the space background
     ship: [0, 12], // the spaceship
     pewpewlazors: [1, 12], // the pewpew
-    enemy1: [2, 12], // the first enemy
+    grunt: [2, 12], // the grunt enemy
     explosion: [3, 12], // the explosion animation
-    fireball: [8, 12] // the fireball
+    patrol: [8, 12] // the patrol enemy
     });
 
 // Represents an image that will reset up the screen once it reached the bottom
@@ -136,23 +119,24 @@ Crafty.c("NotifyWhenOutOfScreen", {
 Crafty.c("FollowPath", {
     _path: function(x) { return x; },
     _deltaT: 0,
-    _reflexionY: false,
     init: function() {
         this.deltaT = 0;
+        this.showRotation = true;
 
         this.bind("EnterFrame", function() {
             var newPos = this.path(this.deltaT);
-            this.x = newPos.x;
-            this.y = newPos.y;
-            if (this.reflexionY)
-                this.x = -this.x + SCREEN_W;
+            var rect = this.mbr();
+            this.x = newPos.x + rect._w / 2;
+            this.y = newPos.y + rect._h / 2;
 
             this.deltaT++;
 
             // find the orientation that we should have based on our next position
-            var nextPos = this.path(this.deltaT);
-            this.rotation = Crafty.math.radToDeg(Math.atan2(nextPos.y - newPos.y, nextPos.x - newPos.x));
-            if (this.reflexionY) this.rotation = -this.rotation + 180;
+            if (this.showRotation)
+            {
+                var nextPos = this.path(this.deltaT);
+                this.rotation = Crafty.math.radToDeg(Math.atan2(nextPos.y - newPos.y, nextPos.x - newPos.x));
+            }
 
 
             // Is going out of screen? Destroy it.
@@ -166,7 +150,7 @@ Crafty.c("FollowPath", {
         });
     },
     followPath: function(func) { this.path = func; return this; },
-    setSpawnFromRight: function(spawnFromRight) { this.reflexionY = spawnFromRight; }
+    allowRotation: function(allow) { this.showRotation = allow; }
 });
 
 // Called when an enemy is hit by a pewpewlazors
@@ -262,7 +246,8 @@ Crafty.c("Spaceship", {
 
     init: function() {
         this.requires("2D, Canvas, ship, Living, HealthBar")
-            .setMaxHealth(100);
+            .setMaxHealth(100)
+            .crop(0,0,35,35);
         this.x = SCREEN_W/2 - this.w/2;
         this.y = SCREEN_H/2 - this.h/2;
         this.canShoot = true;
@@ -286,12 +271,12 @@ Crafty.c("Spaceship", {
                 .setDamage(10)
                 .setAngle(0)
                 .setSpeed(15)
+                .crop(22,15,4,35)
                 .collision()
-                .onHit("Enemy", onLazorHitEnemy)
-                .crop(22,15,4,35);
+                .onHit("Enemy", onLazorHitEnemy);
             // Spawn it above the player's center, to shoot them pewpews
             pew.x = this.x + this.w/2 - pew.w/2;
-            pew.y = this.y - 0.6*pew.h;
+            pew.y = this.y - this.h/2 - 0.3*pew.h;
             this.reload();
         }
     }
@@ -300,11 +285,7 @@ Crafty.c("Spaceship", {
 // Enemy component
 Crafty.c("Enemy", {
     init: function() {
-        this.requires("2D, Canvas, FollowPath, Collision, Living")
-            .setMaxHealth(20)
-            .origin("center")
-            .collision()
-            .onHit("Spaceship", onPlayerHitEnemy);
+        this.requires("2D, Canvas, Collision, Living, FollowPath");
     },
     setShootDelay: function(delay) {
         this.shootDelay = delay;
@@ -346,7 +327,7 @@ Crafty.c("Spawner", {
     },
     startSpawning: function() {
         this.spawnFunction();
-        this.timeout(this.startSpawning, 200); //TODO: random intervals
+        //this.timeout(this.startSpawning, 1000); //TODO: random intervals
     }
 });
 
@@ -389,23 +370,35 @@ function startGame() {
     spawner.startSpawning();
 }
 
+Crafty.c("Grunt", {
+    init: function() {
+        this.requires("Enemy, grunt")
+            .crop(0,0,27,29)
+            .setMaxHealth(15);
+    }
+});
+
+Crafty.c("Patrol", {
+    init: function() {
+        this.requires("Enemy, patrol")
+            .crop(0,0,27,25)
+            .setMaxHealth(25)
+            .allowRotation(false);
+    }
+});
+
 // Spawns the specified enemy.
-function spawnEnemy(name) {
-    var enemy;
-
-    if (name == 'EasyEnemyNoShootTopRight')
-        enemy = Crafty.e("Enemy, enemy1")
-            .followPath(enemy1Func)
-            .crop(7,5,35,37)
-            .setProjectileType("Fireball")
-            .setShootDelay(500);
-
-    enemy.setSpawnFromRight(Crafty.math.randomInt(0, 1) === 0); // randomly spawn from left or right
+function spawnEnemy(enemyType, startX, startY, pathType) {
+    var enemy = Crafty.e(enemyType).attr({x:startX, y:startY})
+                                    .collision()
+                                    .onHit("Spaceship", onPlayerHitEnemy)
+                                    .origin("center");
+    enemy.followPath(getPath(pathType, startX, startY));
 
     return enemy;
 }
 
 function spawnNextEnemy() {
-    spawnEnemy('EasyEnemyNoShootTopRight');
+    spawnEnemy('Patrol', 350, -50, "PatrolHorizontal");
+    spawnEnemy('Grunt', 0, -50, "TopLeftBottomRight");
 }
-
