@@ -49,8 +49,5 @@ var server = http.createServer(app).listen(config.port || 3000, config.host || '
 });
 
 var io = socketio.listen(server);
-
-io.sockets.on('connection', function(socket) {
-  socket.emit('fuck', { val: 'you' });
-});
+require('./game')(io.sockets, db, config.game);
 

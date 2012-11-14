@@ -10,5 +10,5 @@ var User = new Schema({
   email    : { type: String, index: { unique: true } }
 });
 
-module.exports.user = mongo.model('user', User);
+exports.user = mongo.model('user', User);
 
