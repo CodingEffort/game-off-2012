@@ -111,9 +111,19 @@ function getPath(pathType, startX, startY) {
 
     else if (pathType == "PatrolHorizontal")
     {
+        var PATROL_REACH_UPPER_FRAMES = 40;
+        var PATROL_UPPER_Y = 100;
+
+        var PATROL_TOTAL_FRAMES = 400;
+        var PATROL_MIN_X = 50;
+        var PATROL_MAX_X = SCREEN_W-50;
+
+        var PATROL_X_K = (PATROL_MAX_X + PATROL_MIN_X) / 2;
+        var PATROL_X_A = (Crafty.math.randomInt(0, 1) === 0 ? 1 : -1) * //COOLEST FEATURE EVER DO NOT REMOVEEEEE
+            (PATROL_MAX_X - PATROL_MIN_X) / 2;
+        var PATROL_X_B = 2 * Math.PI / PATROL_TOTAL_FRAMES;
         return function(t) {
-            var PATROL_REACH_UPPER_FRAMES = 40;
-            var PATROL_UPPER_Y = 100;
+            
             if (t <= PATROL_REACH_UPPER_FRAMES) // frames to reach the upper screen
             {
                 var patrolHorizA = (PATROL_UPPER_Y - startY) / PATROL_REACH_UPPER_FRAMES;
@@ -124,14 +134,6 @@ function getPath(pathType, startX, startY) {
             }
             else // we should patrol instead
             {
-                var PATROL_TOTAL_FRAMES = 400;
-                var PATROL_MIN_X = 50;
-                var PATROL_MAX_X = SCREEN_W-50;
-
-                var PATROL_X_K = (PATROL_MAX_X + PATROL_MIN_X) / 2;
-                var PATROL_X_A = (Crafty.math.randomInt(0, 1) === 0 ? 1 : -1) * //COOLEST FEATURE EVER DO NOT REMOVEEEEE
-                    (PATROL_MAX_X - PATROL_MIN_X) / 2;
-                var PATROL_X_B = 2 * Math.PI / PATROL_TOTAL_FRAMES;
                 // Update to take into account our startX
                 PATROL_X_H = -(Math.asin( (startX - PATROL_X_K) / PATROL_X_A ) / PATROL_X_B);
                 return {
