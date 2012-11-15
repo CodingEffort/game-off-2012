@@ -149,37 +149,50 @@ Crafty.c("FollowPath", {
     allowRotation: function(allow) { this.showRotation = allow; return this; }
 });
 
+Crafty.c("HasHealth", {
+  init: function() {
+    this.health = 0;
+    this.maxHealth = 0;
+  },
+  setMaxHealth: function(amount) {
+    this.maxHealth = amount;
+    this.health = this.maxHealth;
+    return this;
+  },
+  hurt: function(amount) {
+    this.hurtAmount = amount;
+    this.trigger("Hurt");
+    this.health -= amount;
+    this.health = Crafty.math.clamp(this.health, 0, this.maxHealth);
+    if (this.health === 0)
+    {
+      this.trigger("Dead");
+      this.destroy();
+    }
+  }
+
+});
+
 // Represents a living entity, with health, that can die and explode.
 Crafty.c("Living", {
     init: function() {
-        this.requires("2D, Canvas, Sprite");
-        this.health = 0;
-        this.maxHealth = 0;
+        this.requires("HasHealth, 2D, Canvas, Sprite");
         this.isPlayer = false;
-    },
-    setMaxHealth: function(amount) {
-        this.maxHealth = amount;
-        this.health = amount;
-        return this;
-    },
-    hurt: function(amount) {
-        var rect = this.mbr();
-        Crafty.e("HurtFeedback")
-          .text("-" + amount)
-          .setIsImportant(this.isPlayer)
-          .attr({x:rect._x + rect._w/2, y:rect._y});
-        this.health -= amount;
-        this.health = Crafty.math.clamp(this.health, 0, this.maxHealth);
-        if (this.health === 0)
-            this.onDeath();
-    },
-    onDeath: function() {
-        var rect = this.mbr();
-        this.trigger("Dead");
-        var explosion = Crafty.e("Explosion").attr({z:9000});
-        explosion.x = rect._x + rect._w/2 - explosion.w/2;
-        explosion.y = rect._y + rect._h/2 - explosion.h/2;
-        this.destroy();
+
+        this.bind("Hurt", function() {
+          var rect = this.mbr();
+          Crafty.e("HurtFeedback")
+            .text("-" + this.hurtAmount)
+            .setIsImportant(this.isPlayer)
+            .attr({x:rect._x + rect._w/2, y:rect._y});
+        });
+
+        this.bind("Dead", function() {
+          var rect = this.mbr();
+          var explosion = Crafty.e("Explosion").attr({z:9000});
+          explosion.x = rect._x + rect._w/2 - explosion.w/2;
+          explosion.y = rect._y + rect._h/2 - explosion.h/2;
+        });
     },
     setIsPlayer: function(isPlayer) {
       this.isPlayer = isPlayer;
@@ -188,30 +201,50 @@ Crafty.c("Living", {
 });
 
 // Component that shows the current health value of a living entity.
-Crafty.c("HealthBar" , {
+Crafty.c("HealthBar", {
     init: function() {
+        this.barYOffset = 0;
+        this.hpBarColor = null;
+        this.barFollow = this;
+
         this.bar = Crafty.e("2D, Canvas, Text")
-          .textFont({weight: 'bold', family:'Arial', size:'10px'})
+          .textFont({weight: 'bold', family:'Arial', size:'12px'})
           .textColor("#FFFFFF")
           .attr({z:10000});
 
         this.bind("EnterFrame", function() {
             this.bar.text(this.health);
-            var rect = this.mbr();
+            var rect = this.barFollow.mbr();
             this.bar.x = rect._x + rect._w/2 - this.bar.w/2;
-            this.bar.y = rect._y + rect._h + 20;
-            var percent = this.health / this.maxHealth;
-            if (percent >= 0.7)
-                this.bar.textColor("#00FF00");
-            else if (percent >= 0.3)
-                this.bar.textColor("#FFFF00");
-            else
-                this.bar.textColor("#FF0000");
+            this.bar.y = rect._y + rect._h + 20 + this.barYOffset;
+            if (this.hpBarColor === null)
+            {
+              var percent = this.health / this.maxHealth;
+              if (percent >= 0.7)
+                  this.bar.textColor("#00FF00");
+              else if (percent >= 0.3)
+                  this.bar.textColor("#FFFF00");
+              else
+                  this.bar.textColor("#FF0000");
+            }
         });
 
         this.bind("Remove", function() {
             this.bar.destroy();
         });
+    },
+    setHpBarYOffset: function(yOffset) {
+      this.barYOffset = yOffset;
+      return this;
+    },
+    setHpBarFollow: function(entity) {
+      this.barFollow = entity;
+      return this;
+    },
+    setHpBarColor: function(color) {
+      this.hpBarColor = color;
+      this.bar.textColor(color);
+      return this;
     }
 });
 
@@ -232,7 +265,7 @@ Crafty.c("HurtFeedback", {
   setIsImportant: function(isImportant) {
     if (isImportant)
     {
-      this.textFont({weight:'bold', family:'Arial', size:'10px'});
+      this.textFont({weight:'bold', family:'Arial', size:'12px'});
       this.textColor("#FFFFFF");
     }
     else
