@@ -70,9 +70,9 @@ function onProjectileHitPlayer(e) {
 function hurtPlayer(player, dmg) {
     if (player.powerups["ShieldPowerup"] !== undefined) // if we're shielded
     {
+        var remainingDmg = dmg - player.powerups["ShieldPowerup"].health;
         player.powerups["ShieldPowerup"].hurt(dmg);
-        if (player.powerups["ShieldPowerup"] !== undefined) // the shield is still up
-            dmg -= player.powerups["ShieldPowerup"].hurtAmount; // get the remaining damage
+        dmg = remainingDmg; // get the remaining damage
     }
     if (dmg > 0) // if we still have damages for the player
     {
@@ -88,7 +88,7 @@ Crafty.c("Spawner", {
     },
     startSpawning: function() {
         this.spawnFunction();
-        this.timeout(this.startSpawning, 2000); //TODO: random intervals
+        //this.timeout(this.startSpawning, 2000); //TODO: random intervals
     }
 });
 

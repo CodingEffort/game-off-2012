@@ -23,11 +23,12 @@ function spawnPowerup(player, powerUpName, startX, startY) {
 
 // Called when a player picks a powerup.
 function onPlayerPickedPowerup(e) {
+	var shouldRemovePowerup = true;
 	for (var i = 0; i < e.length; ++i)
 	{
 		if (e[i].obj.powerups[this.powerupObject] !== undefined) // effect already on? just reset it
 		{
-			e[i].obj.powerups[this.powerupObject].resetEffect();
+			shouldRemovePowerup = e[i].obj.powerups[this.powerupObject].resetEffect();
 		}
 		else // new effect to add
 		{
@@ -40,7 +41,8 @@ function onPlayerPickedPowerup(e) {
 		}
 
 	}
-	this.destroy();
+	if (shouldRemovePowerup)
+		this.destroy();
 }
 
 // Represents a powerup item that must be picked to activate the real powerup effect.
@@ -83,6 +85,7 @@ Crafty.c("PowerupObject", {
 	},
 	setOwner: function(player) {
 		this.player = player;
+		this.trigger("OwnerSet");
 		return this;
 	},
 	setPowerupName: function(name) {
@@ -91,6 +94,7 @@ Crafty.c("PowerupObject", {
 	},
 	resetEffect: function() {
 		this.trigger("EffectReset");
+		return this.shouldPickPowerup === undefined ? true : this.shouldPickPowerup;
 	}
 });
 
@@ -112,15 +116,13 @@ Crafty.c("ShieldPowerup", {
 			.setHpBarYOffset(10)
 			.setHpBarColor('#0094FF');
 
+		this.bind("OwnerSet", function() {
+			this.setHpBarFollow(this.player);
+			this.positionShield();
+		});
+
 		this.bind("EnterFrame", function() {
-			if (this.player !== undefined)
-			{
-				//var thisBounds =  this.mbr();
-				var playerBounds = this.player.mbr();
-				this.x = playerBounds._x + playerBounds._w/2 - this.w/2;
-				this.y = playerBounds._y + playerBounds._h/2 - this.h/2;
-				this.setHpBarFollow(this.player);
-			}
+			this.positionShield();
 		});
 
 		this.bind("Hurt", function() {
@@ -129,7 +131,13 @@ Crafty.c("ShieldPowerup", {
 		});
 
 		this.bind("EffectReset", function() {
+			this.shouldPickPowerup = this.health !== this.maxHealth; // don't pick shields if ours is full
 			this.setMaxHealth(this.maxHealth);
 		});
+	},
+	positionShield: function() {
+		var playerBounds = this.player.mbr();
+		this.x = playerBounds._x + playerBounds._w/2 - this.w/2;
+		this.y = playerBounds._y + playerBounds._h/2 - this.h/2;
 	}
 });
