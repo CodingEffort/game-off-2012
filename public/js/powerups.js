@@ -10,15 +10,18 @@ Holds the powerups that can be picked through the game.
 function spawnPowerup(powerUpName, startX, startY) {
 	var powerup;
 	if (powerUpName === "ShieldPowerup") {
-		powerup = Crafty.e("ShieldPowerupItem")
-			.attr({x: startX, y: startY});
+		powerup = Crafty.e("ShieldPowerupItem");
+	}
+	else if (powerUpName === "HealPowerup") {
+		powerup = Crafty.e("HealPowerupItem");
 	}
 	else
 		throw ("The power up '" + powerUpName + "' is not implemented while spawning it.");
 
 	powerup.fadeIn(0.03)
 		.collision()
-		.onHit("Spaceship", onPlayerPickedPowerup);
+		.onHit("Spaceship", onPlayerPickedPowerup)
+		.attr({x: startX, y: startY});
 }
 
 // Called when a player picks a powerup.
@@ -30,7 +33,7 @@ function onPlayerPickedPowerup(e) {
 		{
 			shouldRemovePowerup = e[i].obj.powerups[this.powerupObject].resetEffect();
 		}
-		else // new effect to add
+		else if (this.shouldPickPowerup(e[i].obj)) // new effect to add
 		{
 			var powerup = Crafty.e(this.powerupObject)
 				.setOwner(e[i].obj)
@@ -57,7 +60,7 @@ Crafty.c("PowerupItem", {
 		this.bind("EnterFrame", function ()
 		{
 			this.t++;
-			this.scaleFactor = 0.5 * Math.sin(2 * Math.PI / 120 * this.t);
+			this.scaleFactor = 0.2 * Math.sin(2 * Math.PI / 120 * this.t);
 
 			this.x += this.w/2;
 			this.y += this.h/2;
@@ -72,6 +75,9 @@ Crafty.c("PowerupItem", {
 	setPowerupObject: function(powerup) {
 		this.powerupObject = powerup;
 		return this;
+	},
+	shouldPickPowerup: function(player) {
+		return true;
 	}
 });
 
@@ -103,8 +109,8 @@ Crafty.c("PowerupObject", {
 Crafty.c("ShieldPowerupItem", {
 	init: function() {
 		this.requires("PowerupItem, shield")
-			.crop(0,0,28,29)
-			.setPowerupObject("ShieldPowerup");
+			.setPowerupObject("ShieldPowerup")
+			.crop(0,0,28,29);
 	}
 });
 
@@ -119,8 +125,6 @@ Crafty.c("ShieldPowerup", {
 		this.bind("OwnerSet", function() {
 			this.setHpBarFollow(this.player);
 			this.positionShield();
-			//TODO: heal powerup using this function
-			//this.player.tween({health: this.player.maxHealth}, 100);
 		});
 
 		this.bind("EnterFrame", function() {
@@ -141,5 +145,40 @@ Crafty.c("ShieldPowerup", {
 		var playerBounds = this.player.mbr();
 		this.x = playerBounds._x + playerBounds._w/2 - this.w/2;
 		this.y = playerBounds._y + playerBounds._h/2 - this.h/2;
+	}
+});
+
+// Powerup that heals the player
+Crafty.c("HealPowerupItem", {
+	init: function() {
+		this.requires("PowerupItem, heal")
+			.crop(0,0,36,10)
+			.setPowerupObject("HealPowerup");
+	},
+
+	shouldPickPowerup: function(player) {
+		return player.health < player.maxHealth;
+	}
+});
+
+// Powerup that heals the player
+Crafty.c("HealPowerup", {
+	init: function() {
+		this.requires("PowerupObject");
+
+		var HEAL_AMOUNT = 25;
+		var HEAL_TIME = 50;
+
+		this.bind("OwnerSet", function() {
+			var targetHealth = Math.min(this.player.health + HEAL_AMOUNT, this.player.maxHealth);
+			this.player.tween({health: targetHealth}, HEAL_TIME);
+			this.timeout(function() {
+				this.destroy();
+			}, HEAL_TIME);
+		});
+
+		this.bind("EffectReset", function () {
+			this.shouldPickPowerup = false; // don't pick a heal if we're already getting healed
+		});
 	}
 });

@@ -132,7 +132,7 @@ Crafty.c("FollowPath", {
             this.x = newPos.x + rect._w / 2;
             this.y = newPos.y + rect._h / 2;
 
-            this.deltaT++;
+            this.deltaT += this.speedModificator;
 
             // find the orientation that we should have based on our next position
             if (this.showRotation)
@@ -145,7 +145,7 @@ Crafty.c("FollowPath", {
             this.destroy();
         });
     },
-    followPath: function(func) { this.path = func; return this; },
+    followPath: function(func, speedModificator) { this.path = func; this.speedModificator = speedModificator; return this; },
     allowRotation: function(allow) { this.showRotation = allow; return this; }
 });
 
@@ -214,19 +214,22 @@ Crafty.c("HealthBar", {
           .attr({z:10000});
 
         this.bind("Change", function() {
-            this.bar.text(Math.floor(this.health));
             var rect = this.barFollow.mbr();
             this.bar.x = rect._x + rect._w/2 - this.bar.w/2;
             this.bar.y = rect._y + rect._h + 20 + this.barYOffset;
+        });
+
+        this.bind("EnterFrame", function() {
+            this.bar.text(Math.floor(this.health));
             if (this.hpBarColor === null)
             {
-              var percent = this.health / this.maxHealth;
-              if (percent >= 0.7)
-                  this.bar.textColor("#00FF00");
-              else if (percent >= 0.3)
-                  this.bar.textColor("#FFFF00");
-              else
-                  this.bar.textColor("#FF0000");
+                var percent = this.health / this.maxHealth;
+                if (percent >= 0.7)
+                    this.bar.textColor("#00FF00");
+                else if (percent >= 0.3)
+                    this.bar.textColor("#FFFF00");
+                else
+                    this.bar.textColor("#FF0000");
             }
         });
 

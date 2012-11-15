@@ -23,7 +23,8 @@ Crafty.sprite(50, "assets/back.png", {
     patrol: [8, 12], // the patrol enemy
     enemypewpew: [1, 12],
     shield: [9, 12],
-    shieldObject: [10, 12]
+    shieldObject: [10, 12],
+    heal: [11, 12]
     });
 
 Crafty.c("Explosion", {
@@ -133,6 +134,8 @@ function startGame() {
 
     spawnPowerup('ShieldPowerup', 100, 100);
     spawnPowerup('ShieldPowerup', 500, 100);
+    spawnPowerup('HealPowerup', 200, 100);
+    spawnPowerup('HealPowerup', 400, 300);
 }
 
 function spawnPlayer(x, y, playerID) {
@@ -152,17 +155,17 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, pathType) {
+function spawnEnemy(enemyType, startX, startY, pathType, speedModificator) {
     var enemy = Crafty.e(enemyType).attr({x:startX, y:startY})
                                     .collision()
                                     .onHit("Spaceship", onPlayerHitEnemy)
                                     .origin("center");
-    enemy.followPath(getPath(pathType, startX, startY));
+    enemy.followPath(getPath(pathType, startX, startY), speedModificator);
 
     return enemy;
 }
 
 function spawnNextEnemy() {
-    spawnEnemy('Patrol', 350, -50, "PatrolHorizontal");
-    spawnEnemy('Grunt', 0, -50, "TopLeftBottomRight");
+    spawnEnemy('Patrol', 350, -50, "PatrolHorizontal", Crafty.math.randomNumber(0.8, 1.2));
+    spawnEnemy('Grunt', 0, -50, "TopLeftBottomRight", Crafty.math.randomNumber(0.8, 1.2));
 }
