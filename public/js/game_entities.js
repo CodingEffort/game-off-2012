@@ -182,7 +182,7 @@ Crafty.c("Living", {
         this.bind("Hurt", function() {
           var rect = this.mbr();
           Crafty.e("HurtFeedback")
-            .text("-" + this.hurtAmount)
+            .showDamage(this.hurtAmount)
             .setIsImportant(this.isPlayer)
             .attr({x:rect._x + rect._w/2, y:rect._y});
         });
@@ -201,6 +201,7 @@ Crafty.c("Living", {
 });
 
 // Component that shows the current health value of a living entity.
+//TODO: getter around x&y pos of target to follow better
 Crafty.c("HealthBar", {
     init: function() {
         this.barYOffset = 0;
@@ -212,8 +213,8 @@ Crafty.c("HealthBar", {
           .textColor("#FFFFFF")
           .attr({z:10000});
 
-        this.bind("EnterFrame", function() {
-            this.bar.text(this.health);
+        this.bind("Change", function() {
+            this.bar.text(Math.floor(this.health));
             var rect = this.barFollow.mbr();
             this.bar.x = rect._x + rect._w/2 - this.bar.w/2;
             this.bar.y = rect._y + rect._h + 20 + this.barYOffset;
@@ -273,6 +274,10 @@ Crafty.c("HurtFeedback", {
       this.textFont({weight:'bold', family:'Arial', size:'12px'});
       this.textColor("#FF0000");
     }
+    return this;
+  },
+  showDamage: function(amount) {
+    this.text("-" + Math.floor(amount));
     return this;
   }
 });

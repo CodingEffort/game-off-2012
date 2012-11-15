@@ -102,10 +102,11 @@ function startGame() {
 
     // Update the player according to the movement
     Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
+        var MOVE_LERP_SPEED = 0.9;
         var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w);
         var targetY = Crafty.math.clamp(e.y - player.h/2, 0, SCREEN_H - player.h);
-        player.x = targetX;
-        player.y = targetY;
+        player.x = Crafty.math.lerp(player.x, targetX, MOVE_LERP_SPEED);
+        player.y = Crafty.math.lerp(player.y, targetY, MOVE_LERP_SPEED);
     });
 
     // Check to fire for the player.

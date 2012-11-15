@@ -119,6 +119,8 @@ Crafty.c("ShieldPowerup", {
 		this.bind("OwnerSet", function() {
 			this.setHpBarFollow(this.player);
 			this.positionShield();
+			//TODO: heal powerup using this function
+			//this.player.tween({health: this.player.maxHealth}, 100);
 		});
 
 		this.bind("EnterFrame", function() {
