@@ -7,9 +7,9 @@ Holds the powerups that can be picked through the game.
 **/
 
 // Spawns a powerup that can be picked at the specified x and y.
-function spawnPowerup(powerUpName, startX, startY) {
+function spawnPowerup(player, powerUpName, startX, startY) {
 	var powerup;
-	if (powerUpName === "Shield") {
+	if (powerUpName === "ShieldPowerup") {
 		powerup = Crafty.e("ShieldPowerupItem")
 			.attr({x: startX, y: startY});
 	}
@@ -25,9 +25,20 @@ function spawnPowerup(powerUpName, startX, startY) {
 function onPlayerPickedPowerup(e) {
 	for (var i = 0; i < e.length; ++i)
 	{
-		var powerup = Crafty.e(this.powerupObject)
-			.setOwner(e[i].obj)
-			.fadeIn(0.05);
+		if (e[i].obj.powerups[this.powerupObject] !== undefined) // effect already on? just reset it
+		{
+			e[i].obj.powerups[this.powerupObject].resetEffect();
+		}
+		else // new effect to add
+		{
+			var powerup = Crafty.e(this.powerupObject)
+				.setOwner(e[i].obj)
+				.fadeIn(0.05)
+				.setPowerupName(this.powerupObject);
+
+			e[i].obj.powerups[this.powerupObject] = powerup;
+		}
+
 	}
 	this.destroy();
 }
@@ -64,7 +75,22 @@ Crafty.c("PowerupItem", {
 
 Crafty.c("PowerupObject", {
 	init: function() {
-		this.requires("2D, Canvas, COllision, FadeIn");
+		this.requires("2D, Canvas, Collision, FadeIn");
+
+		this.bind("Remove", function() {
+			delete this.player.powerups[this.powerupName];
+		});
+	},
+	setOwner: function(player) {
+		this.player = player;
+		return this;
+	},
+	setPowerupName: function(name) {
+		this.powerupName = name;
+		return this;
+	},
+	resetEffect: function() {
+		this.trigger("EffectReset");
 	}
 });
 
@@ -74,27 +100,36 @@ Crafty.c("ShieldPowerupItem", {
 	init: function() {
 		this.requires("PowerupItem, shield")
 			.crop(0,0,28,29)
-			.setPowerupObject("ShieldPowerupObject");
+			.setPowerupObject("ShieldPowerup");
 	}
 });
 
 // Powerup that blocks incoming projectiles and collisions until it is destroyed.
-Crafty.c("ShieldPowerupObject", {
+Crafty.c("ShieldPowerup", {
 	init: function() {
-		this.requires("PowerupObject, shieldObject");
+		this.requires("Living, PowerupObject, shieldObject, HealthBar")
+			.setMaxHealth(50)
+			.setHpBarYOffset(10)
+			.setHpBarColor('#0094FF');
 
 		this.bind("EnterFrame", function() {
 			if (this.player !== undefined)
 			{
-				var thisBounds =  this.mbr();
+				//var thisBounds =  this.mbr();
 				var playerBounds = this.player.mbr();
-				this.x = playerBounds._x + playerBounds._w/2 - thisBounds._w/2;
-				this.y = playerBounds._y + playerBounds._h/2 - thisBounds._h/2;
+				this.x = playerBounds._x + playerBounds._w/2 - this.w/2;
+				this.y = playerBounds._y + playerBounds._h/2 - this.h/2;
+				this.setHpBarFollow(this.player);
 			}
 		});
-	},
-	setOwner: function(player) {
-		this.player = player;
-		return this;
+
+		this.bind("Hurt", function() {
+			var percent = this.health / this.maxHealth;
+			this.alpha = percent;
+		});
+
+		this.bind("EffectReset", function() {
+			this.setMaxHealth(this.maxHealth);
+		});
 	}
 });

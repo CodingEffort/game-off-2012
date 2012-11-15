@@ -19,11 +19,18 @@ Crafty.c("Spaceship", {
         this.y = SCREEN_H/2 - this.h/2;
         this.canShoot = true;
         this.weapon = "PlayerPewPewFastLazor";
+        this.powerups = {};
 
         this.bind("EnterFrame", function() {
             if (this.shooting) {
                 this.shoot();
             }
+        });
+
+        this.bind("Remove", function() {
+            console.log(this.powerups);
+            for (var powerup in this.powerups)
+                this.powerups[powerup].destroy();
         });
     },
     reload: function() {

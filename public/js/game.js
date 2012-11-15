@@ -20,7 +20,10 @@ Crafty.sprite(50, "assets/back.png", {
     pewpewlazors: [1, 12], // the pewpew
     grunt: [2, 12], // the grunt enemy
     explosion: [3, 12], // the explosion animation
-    patrol: [8, 12] // the patrol enemy
+    patrol: [8, 12], // the patrol enemy
+    enemypewpew: [1, 12],
+    shield: [9, 12],
+    shieldObject: [10, 12]
     });
 
 Crafty.c("Explosion", {
@@ -51,15 +54,30 @@ function onPlayerHitEnemy(e) {
     // hurt the player by our current health value
     for (var i = 0; i < e.length; ++i)
     {
-        e[i].obj.hurt(this.health);
+        hurtPlayer(e[i].obj, this.health);
     }
     this.hurt(this.maxHealth); // kill the enemy
 }
 
 function onProjectileHitPlayer(e) {
     for (var i = 0; i < e.length; ++i)
-        e[i].hurt(this.damage);
+    {
+        hurtPlayer(e[i].obj, this.damage);
+    }
     this.destroy();
+}
+
+function hurtPlayer(player, dmg) {
+    if (player.powerups["ShieldPowerup"] !== undefined) // if we're shielded
+    {
+        player.powerups["ShieldPowerup"].hurt(dmg);
+        if (player.powerups["ShieldPowerup"] !== undefined) // the shield is still up
+            dmg -= player.powerups["ShieldPowerup"].hurtAmount; // get the remaining damage
+    }
+    if (dmg > 0) // if we still have damages for the player
+    {
+        player.hurt(dmg);
+    }
 }
 
 Crafty.c("Spawner", {
@@ -70,7 +88,7 @@ Crafty.c("Spawner", {
     },
     startSpawning: function() {
         this.spawnFunction();
-        //this.timeout(this.startSpawning, 1000); //TODO: random intervals
+        this.timeout(this.startSpawning, 2000); //TODO: random intervals
     }
 });
 
@@ -111,6 +129,10 @@ function startGame() {
 
     // We bring the enemies
     spawner.startSpawning();
+
+
+    spawnPowerup(player, 'ShieldPowerup', 100, 100);
+    spawnPowerup(player, 'ShieldPowerup', 500, 100);
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
