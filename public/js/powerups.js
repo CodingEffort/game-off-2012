@@ -7,7 +7,7 @@ Holds the powerups that can be picked through the game.
 **/
 
 // Spawns a powerup that can be picked at the specified x and y.
-function spawnPowerup(player, powerUpName, startX, startY) {
+function spawnPowerup(powerUpName, startX, startY) {
 	var powerup;
 	if (powerUpName === "ShieldPowerup") {
 		powerup = Crafty.e("ShieldPowerupItem")

@@ -44,26 +44,17 @@ Crafty.c("ParralaxBackground", {
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
     this.destroy(); // remove the pew pew lazor
-    for (var i = 0; i < e.length; ++i)
-    {
-        e[i].obj.hurt(this.damage); // hurt the enemy
-    }
+    e[0].obj.hurt(this.damage); // hurt the enemy
 }
 
 function onPlayerHitEnemy(e) {
     // hurt the player by our current health value
-    for (var i = 0; i < e.length; ++i)
-    {
-        hurtPlayer(e[i].obj, this.health);
-    }
+    hurtPlayer(e[0].obj, this.health);
     this.hurt(this.maxHealth); // kill the enemy
 }
 
 function onProjectileHitPlayer(e) {
-    for (var i = 0; i < e.length; ++i)
-    {
-        hurtPlayer(e[i].obj, this.damage);
-    }
+    hurtPlayer(e[0].obj, this.damage);
     this.destroy();
 }
 
@@ -77,6 +68,8 @@ function hurtPlayer(player, dmg) {
     if (dmg > 0) // if we still have damages for the player
     {
         player.hurt(dmg);
+        if (player.health <= 0)
+            ui.showClientMessage("Player '" + player.playerID + "' branched a new dimension [C1] where he still lives.");
     }
 }
 
@@ -88,7 +81,7 @@ Crafty.c("Spawner", {
     },
     startSpawning: function() {
         this.spawnFunction();
-        //this.timeout(this.startSpawning, 2000); //TODO: random intervals
+        this.timeout(this.startSpawning, 2000); //TODO: random intervals
     }
 });
 
@@ -98,7 +91,11 @@ function startGame() {
     var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
 
     // Create the player space shit
-    var player = Crafty.e("Spaceship");
+    this.players = [];
+    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0);
+    var interwebz = spawnPlayer(200, 300, 42);
+    setInterval(function() { forcePlayerPosition(interwebz.playerID, Crafty.math.randomInt(0, SCREEN_W),
+        Crafty.math.randomInt(0, SCREEN_H), 50); }, 1000);
 
     // TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
     var spawner = Crafty.e("Spawner").setSpawnFunction(spawnNextEnemy);
@@ -130,9 +127,27 @@ function startGame() {
     // We bring the enemies
     spawner.startSpawning();
 
+    this.ui = Crafty.e("UI");
 
-    spawnPowerup(player, 'ShieldPowerup', 100, 100);
-    spawnPowerup(player, 'ShieldPowerup', 500, 100);
+
+    spawnPowerup('ShieldPowerup', 100, 100);
+    spawnPowerup('ShieldPowerup', 500, 100);
+}
+
+function spawnPlayer(x, y, playerID) {
+    var player = Crafty.e("Spaceship").setPlayerID(playerID);
+    player.x = x - player.w/2;
+    player.y = y - player.h/2;
+    this.players.push(player);
+    return player;
+}
+
+function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
+    for (var i = 0; i < this.players.length; ++i) {
+        if (this.players[i].playerID === playerID) {
+            this.players[i].tween({x:xPos, y:yPos}, tweenTime);
+        }
+    }
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.

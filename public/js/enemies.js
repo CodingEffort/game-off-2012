@@ -50,6 +50,7 @@ Crafty.c("PatrolPewPew", {
     }
 });
 
+//TODO: Gun class
 Crafty.c("Grunt", {
     init: function() {
         this.requires("Enemy, grunt")

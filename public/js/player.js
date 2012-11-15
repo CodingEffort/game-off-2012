@@ -11,15 +11,14 @@ Crafty.c("Spaceship", {
     _shooting: false,
 
     init: function() {
-        this.requires("2D, Canvas, ship, Living, HealthBar")
+        this.requires("2D, Canvas, ship, Living, HealthBar, Tween")
             .setMaxHealth(100)
             .setIsPlayer(true)
             .crop(0,0,35,35);
-        this.x = SCREEN_W/2 - this.w/2;
-        this.y = SCREEN_H/2 - this.h/2;
         this.canShoot = true;
         this.weapon = "PlayerPewPewFastLazor";
         this.powerups = {};
+        this.playerID = 0;
 
         this.bind("EnterFrame", function() {
             if (this.shooting) {
@@ -50,6 +49,10 @@ Crafty.c("Spaceship", {
             pew.y = this.y - this.h/2 - 0.3*pew.h;
             this.reload();
         }
+    },
+    setPlayerID: function(playerID) {
+        this.playerID = playerID;
+        return this;
     }
 });
 
