@@ -4,13 +4,6 @@
 
 ### Client
 
-1. Receive enemy type,x,y,path
-2. Different grunt paths
-3. Reduce player&enemy size
-4. New enemy: go down, patrol left right
-5. Enemy waves (handle wave name list)
-6. Handle death: show branching on UI
-7. Visual feedback when enemies/player get hurt (dmg going up fading out?)
 8. Homing missile
 
 ### Server
