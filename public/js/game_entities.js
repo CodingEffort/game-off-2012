@@ -188,20 +188,22 @@ Crafty.c("Living", {
         });
 
         this.bind("Dead", function() {
-          var rect = this.mbr();
-          var explosion = Crafty.e("Explosion").attr({z:9000});
-          explosion.x = rect._x + rect._w/2 - explosion.w/2;
-          explosion.y = rect._y + rect._h/2 - explosion.h/2;
+          
         });
     },
     setIsPlayer: function(isPlayer) {
       this.isPlayer = isPlayer;
       return this;
+    },
+    explode: function(explosionComponent) {
+      var rect = this.mbr();
+      var explosion = explosionComponent.attr({z:9000});
+      explosion.x = rect._x + rect._w/2 - explosion.w/2;
+      explosion.y = rect._y + rect._h/2 - explosion.h/2;
     }
 });
 
 // Component that shows the current health value of a living entity.
-//TODO: getter around x&y pos of target to follow better
 Crafty.c("HealthBar", {
     init: function() {
         this.barYOffset = 0;
@@ -209,7 +211,7 @@ Crafty.c("HealthBar", {
         this.barFollow = this;
 
         this.bar = Crafty.e("2D, Canvas, Text")
-          .textFont({weight: 'bold', family:'Arial', size:'12px'})
+          //.textFont({weight: 'bold', family:'Arial', size:'12px'})
           .textColor("#FFFFFF")
           .attr({z:10000});
 
@@ -269,12 +271,12 @@ Crafty.c("HurtFeedback", {
   setIsImportant: function(isImportant) {
     if (isImportant)
     {
-      this.textFont({weight:'bold', family:'Arial', size:'12px'});
+      //this.textFont({weight:'bold', family:'Arial', size:'12px'});
       this.textColor("#FFFFFF");
     }
     else
     {
-      this.textFont({weight:'bold', family:'Arial', size:'12px'});
+      //this.textFont({weight:'bold', family:'Arial', size:'12px'});
       this.textColor("#FF0000");
     }
     return this;
@@ -283,4 +285,33 @@ Crafty.c("HurtFeedback", {
     this.text("-" + Math.floor(amount));
     return this;
   }
+});
+
+Crafty.c("FadedOutAnimation", {
+    init: function() {
+        this.requires("2D, Canvas, SpriteAnimation, FadeOut")
+            .fadeOut(0.05);
+    }
+});
+
+Crafty.c("Explosion", {
+    init: function() {
+        this.requires("FadedOutAnimation, explosion")
+            .animate('explosion', 3, 12, 7)
+            .animate('explosion', 10, 0);
+    }
+});
+
+Crafty.c("Implosion", {
+    init: function() {
+        this.requires("FadedOutAnimation, teleport")
+            .animate('teleport', 0, 13, 4)
+            .animate('teleport', 10, 0);
+    }
+});
+
+Crafty.c("ParralaxBackground", {
+    init: function() {
+        this.requires("2D, Canvas, space, ScreenScrolldown");
+    }
 });

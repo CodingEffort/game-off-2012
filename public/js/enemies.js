@@ -8,64 +8,64 @@
  // Main enemy component
 Crafty.c("Enemy", {
     init: function() {
-        this.requires("FollowPath, 2D, Canvas, Collision, Living");
+        this.requires("FollowPath, 2D, Canvas, Collision, Living")
+            .origin("center");
     },
-    setShootDelay: function(delay) {
-        this.shootDelay = delay;
-        this.timeout(this.shoot, this.shootDelay);
+    setGun: function(gunName) {
+        var gun = Crafty.e(gunName);
+        var firstGun  = this.gun === undefined;
+        this.gun = gun;
+        if (firstGun && this.gun.shootDelay >= 0)
+            this.timeout(this.shoot, this.gun.shootDelay);
         return this;
     },
     shoot: function() {
-        if (this.health > 0) {
-            // shoot the ammo
-            var pew = Crafty.e(this.projectileName)
-                .collision()
-                .onHit("Spaceship", onProjectileHitPlayer);
-            pew.x = this.x + this.w/2 - pew.w/2;
-            pew.y = this.y + this.h;
-            this.timeout(this.shoot, this.shootDelay);
+        if (this.health > 0) { // we're alive
+            for (var angleDiff in this.gun.shootAngles) {
+                // shoot the ammo
+                var pew = Crafty.e(this.gun.projectileName)
+                    .collision()
+                    .onHit("Spaceship", onProjectileHitPlayer)
+                    .setDamage(this.gun.damage);
+                pew.x = this.x + this.w/2 - pew.w/2;
+                pew.y = this.y + this.h;
+                pew.setAngle(90 + this.rotation + this.gun.shootAngles[angleDiff]);
+            }
+
+            this.timeout(this.shoot, this.gun.shootDelay);
         }
-    },
-    setProjectileType: function(projectileName) {
-        this.projectileName = projectileName;
-        return this;
     }
 });
 
 // General enemy projectile.
-Crafty.c("EnemyPewPew", {
+Crafty.c("EnemyProjectile", {
     init: function() {
         this.requires("Projectile");
     }
 });
 
-// The projectile of the patrol enemy.
-Crafty.c("PatrolPewPew", {
-	init: function() {
-        this.requires("EnemyPewPew, enemypewpew")
-            .setDamage(5)
-            .setSpeed(8)
-            .crop(0,0,3,12)
-            .setAngle(180);
+// General gun used by the enemies
+Crafty.c("Gun", {
+    init: function() {
+        this.damage = 0;
+        this.projectileName = null;
+        this.shootDelay = 0;
+        this.shootAngles = [0];
+    },
+    setDamage: function(dmg) {
+        this.damage = dmg; return this;
+    },
+    setProjectileType: function(projectile) {
+        this.projectileName = projectile; return this;
+    },
+    setShootDelay: function(shootDelay) {
+        this.shootDelay = shootDelay; return this;
+    },
+    // Used to fire more than one projectile at a time. E.g. to fire 3 in a cone: setProjectilesAngleDeltas([-5,0,5]), will shoot ahead along
+    // with 2 on the sides with a 5 degrees angle difference.
+    setProjectilesAngleDeltas: function(angles) {
+        this.shootAngles = angles; return this;
     }
 });
 
-//TODO: Gun class
-Crafty.c("Grunt", {
-    init: function() {
-        this.requires("Enemy, grunt")
-            .crop(0,0,27,29)
-            .setMaxHealth(15);
-    }
-});
 
-Crafty.c("Patrol", {
-    init: function() {
-        this.requires("Enemy, patrol")
-            .crop(0,0,27,25)
-            .setMaxHealth(25)
-            .allowRotation(false)
-            .setProjectileType("PatrolPewPew")
-            .setShootDelay(1000);
-    }
-});

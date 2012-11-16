@@ -119,7 +119,7 @@ function getPath(pathType, startX, startY) {
         var PATROL_MAX_X = SCREEN_W-50;
 
         var PATROL_X_K = (PATROL_MAX_X + PATROL_MIN_X) / 2;
-        var PATROL_X_A = (Crafty.math.randomInt(0, 1) === 0 ? 1 : -1) * //COOLEST FEATURE EVER DO NOT REMOVEEEEE
+        var PATROL_X_A = (Crafty.math.randomInt(0, 1) === 0 ? 1 : -1) * //Put IN function for ghost patrol
             (PATROL_MAX_X - PATROL_MIN_X) / 2;
         var PATROL_X_B = 2 * Math.PI / PATROL_TOTAL_FRAMES;
         return function(t) {

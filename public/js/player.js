@@ -16,9 +16,9 @@ Crafty.c("Spaceship", {
             .setIsPlayer(true)
             .crop(0,0,35,35);
         this.canShoot = true;
-        this.weapon = "PlayerPewPewFastLazor";
         this.powerups = {};
-        this.playerID = 0;
+        this.playerID = -1;
+        this.cash = 0;
 
         this.bind("EnterFrame", function() {
             if (this.shooting) {
@@ -32,23 +32,40 @@ Crafty.c("Spaceship", {
                 this.powerups[powerup].destroy();
         });
     },
+    setGun: function(gunName) {
+        var gun = Crafty.e(gunName);
+        var firstGun  = this.gun === undefined;
+        this.gun = gun;
+        if (firstGun && this.gun.shootDelay >= 0)
+            this.timeout(this.shoot, this.gun.shootDelay);
+        return this;
+    },
     reload: function() {
         this.canShoot = false;
 
         this.timeout(function() {
             this.canShoot = true;
-        }, getReloadSpeed(this.weapon));
+        }, this.gun.shootDelay);
     },
     shoot: function() {
         if (this.canShoot) {
-            var pew = Crafty.e(this.weapon)
-                .collision()
-                .onHit("Enemy", onLazorHitEnemy);
-            // Spawn it above the player's center, to shoot them pewpews
-            pew.x = this.x + this.w/2 - pew.w/2;
-            pew.y = this.y - this.h/2 - 0.3*pew.h;
+            for (var angleDiff in this.gun.shootAngles) {
+                var pew = Crafty.e(this.gun.projectileName);
+                pew.owner = this;
+                pew.collision()
+                    .onHit("Enemy", onLazorHitEnemy)
+                    .setDamage(this.gun.damage);
+                // Spawn it above the player's center, to shoot them pewpews
+                pew.x = this.x + this.w/2 - pew.w/2;
+                pew.y = this.y - this.h/2 - 0.3*pew.h;
+                pew.setAngle(this.gun.shootAngles[angleDiff]);
+            }
             this.reload();
         }
+    },
+    gainCash: function(amount) {
+        this.cash += amount;
+        this.trigger("CashChanged");
     },
     setPlayerID: function(playerID) {
         this.playerID = playerID;
@@ -61,37 +78,5 @@ Crafty.c("PlayerPewpew", {
     init: function() {
         this.requires("Projectile");
         return this;
-    }
-});
-
-// Returns the reaload speed of a certain weapon.
-function getReloadSpeed(weapon) {
-    if (weapon === "PlayerPewPewLazor")
-        return 150;
-    else if (weapon === "PlayerPewPewFastLazor")
-        return 50;
-    else
-        throw("Weapon '" + weapon + "' is not implemented while getting its reload speed.");
-}
-
-// Represents the weapon machinegun pewpew
-Crafty.c("PlayerPewPewFastLazor", {
-    init: function() {
-        this.requires("PlayerPewpew, pewpewlazors")
-            .crop(7,0,3,12)
-            .setAngle(0)
-            .setSpeed(16)
-            .setDamage(3);
-    }
-});
-
-// Represents the first weapon pewpew
-Crafty.c("PlayerPewPewLazor", {
-    init: function() {
-        this.requires("PlayerPewpew, pewpewlazors")
-            .crop(3,0,4,34)
-            .setAngle(0)
-            .setSpeed(15)
-            .setDamage(10);
     }
 });

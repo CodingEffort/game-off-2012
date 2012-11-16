@@ -60,13 +60,16 @@ Crafty.c("PowerupItem", {
 		this.bind("EnterFrame", function ()
 		{
 			this.t++;
-			this.scaleFactor = 0.2 * Math.sin(2 * Math.PI / 120 * this.t);
+			this.scaleFactor = 0.1 * Math.sin(2 * Math.PI / 30 * this.t) + 1.0;
 
 			this.x += this.w/2;
 			this.y += this.h/2;
 
-			this.w += this.scaleFactor;
-			this.h += this.scaleFactor;
+			if (this.initialW === undefined) this.initialW = this.w;
+			if (this.initialH === undefined) this.initialH = this.h;
+
+			this.w = this.initialW * this.scaleFactor;
+			this.h = this.initialH * this.scaleFactor;
 
 			this.x -= this.w/2;
 			this.y -= this.h/2;
@@ -140,6 +143,10 @@ Crafty.c("ShieldPowerup", {
 			this.shouldPickPowerup = this.health !== this.maxHealth; // don't pick shields if ours is full
 			this.setMaxHealth(this.maxHealth);
 		});
+
+		this.bind("Dead", function() {
+			this.explode(Crafty.e("Explosion"));
+		});
 	},
 	positionShield: function() {
 		var playerBounds = this.player.mbr();
@@ -152,7 +159,7 @@ Crafty.c("ShieldPowerup", {
 Crafty.c("HealPowerupItem", {
 	init: function() {
 		this.requires("PowerupItem, heal")
-			.crop(0,0,36,10)
+			.crop(0,0,35,14)
 			.setPowerupObject("HealPowerup");
 	},
 

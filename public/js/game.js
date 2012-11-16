@@ -12,6 +12,7 @@ var SCREEN_H = 600;
 
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
+Crafty.canvas.init();
 
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {
@@ -24,34 +25,27 @@ Crafty.sprite(50, "assets/back.png", {
     enemypewpew: [1, 12],
     shield: [9, 12],
     shieldObject: [10, 12],
-    heal: [11, 12]
+    heal: [11, 12],
+    teleport: [0, 13]
     });
-
-Crafty.c("Explosion", {
-    init: function() {
-        this.requires("2D, Canvas, SpriteAnimation, explosion, FadeOut")
-            .animate('explosion', 3, 12, 7)
-            .animate('explosion', 10, 0)
-            .fadeOut(0.05);
-    }
-});
-
-Crafty.c("ParralaxBackground", {
-    init: function() {
-        this.requires("2D, Canvas, space, ScreenScrolldown");
-    }
-});
 
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
-    this.destroy(); // remove the pew pew lazor
     e[0].obj.hurt(this.damage); // hurt the enemy
+    checkToGiveEnemyCashToPlayer(e[0].obj, this.owner);
+    this.destroy(); // remove the pew pew lazor
 }
 
 function onPlayerHitEnemy(e) {
     // hurt the player by our current health value
+    checkToGiveEnemyCashToPlayer(this, e[0].obj);
     hurtPlayer(e[0].obj, this.health);
     this.hurt(this.maxHealth); // kill the enemy
+}
+
+function checkToGiveEnemyCashToPlayer(enemy, player) {
+    if (enemy.health <= 0) // enemy is dead
+        player.gainCash(enemy.cash);
 }
 
 function onProjectileHitPlayer(e) {
@@ -69,11 +63,13 @@ function hurtPlayer(player, dmg) {
     if (dmg > 0) // if we still have damages for the player
     {
         player.hurt(dmg);
+        //TEMP UNTIL SERVER SHOOTS MESSAGES
         if (player.health <= 0)
             ui.showClientMessage("Player '" + player.playerID + "' branched a new dimension [C1] where he still lives.");
     }
 }
 
+//TEMP UNTIL SERVER SPAWNS ENEMIES
 Crafty.c("Spawner", {
     init: function() { },
     setSpawnFunction: function(func) {
@@ -82,7 +78,7 @@ Crafty.c("Spawner", {
     },
     startSpawning: function() {
         this.spawnFunction();
-        this.timeout(this.startSpawning, 2000); //TODO: random intervals
+        this.timeout(this.startSpawning, Crafty.math.randomInt(50, 1500));
     }
 });
 
@@ -93,8 +89,9 @@ function startGame() {
 
     // Create the player space shit
     this.players = [];
-    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0);
-    var interwebz = spawnPlayer(200, 300, 42);
+    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0).setGun("PlayerFastPewPew");
+    var interwebz = spawnPlayer(200, 300, 42).setGun("PlayerLamePewPew");
+    interwebz.bind("EnterFrame", function() { this.shoot(); });
     setInterval(function() { forcePlayerPosition(interwebz.playerID, Crafty.math.randomInt(0, SCREEN_W),
         Crafty.math.randomInt(0, SCREEN_H), 50); }, 1000);
 
@@ -130,6 +127,9 @@ function startGame() {
     spawner.startSpawning();
 
     this.ui = Crafty.e("UI");
+    player.bind("CashChanged", function() {
+        ui.setCashAmount(player.cash);
+    });
 
 
     spawnPowerup('ShieldPowerup', 100, 100);
@@ -142,6 +142,7 @@ function spawnPlayer(x, y, playerID) {
     var player = Crafty.e("Spaceship").setPlayerID(playerID);
     player.x = x - player.w/2;
     player.y = y - player.h/2;
+    player.bind("Dead", function() { player.explode(Crafty.e("Implosion")); });
     this.players.push(player);
     return player;
 }
@@ -155,17 +156,21 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, pathType, speedModificator) {
+function spawnEnemy(enemyType, startX, startY, pathType, gunType, speedModificator, cashValue) {
     var enemy = Crafty.e(enemyType).attr({x:startX, y:startY})
                                     .collision()
-                                    .onHit("Spaceship", onPlayerHitEnemy)
-                                    .origin("center");
+                                    .onHit("Spaceship", onPlayerHitEnemy);
     enemy.followPath(getPath(pathType, startX, startY), speedModificator);
+    enemy.cash = cashValue;
+    enemy.bind("Dead", function() { enemy.explode(Crafty.e("Explosion")); });
+    enemy.setGun(gunType);
 
     return enemy;
 }
 
+
+//TEMP UNTIL SERVER SPAWNS ENEMIES
 function spawnNextEnemy() {
-    spawnEnemy('Patrol', 350, -50, "PatrolHorizontal", Crafty.math.randomNumber(0.8, 1.2));
-    spawnEnemy('Grunt', 0, -50, "TopLeftBottomRight", Crafty.math.randomNumber(0.8, 1.2));
+    if (Crafty.math.randomInt(0, 1) === 0) spawnEnemy('Patrol', 350, -50, "PatrolHorizontal", "LameConeEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else spawnEnemy('Grunt', 0, -50, "TopLeftBottomRight", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 1);
 }

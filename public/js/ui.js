@@ -16,6 +16,16 @@ Crafty.c("UI", {
 
 	init: function() {
 		_clientMessages = [];
+		this.cash = Crafty.e("2D, DOM, Text")
+			.attr({x: SCREEN_W - 90, y: SCREEN_H - 50, z:10000});
+		this.cash.css({fontFamily: 'Arial', fontWeight:'bold', fontSize: '20px', color: '#0094FF', width: '100px', height: '50px'});
+
+		this.setCashAmount(0);
+	},
+
+	setCashAmount: function(amount) {
+		this.cash.text(amount + " $");
+		return this;
 	},
 
 	showClientMessage: function(message) {
@@ -55,10 +65,9 @@ Crafty.c("ClientMessage", {
 	init: function() {
 		this.requires("FadeIn, FadeOut");
 		this.message = this.requires("2D, DOM, Text")
-			.textFont({weight: 'bold', family:'Arial', size:'10px'})
-			.textColor("#0094FF")
 			.attr({z:10000, w: 500})
 			.fadeIn(0.15);
+		this.message.css({fontFamily: 'Arial', fontWeight:'bold', fontSize: '10px', color: '#0094FF', width: '500px'});
 
 		this.timeout(function () {
 			this.fadeOut(0.05);
