@@ -7,11 +7,15 @@
   },
   "dependencies": {
     "express": "3.0.2",
+    "connect": "*",
     "consolidate": "git://github.com/simov/consolidate.js.git#hogan-partials",
     "hogan.js": "*",
     "mongoose": "*",
-    "connect-redis": "*",
     "Array.prototype.forEachAsync": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-google": "*",
+    "passport.socketio": "*"
   }
 }

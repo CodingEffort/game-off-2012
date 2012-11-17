@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <head>
   <title>{{title}}</title>
+  <link rel="stylesheet" href="{{prefix}}/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{prefix}}/css/zocial.css">
+  <script src="{{prefix}}/js/jquery.min.js"></script>
+  <script src="{{prefix}}/js/bootstrap.min.js"></script>
+  <script src="{{prefix}}/js/crafty.min.js"></script>
 </head>
 <body>
   <!-- My body is ready -->

@@ -12,11 +12,6 @@ module.exports = {
     user     : '',
     pass     : ''
   },
-  redisStore : true,
-  redis: {
-    host     : 'localhost',
-    port     : 6379
-  },
   game: {
   
   }
