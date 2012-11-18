@@ -1,9 +1,9 @@
     <div class="row">
       <div class="span12">
-        <form action="{{prefix}}/auth/google" method="get">
+        <form action="{{prefix}}/login" method="get">
           <fieldset>
             <legend>Sign in or create an account</legend>
-            <button type="submit" class="zocial googleplus">Sign in with Google+</button>
+            <a href="{{prefix}}/auth/google" class="zocial googleplus">Sign in with Google+</a>
           </fieldset>
         </form>
       </div>
