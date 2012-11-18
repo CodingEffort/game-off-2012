@@ -36,8 +36,8 @@ passport.use(new LocalStrategy(function(username, password, done) {
 }));
 
 passport.use(new GoogleStrategy({
-  returnURL: 'http://localhost:3000' + config.prefix + '/auth/google/return',
-  realm: 'http://localhost:3000' + config.prefix + '/'
+  returnURL: 'http://' + config.host + config.prefix + '/auth/google/return',
+  realm: 'http://' + config.host + config.prefix + '/'
 }, function(identifier, profile, done) {
   console.log(identifier);
   console.log(profile);
@@ -95,8 +95,8 @@ app.configure('development', function(){
 // http://madhums.me/2012/07/19/breaking-down-app-js-file-nodejs-express-mongoose/
 require('./controllers')(app, db, config.prefix, passport);
 
-var server = http.createServer(app).listen(config.port || 3000, config.host || '0.0.0.0', function() {
-  console.log("Project Nixie worker listening on " + (config.host || '0.0.0.0') + ":" + (config.port || 3000));
+var server = http.createServer(app).listen(config.port || 3000, config.listen || '0.0.0.0', function() {
+  console.log("Project Nixie worker listening on " + (config.listen || '0.0.0.0') + ":" + (config.port || 3000));
 });
 
 var io = sio.listen(server);
