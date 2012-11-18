@@ -49,8 +49,6 @@ passport.use(new GoogleStrategy({
   returnURL: 'http://' + config.host + config.prefix + '/auth/google/return',
   realm: 'http://' + config.host + config.prefix + '/'
 }, function(identifier, profile, done) {
-  console.log(identifier);
-  console.log(profile);
   db.user.getByEmail(profile.emails[0].value, function(user) {
     if (user) {
       done(null, user);
