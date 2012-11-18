@@ -5,7 +5,6 @@
   <link rel="stylesheet" href="{{prefix}}/css/zocial.css">
   <script src="{{prefix}}/js/jquery.min.js"></script>
   <script src="{{prefix}}/js/bootstrap.min.js"></script>
-  <script src="{{prefix}}/js/crafty.min.js"></script>
 </head>
 <body>
   <div class="container">

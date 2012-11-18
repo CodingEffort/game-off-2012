@@ -14,6 +14,8 @@ var SCREEN_H = 600;
 Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.canvas.init();
 
+Crafty.modules({ 'crafty-debug-bar': 'release' }, function () { Crafty.debugBar.show(); });
+
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {
     space: [0,0, 16, 12], // the space background
