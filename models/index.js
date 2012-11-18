@@ -1,7 +1,7 @@
 var config = require('../config');
 
 var mongoose = require('mongoose'),
-    mongo    = mongoose.createConnection(config.mongo.host || '127.0.0.1', config.mongo.db, config.mongo.port || 27017),
+    mongo    = mongoose.createConnection(config.mongodb.url || 'mongodb://localhost:27017/' + config.mongodb.db),
     Schema   = mongoose.Schema;
 
 var User = new Schema({
