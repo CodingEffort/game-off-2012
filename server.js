@@ -30,7 +30,17 @@ passport.use(new LocalStrategy(function(username, password, done) {
         done(null, false);
       }
     } else {
-      done(null, false);
+      db.user.getByEmail(username, function(user) {
+        if (!err && user) {
+          if (user.password == password) {
+            done(null, user);
+          } else {
+            done(null, false);
+          }
+        } else {
+          done(null, false);
+        }
+      });
     }
   });
 }));
