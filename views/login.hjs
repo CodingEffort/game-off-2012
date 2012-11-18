@@ -4,6 +4,7 @@
           <fieldset>
             <legend>Sign in or create an account</legend>
             <a href="{{prefix}}/auth/google" class="zocial googleplus">Sign in with Google+</a>
+            <a href="{{prefix}}/auth/github" class="zocial github">Sign in with GitHub</a>
           </fieldset>
         </form>
       </div>

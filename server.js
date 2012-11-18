@@ -11,6 +11,7 @@ var parseCookie = require('connect').utils.parseCookie,
       passport = require('passport'),
         LocalStrategy = require('passport-local').Strategy,
         GoogleStrategy = require('passport-google').Strategy,
+        GitHubStrategy = require('passport-github').Strategy,
     sio = require('socket.io'),
       passportSio = require('passport.socketio'),
     db = require('./models');
@@ -46,7 +47,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 }));
 
 passport.use(new GoogleStrategy({
-  returnURL: 'http://' + config.host + config.prefix + '/auth/google/return',
+  returnURL: 'http://' + config.host + config.prefix + '/auth/google/callback',
   realm: 'http://' + config.host + config.prefix + '/'
 }, function(identifier, profile, done) {
   db.user.getByEmail(profile.emails[0].value, function(user) {
@@ -64,6 +65,14 @@ passport.use(new GoogleStrategy({
       });
     }
   });
+}));
+
+passport.use(new GitHubStrategy({
+  clientID: config.github.id,
+  clientSecret: config.github.secret,
+  callbackURL: 'http://' + config.host + config.prefix + '/auth/github/callback'
+}, function(accessToken, refreshToken, profile, done) {
+  // TODO: same as Google, only here we have a Username
 }));
 
 passport.serializeUser(function(user, done) {
