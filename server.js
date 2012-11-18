@@ -21,27 +21,54 @@ var app = express();
 var sessions = new express.session.MemoryStore();
 
 passport.use(new LocalStrategy(function(username, password, done) {
-  var user = new db.user();
-  // TODO: find user
-  done(null, user);
+  db.user.getByUsername(username, function(user) {
+    if (!err && user) {
+      // I find the lack of encryption disturbing
+      if (user.password === password) {
+        done(null, user);
+      } else {
+        done(null, false);
+      }
+    } else {
+      done(null, false);
+    }
+  });
 }));
+
 passport.use(new GoogleStrategy({
   returnURL: 'http://localhost:3000' + config.prefix + '/auth/google/return',
   realm: 'http://localhost:3000' + config.prefix + '/'
 }, function(identifier, profile, done) {
   console.log(identifier);
   console.log(profile);
-  var user = new db.user();
-  // TODO: find or create user
-  done(null, user);
+  db.user.getByEmail(profile.emails[0].value, function(user) {
+    if (user) {
+      done(null, user);
+    } else {
+      var User = new db.user();
+      User.email = profile.emails[0].value;
+      User.save(function(err, user) {
+        if (!err && user) {
+          done(null, user);
+        } else {
+          done(null, false);
+        }
+      });
+    }
+  });
 }));
 
 passport.serializeUser(function(user, done) {
   done(null, user._id);
 });
 passport.deserializeUser(function(id, done) {
-  // TODO: find user
-  done(null, new db.user());
+  db.user.getById(id, function(user) {
+    if (user) {
+      done(null, user);
+    } else {
+      done(null, false);
+    }
+  });
 });
 
 app.configure(function(){

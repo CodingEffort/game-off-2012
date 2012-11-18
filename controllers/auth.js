@@ -2,7 +2,7 @@ module.exports = function(app, db, prefix, passport) {
   app.get(prefix + '/login', function(req, res) {
     res.render('layout', { partials: { content: 'lagin' } });
   });
-  app.post(prefix + '/auth/local', passport.authenticate('lcoal', {
+  app.post(prefix + '/auth/local', passport.authenticate('local', {
     successRedirect: prefix + '/',
     failureRedirect: prefix + '/login',
     failureFlash: true

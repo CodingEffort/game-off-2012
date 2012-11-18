@@ -9,6 +9,7 @@ var User = new Schema({
   password : String,
   email    : { type: String, index: { unique: true } }
 });
+require('./user')(User);
 
 exports.user = mongo.model('user', User);
 
