@@ -8,7 +8,8 @@
   <script src="{{prefix}}/js/crafty.min.js"></script>
 </head>
 <body>
-  <!-- My body is ready -->
+  <div class="container">
 {{>content}}
+  </div>
 </body>
 
