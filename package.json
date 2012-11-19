@@ -16,6 +16,7 @@
     "passport": "*",
     "passport-local": "*",
     "passport-google": "*",
+    "passport-github": "*",
     "passport.socketio": "*"
   }
 }

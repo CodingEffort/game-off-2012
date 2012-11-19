@@ -54,11 +54,11 @@ passport.use(new GoogleStrategy({
     if (user) {
       done(null, user);
     } else {
-      var User = new db.user();
-      User.email = profile.emails[0].value;
-      User.save(function(err, user) {
-        if (!err && user) {
-          done(null, user);
+      var user = new db.user();
+      user.email = profile.emails[0].value;
+      user.save(function(err, doc) {
+        if (!err && doc) {
+          done(null, doc);
         } else {
           done(null, false);
         }
@@ -72,7 +72,22 @@ passport.use(new GitHubStrategy({
   clientSecret: config.github.secret,
   callbackURL: 'http://' + config.host + config.prefix + '/auth/github/callback'
 }, function(accessToken, refreshToken, profile, done) {
-  // TODO: same as Google, only here we have a Username
+  console.log(profile);
+  db.user.getByEmail(profile.emails[0].value, function(user) {
+    if (user) {
+      done(null, user);
+    } else {
+      var user = new db.user();
+      user.email = profile.emails[0].value;
+      user.save(function(err, doc) {
+        if (!err && doc) {
+          done(null, doc);
+        } else {
+          done(null, false);
+        }
+      });
+    }
+  });
 }));
 
 passport.serializeUser(function(user, done) {

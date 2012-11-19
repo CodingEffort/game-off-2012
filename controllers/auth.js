@@ -19,8 +19,14 @@ module.exports = function(app, db, prefix, passport) {
   app.get(prefix + '/auth/google', passport.authenticate('google'));
   app.get(prefix + '/auth/google/callback', passport.authenticate('google', {
     successRedirect: prefix + '/',
-    failureRedirect: prefix + '/login'
+    failureRedirect: prefix + '/login',
+    failureFlash: true
   }));
 
-  app.get(prefix + '/auth/github')
+  app.get(prefix + '/auth/github', passport.authenticate('github'));
+  app.get(prefix + '/auth/github/callback', passport.authenticate('github', {
+    successRedirect: prefix + '/',
+    failureRedirect: prefix + '/login',
+    failureFlash: true
+  }));
 };
