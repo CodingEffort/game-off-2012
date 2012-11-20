@@ -5,6 +5,7 @@
     </div>
     <script src="{{prefix}}/socket.io/socket.io.js"></script>
     <script src="{{prefix}}/js/crafty.min.js"></script>
+    <script src="js/netclient.js"></script>
     <script src="js/game_entities.js"></script>
     <script src="js/player.js"></script>
     <script src="js/enemy_paths.js"></script>
