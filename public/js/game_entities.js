@@ -146,7 +146,9 @@ Crafty.c("FollowPath", {
         });
     },
     followPath: function(func, speedModificator) { this.path = func; this.speedModificator = speedModificator; return this; },
-    allowRotation: function(allow) { this.showRotation = allow; return this; }
+    allowRotation: function(allow) { this.showRotation = allow; return this; },
+    alwaysLookDown: function() { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation = 90; });},
+    rotateEveryFrame: function(amount) { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation += amount; }); }
 });
 
 Crafty.c("HasHealth", {
@@ -313,5 +315,35 @@ Crafty.c("Implosion", {
 Crafty.c("ParralaxBackground", {
     init: function() {
         this.requires("2D, Canvas, space, ScreenScrolldown");
+    }
+});
+
+// General gun used by the enemies
+Crafty.c("Gun", {
+    init: function() {
+        this.damage = 0;
+        this.projectileName = null;
+        this.shootDelay = 0;
+        this.shootAngles = [0];
+        this.xDeltas = [0];
+    },
+    setDamage: function(dmg) {
+        this.damage = dmg; return this;
+    },
+    setProjectileType: function(projectile) {
+        this.projectileName = projectile; return this;
+    },
+    setShootDelay: function(shootDelay) {
+        this.shootDelay = shootDelay; return this;
+    },
+    // Used to fire more than one projectile at a time. E.g. to fire 3 in a cone: setProjectilesAngleDeltas([-5,0,5]), will shoot ahead along
+    // with 2 on the sides with a 5 degrees angle difference.
+    setProjectilesAngleDeltas: function(angles) {
+        this.shootAngles = angles; return this;
+    },
+    // Used to fire more than one projectile at a time, starting at different X positions. E.g. to fire 2 parrallel: setProjectilesXDeltas([-3,3]), will
+    // shoot ahead 2 shots parrallel to each other.
+    setProjectilesXDeltas: function(deltas) {
+        this.xDeltas = deltas; return this;
     }
 });

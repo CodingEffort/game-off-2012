@@ -112,7 +112,7 @@ function getPath(pathType, startX, startY) {
     else if (pathType == "PatrolHorizontal")
     {
         var PATROL_REACH_UPPER_FRAMES = 40;
-        var PATROL_UPPER_Y = 100;
+        var PATROL_UPPER_Y = Crafty.math.randomInt(100, 200);
 
         var PATROL_TOTAL_FRAMES = 400;
         var PATROL_MIN_X = 50;
@@ -139,6 +139,92 @@ function getPath(pathType, startX, startY) {
                 return {
                     x: PATROL_X_A * Math.sin(PATROL_X_B * (t - PATROL_REACH_UPPER_FRAMES - PATROL_X_H)) + PATROL_X_K,
                     y: PATROL_UPPER_Y
+                };
+            }
+        };
+    }
+
+    else if (pathType === "ZigZag")
+    {
+        var ZIGZAG_REACH_UPPER_FRAMES = 40;
+        var ZIGZAG_UPPER_Y = 100;
+        var ZIGZAG_DOWN_Y = SCREEN_H-100;
+
+        var ZIGZAG_TOTAL_FRAMES = 400;
+        var ZIGZAG_MIN_X = 50;
+        var ZIGZAG_MAX_X = SCREEN_W-50;
+
+        var ZIGZAG_X_K = (ZIGZAG_MAX_X + ZIGZAG_MIN_X) / 2;
+        var ZIGZAG_X_A = (Crafty.math.randomInt(0, 1) === 0 ? 1 : -1) * //Put IN function for ghost patrol
+            (ZIGZAG_MAX_X - ZIGZAG_MIN_X) / 2;
+        var ZIGZAG_X_B = 2 * Math.PI / ZIGZAG_TOTAL_FRAMES;
+
+        var ZIGZAG_Y_K = (ZIGZAG_DOWN_Y + ZIGZAG_UPPER_Y) / 2;
+        var ZIGZAG_Y_A = (ZIGZAG_DOWN_Y - ZIGZAG_UPPER_Y) / 2;
+        var ZIGZAG_Y_B = 2 * Math.PI / (ZIGZAG_TOTAL_FRAMES * 3);
+
+
+        return function(t) {
+            
+            if (t <= ZIGZAG_REACH_UPPER_FRAMES) // frames to reach the upper screen
+            {
+                var patrolHorizA = (ZIGZAG_UPPER_Y - startY) / ZIGZAG_REACH_UPPER_FRAMES;
+                return {
+                    x: startX,
+                    y: patrolHorizA * t + startY
+                };
+            }
+            else // we should patrol instead
+            {
+                // Update to take into account our startX
+                ZIGZAG_X_H = -(Math.asin( (startX - ZIGZAG_X_K) / ZIGZAG_X_A ) / ZIGZAG_X_B);
+                ZIGZAG_Y_H = -(Math.asin( (ZIGZAG_UPPER_Y - ZIGZAG_Y_K) / ZIGZAG_Y_A ) / ZIGZAG_Y_B);
+                return {
+                    x: ZIGZAG_X_A * Math.sin(ZIGZAG_X_B * (t - ZIGZAG_REACH_UPPER_FRAMES - ZIGZAG_X_H)) + ZIGZAG_X_K,
+                    y: ZIGZAG_Y_A * Math.sin(ZIGZAG_Y_B * (t - ZIGZAG_REACH_UPPER_FRAMES - ZIGZAG_Y_H)) + ZIGZAG_Y_K
+                };
+            }
+        };
+    }
+
+    else if (pathType === "Circle")
+    {
+        var CIRCLE_REACH_UPPER_FRAMES = 40;
+        var CIRCLE_UPPER_Y = 100;
+        var CIRCLE_DOWN_Y = SCREEN_H-100;
+
+        var CIRCLE_TOTAL_FRAMES = 400;
+        var CIRCLE_MIN_X = 50;
+        var CIRCLE_MAX_X = SCREEN_W-50;
+
+        var CIRCLE_X_K = (CIRCLE_MAX_X + CIRCLE_MIN_X) / 2;
+        var CIRCLE_X_A = (Crafty.math.randomInt(0, 1) === 0 ? 1 : -1) * //Put IN function for ghost patrol
+            (CIRCLE_MAX_X - CIRCLE_MIN_X) / 2;
+        var CIRCLE_X_B = 2 * Math.PI / CIRCLE_TOTAL_FRAMES;
+
+        var CIRCLE_Y_K = (CIRCLE_DOWN_Y + CIRCLE_UPPER_Y) / 2;
+        var CIRCLE_Y_A = (CIRCLE_DOWN_Y - CIRCLE_UPPER_Y) / 2;
+        var CIRCLE_Y_B = 2 * Math.PI / CIRCLE_TOTAL_FRAMES;
+
+
+        return function(t) {
+            
+            if (t <= CIRCLE_REACH_UPPER_FRAMES) // frames to reach the upper screen
+            {
+                var patrolHorizA = (CIRCLE_UPPER_Y - startY) / CIRCLE_REACH_UPPER_FRAMES;
+                return {
+                    x: startX,
+                    y: patrolHorizA * t + startY
+                };
+            }
+            else // we should patrol instead
+            {
+                // Update to take into account our startX
+                CIRCLE_X_H = -(Math.asin( (startX - CIRCLE_X_K) / CIRCLE_X_A ) / CIRCLE_X_B);
+                CIRCLE_Y_H = -(Math.asin( (CIRCLE_UPPER_Y - CIRCLE_Y_K) / CIRCLE_Y_A ) / CIRCLE_Y_B);
+                return {
+                    x: CIRCLE_X_A * Math.sin(CIRCLE_X_B * (t - CIRCLE_REACH_UPPER_FRAMES - CIRCLE_X_H)) + CIRCLE_X_K,
+                    y: CIRCLE_Y_A * Math.sin(CIRCLE_Y_B * (t - CIRCLE_REACH_UPPER_FRAMES - CIRCLE_Y_H)) + CIRCLE_Y_K
                 };
             }
         };

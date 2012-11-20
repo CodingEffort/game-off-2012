@@ -22,9 +22,35 @@ Crafty.c("Patrol", {
         this.requires("Enemy, patrol")
             .crop(0,0,25,27)
             .setMaxHealth(25)
-            .allowRotation(false);
-        this.bind("EnterFrame", function () { this.rotation = 90; });
+            .alwaysLookDown();
     }
+});
+
+Crafty.c("EasiestBoss", {
+	init: function() {
+		this.requires("Enemy, easiestboss")
+			.crop(0,0,40,40)
+			.setMaxHealth(250)
+			.alwaysLookDown();
+	}
+});
+
+Crafty.c("EasiestBossAiming", {
+	init: function() {
+		console.log("hello");
+		this.requires("Enemy, easiestboss")
+			.crop(0,0,40,40)
+			.setMaxHealth(250);
+	}
+});
+
+Crafty.c("EasyBoss", {
+	init: function() {
+		this.requires("Enemy, easyboss")
+			.crop(0,0,40,40)
+			.setMaxHealth(500)
+			.rotateEveryFrame(1);
+	}
 });
 
 
@@ -64,6 +90,24 @@ Crafty.c("LameShotgunEnemyPewPew", {
 			.setProjectilesAngleDeltas([-1,0,1]);
 	}
 });
+Crafty.c("LameFastLargeShotgunEnemyPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setDamage(5)
+			.setShootDelay(300)
+			.setProjectileType("EnemyRegularLazor")
+			.setProjectilesAngleDeltas([-2,-1,1,2]);
+	}
+});
+Crafty.c("CircularEnemyPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setDamage(2)
+			.setShootDelay(1000)
+			.setProjectileType("EnemySmallLazor")
+			.setProjectilesAngleDeltas([-150,-135,-120,-105,-90,-75,-60,-45,-30,-15,0,15,30,45,60,75,90,105,120,135,150,165,180]);
+	}
+});
 
 
 
@@ -79,24 +123,45 @@ Crafty.c("EnemyRegularLazor", {
     }
 });
 
+Crafty.c("EnemySmallLazor", {
+	init: function() {
+		this.requires("EnemyProjectile, enemypewpew")
+			.setSpeed(12)
+			.crop(10,0,3,12);
+	}
+});
+
 
 /************************************************************************/
 /**************************    PLAYER GUNS    ***************************/
 /************************************************************************/
-Crafty.c("PlayerLamePewPew", {
-	init: function() {
-		this.requires("Gun")
-			.setDamage(10)
-			.setShootDelay(150)
-			.setProjectileType("PlayerRegularLazor");
-	}
-});
 Crafty.c("PlayerFastPewPew", {
 	init: function() {
 		this.requires("Gun")
 			.setDamage(3)
 			.setShootDelay(50)
 			.setProjectileType("PlayerSmallLazor");
+	}
+});
+Crafty.c("PlayerParrallelFastPewPew", {
+	init: function() {
+		this.requires("PlayerFastPewPew")
+			.setProjectilesXDeltas([-7,7]);
+	}
+});
+Crafty.c("PlayerFastPewPewSplit3", {
+	init: function() {
+		this.requires("PlayerFastPewPew")
+			.setProjectilesXDeltas([-7,0,7])
+			.setProjectilesAngleDeltas([-7,0,7]);
+	}
+});
+
+Crafty.c("PlayerFastPewPewSplit5", {
+	init: function() {
+		this.requires("PlayerFastPewPew")
+			.setProjectilesXDeltas([-14,-7,0,7,14])
+			.setProjectilesAngleDeltas([-15,-7.5,0,7.5,15]);
 	}
 });
 

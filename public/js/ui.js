@@ -16,15 +16,24 @@ Crafty.c("UI", {
 
 	init: function() {
 		_clientMessages = [];
-		this.cash = Crafty.e("2D, DOM, Text")
-			.attr({x: SCREEN_W - 90, y: SCREEN_H - 50, z:10000});
-		this.cash.css({fontFamily: 'Arial', fontWeight:'bold', fontSize: '20px', color: '#0094FF', width: '100px', height: '50px'});
 
-		this.setCashAmount(0);
+        this.CASH_FONT_SIZE = 16;
+        this.CASH_FONT_PATH = "assets/FontCash.png";
+        var ui = this;
+        Crafty.load([ui.CASH_FONT_PATH], function() {
+            ui.cash = Crafty.e("2D, Canvas, SpriteText")
+                .registerFont("CashFont", ui.CASH_FONT_SIZE, ui.CASH_FONT_PATH);
+
+            ui.setCashAmount(0);
+        });
 	},
 
 	setCashAmount: function(amount) {
-		this.cash.text(amount + " $");
+        var txt = amount + "$";
+        var OFFSET = 16;
+		this.cash.text(txt)
+            .attr({w: txt.length * this.CASH_FONT_SIZE, h: this.CASH_FONT_SIZE})
+            .attr({x: SCREEN_W - this.cash.w - OFFSET, y: SCREEN_H - this.cash.h - OFFSET});
 		return this;
 	},
 
@@ -64,10 +73,10 @@ Crafty.c("UI", {
 Crafty.c("ClientMessage", {
 	init: function() {
 		this.requires("FadeIn, FadeOut");
-		this.message = this.requires("2D, DOM, Text")
+		this.message = this.requires("2D, Canvas, Text")
 			.attr({z:10000, w: 500})
+            .textColor('#0094FF')
 			.fadeIn(0.15);
-		this.message.css({fontFamily: 'Arial', fontWeight:'bold', fontSize: '10px', color: '#0094FF', width: '500px'});
 
 		this.timeout(function () {
 			this.fadeOut(0.05);
