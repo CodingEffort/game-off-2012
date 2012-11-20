@@ -86,7 +86,6 @@ passport.use(new GitHubStrategy({
         profile.emails[0].value = JSON.parse(data)[0];
         db.user.getByEmail(profile.emails[0].value, function(user) {
           if (user) {
-            console.log(user);
             done(null, user);
           } else {
             var user = new db.user();
