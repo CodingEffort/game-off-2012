@@ -6,6 +6,7 @@
 var parseCookie = require('connect').utils.parseCookie,
     express = require('express'),
       http = require('http'),
+      https = require('https'),
       path = require('path'),
       cons = require('consolidate'),
       passport = require('passport'),
@@ -75,7 +76,7 @@ passport.use(new GitHubStrategy({
 }, function(accessToken, refreshToken, profile, done) {
   // Yeah, ofc, don't provide the e-mail in the `profile`
   // and OFC, require `profile update` perms to access it
-  http.get('https://api.github.com/user/emails?access_token=' + accessToken, function(res) {
+  https.get('https://api.github.com/user/emails?access_token=' + accessToken, function(res) {
     if (res.statusCode == 200) {
       var data = '';
       res.on('data', function(chunk) {
