@@ -109,10 +109,10 @@ function startGame() {
     Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
         var MOVE_LERP_SPEED = 0.9;
 
-        var position = $("#cr-stage").offset();
+        var position = $("#cr-stage").position();
 
-        var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w) - position.left;
-        var targetY = Crafty.math.clamp(e.y - player.h/2, 0, SCREEN_H - player.h) - position.top;
+        var targetX = Crafty.math.clamp(e.x - position.left - player.w/2, 0, SCREEN_W - player.w);
+        var targetY = Crafty.math.clamp(e.y - position.top - player.h/2, 0, SCREEN_H - player.h);
         player.x = Crafty.math.lerp(player.x, targetX, MOVE_LERP_SPEED);
         player.y = Crafty.math.lerp(player.y, targetY, MOVE_LERP_SPEED);
     });
