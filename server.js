@@ -70,7 +70,8 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
   clientID: config.github.id,
   clientSecret: config.github.secret,
-  callbackURL: 'http://' + config.host + config.prefix + '/auth/github/callback'
+  callbackURL: 'http://' + config.host + config.prefix + '/auth/github/callback',
+  scope: 'user'
 }, function(accessToken, refreshToken, profile, done) {
   console.log(profile);
   db.user.getByEmail(profile.emails[0].value, function(user) {
