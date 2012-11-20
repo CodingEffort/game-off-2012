@@ -37,7 +37,6 @@ Crafty.c("EasiestBoss", {
 
 Crafty.c("EasiestBossAiming", {
 	init: function() {
-		console.log("hello");
 		this.requires("Enemy, easiestboss")
 			.crop(0,0,40,40)
 			.setMaxHealth(250);
@@ -127,7 +126,7 @@ Crafty.c("EnemySmallLazor", {
 	init: function() {
 		this.requires("EnemyProjectile, enemypewpew")
 			.setSpeed(12)
-			.crop(10,0,3,12);
+			.crop(9,0,3,12);
 	}
 });
 
@@ -145,13 +144,19 @@ Crafty.c("PlayerFastPewPew", {
 });
 Crafty.c("PlayerParrallelFastPewPew", {
 	init: function() {
-		this.requires("PlayerFastPewPew")
+		this.requires("Gun")
+			.setDamage(3)
+			.setShootDelay(55)
+			.setProjectileType("PlayerParrallelLazor")
 			.setProjectilesXDeltas([-7,7]);
 	}
 });
 Crafty.c("PlayerFastPewPewSplit3", {
 	init: function() {
-		this.requires("PlayerFastPewPew")
+		this.requires("Gun")
+			.setDamage(3)
+			.setShootDelay(65)
+			.setProjectileType("PlayerSplit3Lazor")
 			.setProjectilesXDeltas([-7,0,7])
 			.setProjectilesAngleDeltas([-7,0,7]);
 	}
@@ -159,9 +164,21 @@ Crafty.c("PlayerFastPewPewSplit3", {
 
 Crafty.c("PlayerFastPewPewSplit5", {
 	init: function() {
-		this.requires("PlayerFastPewPew")
+		this.requires("Gun")
+			.setDamage(3)
+			.setShootDelay(80)
+			.setProjectileType("PlayerSplit5Lazor")
 			.setProjectilesXDeltas([-14,-7,0,7,14])
 			.setProjectilesAngleDeltas([-15,-7.5,0,7.5,15]);
+	}
+});
+
+Crafty.c("PlayerMelee", {
+	init: function() {
+		this.requires("Gun")
+			.setProjectileType("PlayerMeleeLazor")
+			.setDamage(20)
+			.setShootDelay(50);
 	}
 });
 
@@ -172,16 +189,53 @@ Crafty.c("PlayerFastPewPewSplit5", {
 Crafty.c("PlayerSmallLazor", {
     init: function() {
         this.requires("PlayerPewpew, pewpewlazors")
-            .crop(7,0,3,12)
+            .crop(6,0,3,12)
             .setSpeed(16);
     }
 });
 
 // Represents the first weapon pewpew
-Crafty.c("PlayerRegularLazor", {
+Crafty.c("PlayerParrallelLazor", {
     init: function() {
         this.requires("PlayerPewpew, pewpewlazors")
-            .crop(3,0,4,34)
+            .crop(3,0,3,12)
             .setSpeed(15);
     }
+});
+
+Crafty.c("PlayerSplit3Lazor", {
+	init: function() {
+		this.requires("PlayerPewpew, pewpewlazors")
+            .crop(12,0,3,12)
+            .setSpeed(14);
+	}
+});
+
+Crafty.c("PlayerSplit5Lazor", {
+	init: function() {
+		this.requires("PlayerPewpew, pewpewlazors")
+            .crop(15,0,3,12)
+            .setSpeed(13);
+	}
+});
+
+Crafty.c("PlayerMeleeLazor", {
+	init: function() {
+		this.requires("PlayerPewpew, pewpewlazors, FadeOut")
+			.crop(0,12,40,6)
+			.setSpeed(15)
+			.fadeOut(0.1);
+
+		this.bind("EnterFrame", function() {
+			this.damage *= 0.8;
+			var SCALE_MOD = 1.2;
+			var wDiff = this.w * (SCALE_MOD - 1.0);
+			var hDiff = this.h * (SCALE_MOD - 1.0);
+			this.w *= SCALE_MOD;
+			this.h *= SCALE_MOD;
+			this.x -= wDiff / 2;
+			this.y -= hDiff / 2;
+			this.collision();
+		});
+	}
 });
