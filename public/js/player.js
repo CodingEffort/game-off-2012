@@ -11,7 +11,7 @@ Crafty.c("Spaceship", {
     _shooting: false,
 
     init: function() {
-        this.requires("2D, Canvas, ship, Living, HealthBar, Tween")
+        this.requires("2D, Canvas, ship, SpriteColor, Living, HealthBar, Tween")
             .setMaxHealth(100)
             .setIsPlayer(true)
             .crop(0,0,35,35);
@@ -19,6 +19,8 @@ Crafty.c("Spaceship", {
         this.powerups = {};
         this.playerID = -1;
         this.cash = 0;
+        this.overlay = Crafty.e("2D, Canvas, shipoverlay")
+            .attr({alpha: 0.9});
 
         this.bind("EnterFrame", function() {
             if (this.shooting) {
@@ -26,11 +28,19 @@ Crafty.c("Spaceship", {
             }
         });
 
+        this.bind("Change", function() {
+            this.overlay.attr({x: this.x, y: this.y});
+        });
+
         this.bind("Remove", function() {
-            console.log(this.powerups);
             for (var powerup in this.powerups)
                 this.powerups[powerup].destroy();
+            this.overlay.destroy();
         });
+    },
+    setPlayerColor: function(color)
+    {
+        this.spriteColor(color, 1);
     },
     setGun: function(gunName) {
         var gun = Crafty.e(gunName);
@@ -49,16 +59,16 @@ Crafty.c("Spaceship", {
     },
     shoot: function() {
         if (this.canShoot) {
-            for (var angleDiff in this.gun.shootAngles) {
+            for (var i = 0; i < Math.max(this.gun.xDeltas.length, this.gun.shootAngles.length); ++i) {
                 var pew = Crafty.e(this.gun.projectileName);
                 pew.owner = this;
                 pew.collision()
                     .onHit("Enemy", onLazorHitEnemy)
                     .setDamage(this.gun.damage);
                 // Spawn it above the player's center, to shoot them pewpews
-                pew.x = this.x + this.w/2 - pew.w/2;
+                pew.x = this.x + this.w/2 - pew.w/2 + (this.gun.xDeltas[i] || 0);
                 pew.y = this.y - this.h/2 - 0.3*pew.h;
-                pew.setAngle(this.gun.shootAngles[angleDiff]);
+                pew.setAngle(this.gun.shootAngles[i] || 0);
             }
             this.reload();
         }

@@ -18,6 +18,7 @@ Crafty.canvas.init();
 Crafty.sprite(50, "assets/back.png", {
     space: [0,0, 16, 12], // the space background
     ship: [0, 12], // the spaceship
+    shipoverlay: [12, 12],
     pewpewlazors: [1, 12], // the pewpew
     grunt: [2, 12], // the grunt enemy
     explosion: [3, 12], // the explosion animation
@@ -26,7 +27,9 @@ Crafty.sprite(50, "assets/back.png", {
     shield: [9, 12],
     shieldObject: [10, 12],
     heal: [11, 12],
-    teleport: [0, 13]
+    teleport: [0, 13],
+    easiestboss: [13, 12],
+    easyboss: [14, 12]
     });
 
 // Called when an enemy is hit by a pewpewlazors
@@ -38,9 +41,7 @@ function onLazorHitEnemy(e) {
 
 function onPlayerHitEnemy(e) {
     // hurt the player by our current health value
-    checkToGiveEnemyCashToPlayer(this, e[0].obj);
-    hurtPlayer(e[0].obj, this.health);
-    this.hurt(this.maxHealth); // kill the enemy
+    hurtPlayer(e[0].obj, this.health/100);
 }
 
 function checkToGiveEnemyCashToPlayer(enemy, player) {
@@ -82,6 +83,13 @@ Crafty.c("Spawner", {
     }
 });
 
+//TEMP UNTIL MULTIPLAYER
+function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, lerpTime) {
+    var interwebz = spawnPlayer(startX, startY, playerID, gun, color).bind("EnterFrame", function() { this.shoot(); });
+    setInterval(function() { forcePlayerPosition(interwebz.playerID, Crafty.math.randomInt(0, SCREEN_W),
+        Crafty.math.randomInt(0, SCREEN_H), lerpTime); }, timeForChangePos);
+}
+
 function startGame() {
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
@@ -89,11 +97,10 @@ function startGame() {
 
     // Create the player space shit
     this.players = [];
-    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0).setGun("PlayerFastPewPew");
-    var interwebz = spawnPlayer(200, 300, 42).setGun("PlayerLamePewPew");
-    interwebz.bind("EnterFrame", function() { this.shoot(); });
-    setInterval(function() { forcePlayerPosition(interwebz.playerID, Crafty.math.randomInt(0, SCREEN_W),
-        Crafty.math.randomInt(0, SCREEN_H), 50); }, 1000);
+    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerParrallelFastPewPew", "#FF9900");
+    spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
+    spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerFastPewPew", 2000, 100);
+    spawnInterwebz(400, 200, 69, "#0000FF", "PlayerFastPewPew", 5000, 200);
 
     // TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
     var spawner = Crafty.e("Spawner").setSpawnFunction(spawnNextEnemy);
@@ -101,8 +108,11 @@ function startGame() {
     // Update the player according to the movement
     Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
         var MOVE_LERP_SPEED = 0.9;
-        var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w);
-        var targetY = Crafty.math.clamp(e.y - player.h/2, 0, SCREEN_H - player.h);
+
+        var position = $("#cr-stage").offset();
+
+        var targetX = Crafty.math.clamp(e.x - player.w/2, 0, SCREEN_W - player.w) - position.left;
+        var targetY = Crafty.math.clamp(e.y - player.h/2, 0, SCREEN_H - player.h) - position.top;
         player.x = Crafty.math.lerp(player.x, targetX, MOVE_LERP_SPEED);
         player.y = Crafty.math.lerp(player.y, targetY, MOVE_LERP_SPEED);
     });
@@ -123,6 +133,8 @@ function startGame() {
         //socket.emit('shooting', false);
     });
 
+    //make the stage unselectable
+
     // We bring the enemies
     spawner.startSpawning();
 
@@ -138,11 +150,13 @@ function startGame() {
     spawnPowerup('HealPowerup', 400, 300);
 }
 
-function spawnPlayer(x, y, playerID) {
+function spawnPlayer(x, y, playerID, currentGun, color) {
     var player = Crafty.e("Spaceship").setPlayerID(playerID);
     player.x = x - player.w/2;
     player.y = y - player.h/2;
     player.bind("Dead", function() { player.explode(Crafty.e("Implosion")); });
+    player.setPlayerColor(color);
+    player.setGun(currentGun);
     this.players.push(player);
     return player;
 }
@@ -171,6 +185,14 @@ function spawnEnemy(enemyType, startX, startY, pathType, gunType, speedModificat
 
 //TEMP UNTIL SERVER SPAWNS ENEMIES
 function spawnNextEnemy() {
-    if (Crafty.math.randomInt(0, 1) === 0) spawnEnemy('Patrol', 350, -50, "PatrolHorizontal", "LameConeEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else spawnEnemy('Grunt', 0, -50, "TopLeftBottomRight", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 1);
+    var r = Crafty.math.randomInt(0,100);
+    if (r <= 10) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontal", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 20) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontal", "LameConeEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 40) spawnEnemy('Grunt', Crafty.math.randomInt(50, SCREEN_W/2), -50, "TopLeftBottomRight", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 1);
+    else if (r <= 60) spawnEnemy('Grunt', Crafty.math.randomInt(SCREEN_W/2, SCREEN_W-50), -50, "TopRightBottomLeft", "LameEnemyPewPew", Crafty.math.randomNumber(0.7, 1.3), 1);
+    else if (r <= 65) spawnEnemy('EasiestBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZag", "LameFastLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 70) spawnEnemy('EasiestBossAiming', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "LameFastLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 75) spawnEnemy('EasyBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "CircularEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else {}
+    
 }
