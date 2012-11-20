@@ -73,20 +73,35 @@ passport.use(new GitHubStrategy({
   callbackURL: 'http://' + config.host + config.prefix + '/auth/github/callback',
   scope: 'user'
 }, function(accessToken, refreshToken, profile, done) {
-  console.log(profile);
-  db.user.getByEmail(profile.emails[0].value, function(user) {
-    if (user) {
-      done(null, user);
-    } else {
-      var user = new db.user();
-      user.email = profile.emails[0].value;
-      user.save(function(err, doc) {
-        if (!err && doc) {
-          done(null, doc);
-        } else {
-          done(null, false);
-        }
+  // Yeah, ofc, don't provide the e-mail in the `profile`
+  // and OFC, require `profile update` perms to access it
+  http.get('https://api.github.com/user/emails?access_token=' + accessToken, function(res) {
+    if (res.statusCode == 200) {
+      var data = '';
+      res.on('data', function(chunk) {
+        data += chunk;
       });
+      res.on('end', function() {
+        console.log(data);
+        profile.emails[0].value = JSON.parse(data)[0];
+        db.user.getByEmail(profile.emails[0].value, function(user) {
+          if (user) {
+            done(null, user);
+          } else {
+            var user = new db.user();
+            user.email = profile.emails[0].value;
+            user.save(function(err, doc) {
+              if (!err && doc) {
+                done(null, doc);
+              } else {
+                done(null, false);
+              }
+            });
+          }
+        });
+      });
+    } else {
+      done(null, false);
     }
   });
 }));
