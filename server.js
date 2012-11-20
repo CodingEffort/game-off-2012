@@ -57,9 +57,9 @@ passport.use(new GoogleStrategy({
     } else {
       var user = new db.user();
       user.email = profile.emails[0].value;
-      user.save(function(err, doc) {
-        if (!err && doc) {
-          done(null, doc);
+      user.save(function(err) {
+        if (!err) {
+          done(null, user);
         } else {
           done(null, false);
         }
@@ -90,11 +90,11 @@ passport.use(new GitHubStrategy({
             done(null, user);
           } else {
             var user = new db.user();
+            user.username = profile.username;
             user.email = profile.emails[0].value;
-            user.save(function(err, doc) {
-              console.log(doc);
-              if (!err && doc) {
-                done(null, doc);
+            user.save(function(err) {
+              if (!err) {
+                done(null, user);
               } else {
                 done(null, false);
               }
