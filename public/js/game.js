@@ -95,6 +95,7 @@ function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, 
 }
 
 function startGame() {
+    var players = [];
     nc.bind('connected', function(player) {
       // TODO: do some shit fuck with 'player'
       // ==> player.id
@@ -116,9 +117,9 @@ function startGame() {
     nc.bind('shooting', function(player, shooting) {
         // Here 'player' is the player.id from 'connect'
         // And 'shooting' is a bool for... well... fuck it, it's pretty obvious
-        for (var i = 0; i < this.players.length; ++i) {
-            if (this.players[i].playerID === player) {
-                this.players[i].shooting = shooting;
+        for (var i = 0; i < players.length; ++i) {
+            if (players[i].playerID === player) {
+                players[i].shooting = shooting;
             }
         }
     });
@@ -136,7 +137,6 @@ function startGame() {
     var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
 
     // Create the player space ship
-    this.players = [];
     var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerHomingPewPew", "#FF9900");
     spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
     spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerParrallelFastPewPew", 2000, 100);
@@ -199,14 +199,14 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     player.bind("Dead", function() { player.explode(Crafty.e("Implosion")); });
     player.setPlayerColor(color);
     player.setGun(currentGun);
-    this.players.push(player);
+    players.push(player);
     return player;
 }
 
 function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
-    for (var i = 0; i < this.players.length; ++i) {
-        if (this.players[i].playerID === playerID) {
-            this.players[i].tween({x:xPos, y:yPos}, tweenTime);
+    for (var i = 0; i < players.length; ++i) {
+        if (players[i].playerID === playerID) {
+            players[i].tween({x:xPos, y:yPos}, tweenTime);
         }
     }
 }
