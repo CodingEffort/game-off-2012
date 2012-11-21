@@ -186,7 +186,7 @@ Crafty.c("PlayerHomingPewPew", {
 	init: function() {
 		this.requires("Gun")
 			.setProjectileType("PlayerHomingMissile")
-			.setDamage(50)
+			.setDamage(20)
 			.setShootDelay(300);
 	}
 });

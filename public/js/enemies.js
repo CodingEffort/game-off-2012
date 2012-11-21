@@ -24,10 +24,17 @@ Crafty.c("Enemy", {
         if (this.health > 0 && this.gun !== undefined && this.gun.projectileName !== undefined) { // we're alive
             for (var angleDiff in this.gun.shootAngles) {
                 // shoot the ammo
-                var pew = Crafty.e(this.gun.projectileName)
+                var pew = Crafty.e(this.gun.projectileName);
+
+                if (pew.setDamage === undefined)
+                {
+                    return;
+                }
+
+                pew
+                    .setDamage(this.gun.damage)
                     .collision()
-                    .onHit("Spaceship", onProjectileHitPlayer)
-                    .setDamage(this.gun.damage);
+                    .onHit("Spaceship", onProjectileHitPlayer);
                 var bounds = this.mbr();
                 var angleRad = toRadians(this.rotation);
                 pew.x = bounds._x + bounds._w/2 + Math.cos(angleRad) * bounds._w/2 - pew.w/2;
