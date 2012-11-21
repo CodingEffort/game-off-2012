@@ -10,7 +10,7 @@ module.exports = {
     url    : (process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME),
     db     : 'nixie'
   },
-  github: require(process.env.OPENSHIFT_DATA_DIR + './keys.js').github,
+  github: require((process.env.OPENSHIFT_DATA_DIR || '') + './keys.js').github,
   game: {
   
   }
