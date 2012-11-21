@@ -1,66 +1,107 @@
 function NetClient() {
+  var self = this;
+
   // Attributes
-  this.socket = io.connect();
+  this.socket = null;
+  this.player = null;
+
+  // Flow control
+  this.positionTimeout = null;
+  this.positionBuffer = null;
 
   // Events
   this.events = {
     connected: null,
     spawn: null,
+    despawn: null,
     join: null,
-    startshoot: null,
-    stopshoot: null,
+    shooting: null,
     position: null,
     powerup: null,
+    health: null,
     money: null,
     score: null,
     gun: null
   };
 
-  // Event manager
+  // Event management
   this.bind = function(event, callback) {
-    if (event in this.events) {
-      this.events[event] = callback;
+    if (event in self.events) {
+      self.events[event] = callback;
     }
   };
   this.unbind = function(event) {
-    if (event in this.events) {
-      this.events[event] = null;
+    if (event in self.events) {
+      self.events[event] = null;
     }
   };
 
-  // Socket managers
-  this.socket.on('connected', function() {
-    if (this.events.connected) this.events.connected();
-  });
-  this.socket.on('ping', function(data) {
-    this.socket.emit('pong', { t: new Date(), rx: new Date() - data.t });
-  });
-  this.socket.on('spawn', function(data) {
-    if (this.events.spawn) this.events.spawn(data.enemy);
-  });
-  this.socket.on('join', function(data) {
-    if (this.events.join) this.events.join(data.player);
-  });
-  this.socket.on('startshoot', function(data) {
-    if (this.events.startshoot) this.events.startshoot(data.player);
-  });
-  this.socket.on('stopshoot', function(data) {
-    if (this.events.stopshoot) this.events.stopshoot(data.player);
-  });
-  this.socket.on('position', function(data) {
-    if (this.events.position) this.events.position(data.player);
-  });
-  this.socket.on('powerup', function(data) {
-    if (this.events.powerup) this.events.powerup(data.powerup);
-  });
-  this.socket.on('money', function(data) {
-    if (this.events.money) this.events.money(data.money);
-  });
-  this.socket.on('score', function(data) {
-    if (this.events.score) this.events.score(data.score);
-  });
-  this.socket.on('gun', function(data) {
-    if (this.events.gun) this.events.gun(data.player, data.gun);
-  });
+  this.connect = function() {
+    // Connection boostrapping
+    self.socket = io.connect();
+
+    self.socket.on('ping', function(data) {
+      self.socket.emit('pong', { t: new Date(), rx: new Date() - data.t });
+    });
+    self.socket.on('setup', function(data) {
+      self.player = data.player;
+      if (self.events.connected) self.events.connected(self.player);
+    });
+
+    // Rx
+    self.socket.on('spawn', function(data) {
+      if (self.events.spawn) self.events.spawn(data.spawn);
+    });
+    self.socket.on('despawn', function(data) {
+      if (self.events.despawn) self.events.despawn(data.despawn);
+    });
+    self.socket.on('join', function(data) {
+      if (self.events.join) self.events.join(data.player);
+    });
+    self.socket.on('shooting', function(data) {
+      if (self.events.shooting) self.events.shooting(data.player, data.shooting);
+    });
+    self.socket.on('position', function(data) {
+      if (self.events.position) self.events.position(data.player, data.pos);
+    });
+    self.socket.on('powerup', function(data) {
+      if (self.events.powerup) self.events.powerup(data.player, data.powerup);
+    });
+    self.socket.on('money', function(data) {
+      if (self.events.money) self.events.money(data.money);
+    });
+    self.socket.on('score', function(data) {
+      if (self.events.score) self.events.score(data.score);
+    });
+    self.socket.on('gun', function(data) {
+      if (self.events.gun) self.events.gun(data.player, data.gun);
+    });
+  };
+
+  // Tx
+  this.position = function(x, y) {
+    self.player.pos = { x: x, y: y };
+    if (self.positionTimeout === null) {
+      self.socket.emit('position', self.player.pos);
+      self.positionTimeout = setTimeout(function() {
+        self.socket.emit('position', { pos: self.positionBuffer });
+        self.positionBuffer = null;
+        self.positionTimeout = null;
+      }, 500);
+    } else {
+      self.positionBuffer = self.player.pos;
+    }
+  };
+  this.shooting = function(shooting) {
+    self.player.shooting = shooting;
+    self.socket.emit('shooting', { shooting: shooting });
+  };
+  // Temp Tx, to be removed
+  this.powerup = function(powerup) {
+    self.socket.emit('powerup', { powerup: powerup });
+  };
+  this.despawn = function(obj) {
+    self.socket.emit('despawn', { despawn: obj });
+  };
 }
 

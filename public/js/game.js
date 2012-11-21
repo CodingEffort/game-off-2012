@@ -10,6 +10,9 @@
 var SCREEN_W = 700;
 var SCREEN_H = 600;
 
+// Initialize the network
+var nc = new NetClient();
+
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.canvas.init();
@@ -91,6 +94,29 @@ function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, 
 }
 
 function startGame() {
+    nc.bind('connected', function(player) {
+      // TODO: do some shit fuck with 'player'
+      // ==> player.id
+      // pretty much the only relevent and useful info for now (note, it's a string)
+    });
+    nc.connect();
+
+    /*
+     * TODO: Bind the event 'shooting'
+     * nc.bind('shooting', function(player, shooting) {
+     *    // Here 'player' is the player.id from 'connect'
+     *    // And 'shooting' is a bool for... well... fuck it, it's pretty obvious
+     * }
+     */
+
+    /*
+     * TODO: Bind the event 'position'
+     * nc.bind('position', function(player, pos) {
+     *    // Same here, 'player' is the 'player.id' from 'connect'
+     *    // And 'pos' is an object like this { x: 0, y: 0 }
+     * }
+     */
+
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
     var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
@@ -115,22 +141,23 @@ function startGame() {
         var targetY = Crafty.math.clamp(e.y - position.top - player.h/2, 0, SCREEN_H - player.h);
         player.x = Crafty.math.lerp(player.x, targetX, MOVE_LERP_SPEED);
         player.y = Crafty.math.lerp(player.y, targetY, MOVE_LERP_SPEED);
+        nc.position(player.x, player.y);
     });
 
     // Check to fire for the player.
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
         player.shooting = true;
-        //socket.emit('shooting', true);
+        nc.shooting(true);
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseup", function(e) {
         player.shooting = false;
-        //socket.emit('shooting', false);
+        nc.shooting(false);
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseout", function(e) {
         player.shooting = false;
-        //socket.emit('shooting', false);
+        nc.shooting(false);
     });
 
     //make the stage unselectable
