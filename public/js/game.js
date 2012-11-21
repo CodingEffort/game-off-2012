@@ -98,7 +98,7 @@ function startGame() {
 
     // Create the player space shit
     this.players = [];
-    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerForkYou", "#FF9900");
+    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerHomingPewPew", "#FF9900");
     spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
     spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerParrallelFastPewPew", 2000, 100);
     spawnInterwebz(400, 200, 69, "#0000FF", "PlayerFastPewPewSplit3", 5000, 200);

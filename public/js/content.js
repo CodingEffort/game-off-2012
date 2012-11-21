@@ -182,6 +182,15 @@ Crafty.c("PlayerMelee", {
 	}
 });
 
+Crafty.c("PlayerHomingPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setProjectileType("PlayerHomingMissile")
+			.setDamage(50)
+			.setShootDelay(300);
+	}
+});
+
 Crafty.c("PlayerFireBigPewPew", {
 	init: function() {
 		this.requires("Gun")
@@ -255,6 +264,67 @@ Crafty.c("PlayerMeleeLazor", {
 			this.x -= wDiff / 2;
 			this.y -= hDiff / 2;
 			this.collision();
+		});
+	}
+});
+
+Crafty.c("PlayerHomingMissile", {
+	init: function() {
+		this.requires("PlayerPewpew, pewpewlazors")
+			.crop(25, 0, 11, 12)
+			.setSpeed(10);
+
+		this.bind("EnterFrame", function() {
+			var ATTACK_DIST = 150;
+			var ATTACK_DIST_SQ = ATTACK_DIST * ATTACK_DIST;
+			var thisBounds = this.mbr();
+			var thisX = thisBounds._x + thisBounds._w/2;
+			var thisY = thisBounds._y + thisBounds._h/2;
+			var closest = null;
+			var closestX = null;
+			var closestY = null;
+			var closestDistance = 9999999999999;
+
+			var enemyIDs = Crafty("Enemy");
+			for (var i = 0; i < enemyIDs.length; ++i)
+			{
+				var enemy = Crafty(enemyIDs[i]);
+				var enemyBounds = enemy.mbr();
+				var enemyX = enemyBounds._x + enemyBounds._w/2;
+				var enemyY = enemyBounds._y + enemyBounds._h/2;
+				var distSq = Math.pow(enemyX-thisX,2) + Math.pow(enemyY-thisY,2);
+
+				if (distSq <= ATTACK_DIST_SQ && distSq < closestDistance)
+				{
+					closestDistance = distSq;
+					closest = enemy;
+					closestX = enemyX;
+					closestY = enemyY;
+				}
+			}
+
+			if (closest !== null)
+			{
+				var MAX_STEER = 1;
+				var steerX = closestX - thisX;
+				var steerY = closestY - thisY;
+				var steerL = Math.sqrt(steerX*steerX + steerY*steerY);
+
+				steerX /= steerL;
+				steerX *= MAX_STEER;
+				steerY /= steerL;
+				steerY *= MAX_STEER;
+
+				var orientation = Math.atan2(this.moveY, this.moveX);
+				var currentX = Math.cos(orientation);
+				var currentY = Math.sin(orientation);
+
+				var newAngleRad = Math.atan2(currentY + steerY, currentX + steerX);
+				var newAngle = Crafty.math.radToDeg(newAngleRad);
+				this.rotation = newAngle+90;
+				this.moveX = Math.cos(newAngleRad);
+                this.moveY = Math.sin(newAngleRad);
+			}
 		});
 	}
 });
