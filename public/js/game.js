@@ -29,14 +29,15 @@ Crafty.sprite(50, "assets/back.png", {
     heal: [11, 12],
     teleport: [0, 13],
     easiestboss: [13, 12],
-    easyboss: [14, 12]
+    easyboss: [14, 12],
+    firinmylazor: [5, 13]
     });
 
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
     e[0].obj.hurt(this.damage); // hurt the enemy
     checkToGiveEnemyCashToPlayer(e[0].obj, this.owner);
-    this.destroy(); // remove the pew pew lazor
+    if (this.owner === undefined || !this.owner.gun.isUnique) this.destroy(); // remove the pew pew lazor
 }
 
 function onPlayerHitEnemy(e) {
@@ -97,7 +98,7 @@ function startGame() {
 
     // Create the player space shit
     this.players = [];
-    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerMelee", "#FF9900");
+    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerFireBigPewPew", "#FF9900");
     spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
     spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerParrallelFastPewPew", 2000, 100);
     spawnInterwebz(400, 200, 69, "#0000FF", "PlayerFastPewPewSplit3", 5000, 200);
@@ -133,7 +134,6 @@ function startGame() {
         //socket.emit('shooting', false);
     });
 
-    //make the stage unselectable
 
     // We bring the enemies
     spawner.startSpawning();
@@ -145,9 +145,9 @@ function startGame() {
 
 
     spawnPowerup('ShieldPowerup', 100, 100);
-    spawnPowerup('ShieldPowerup', 500, 100);
-    spawnPowerup('HealPowerup', 200, 100);
-    spawnPowerup('HealPowerup', 400, 300);
+    spawnPowerup('ShieldPowerup', SCREEN_W-300, 100);
+    spawnPowerup('HealPowerup', 300, 100);
+    spawnPowerup('HealPowerup', SCREEN_W-100, 100);
 }
 
 function spawnPlayer(x, y, playerID, currentGun, color) {
@@ -193,6 +193,7 @@ function spawnNextEnemy() {
     else if (r <= 65) spawnEnemy('EasiestBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZag", "LameFastLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
     else if (r <= 70) spawnEnemy('EasiestBossAiming', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "LameFastLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
     else if (r <= 75) spawnEnemy('EasyBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "CircularEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else {}
+    else if (r <= 80) spawnPowerup('ShieldPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
+    else if (r <= 85) spawnPowerup('HealPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
     
 }

@@ -182,6 +182,16 @@ Crafty.c("PlayerMelee", {
 	}
 });
 
+Crafty.c("PlayerFireBigPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setProjectileType("PlayerFiringMyLazor")
+			.setDamage(5)
+			.setUnique(true)
+			.setShootDelay(0);
+	}
+});
+
 /************************************************************************/
 /*********************    PLAYER GUN PROJECTILES    *********************/
 /************************************************************************/
@@ -235,6 +245,24 @@ Crafty.c("PlayerMeleeLazor", {
 			this.h *= SCALE_MOD;
 			this.x -= wDiff / 2;
 			this.y -= hDiff / 2;
+			this.collision();
+		});
+	}
+});
+
+Crafty.c("PlayerFiringMyLazor", {
+	init: function() {
+		this.requires("PlayerPewpew, firinmylazor, FadeIn, FadeOut")
+			.crop(0,0,25,50)
+			.setSpeed(0)
+			.attr({z:105})
+			.fadeIn(0.2);
+
+		this.bind("EnterFrame", function() {
+			var oBounds = this.owner.mbr();
+			this.h = oBounds._y + oBounds._h;
+			this.y = 0;
+			this.x = oBounds._x + oBounds._w/2 - this.w/2;
 			this.collision();
 		});
 	}

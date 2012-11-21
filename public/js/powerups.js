@@ -52,7 +52,8 @@ function onPlayerPickedPowerup(e) {
 Crafty.c("PowerupItem", {
 	init: function() {
 		this.requires("2D, Canvas, Collision, FadeIn")
-			.origin("center");
+			.origin("center")
+			.attr({z:1000});
 
 		this.t = 0;
 		this.scaleFactor = 1;
@@ -86,7 +87,8 @@ Crafty.c("PowerupItem", {
 
 Crafty.c("PowerupObject", {
 	init: function() {
-		this.requires("2D, Canvas, Collision, FadeIn");
+		this.requires("2D, Canvas, Collision, FadeIn")
+			.attr({z:900});
 
 		this.bind("Remove", function() {
 			delete this.player.powerups[this.powerupName];

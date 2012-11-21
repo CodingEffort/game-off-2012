@@ -69,7 +69,8 @@ Crafty.c("FadeOut", {
 // and moves every frame.
 Crafty.c("Projectile", {
     init: function() {
-        this.requires("NotifyWhenOutOfScreen, 2D, Canvas, Collision");
+        this.requires("NotifyWhenOutOfScreen, 2D, Canvas, Collision")
+          .attr({z:50});
 
         this.bind("EnterFrame", function() {
             this.x += this.moveX * this.speed;
@@ -178,7 +179,8 @@ Crafty.c("HasHealth", {
 // Represents a living entity, with health, that can die and explode.
 Crafty.c("Living", {
     init: function() {
-        this.requires("HasHealth, 2D, Canvas, Sprite");
+        this.requires("HasHealth, 2D, Canvas, Sprite")
+          .attr({z:100});
         this.isPlayer = false;
 
         this.bind("Hurt", function() {
@@ -326,6 +328,7 @@ Crafty.c("Gun", {
         this.shootDelay = 0;
         this.shootAngles = [0];
         this.xDeltas = [0];
+        this.isUnique = false;
     },
     setDamage: function(dmg) {
         this.damage = dmg; return this;
@@ -345,5 +348,8 @@ Crafty.c("Gun", {
     // shoot ahead 2 shots parrallel to each other.
     setProjectilesXDeltas: function(deltas) {
         this.xDeltas = deltas; return this;
+    },
+    setUnique: function(isUnique) {
+        this.isUnique = isUnique; return this;
     }
 });
