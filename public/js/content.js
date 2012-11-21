@@ -186,9 +186,18 @@ Crafty.c("PlayerFireBigPewPew", {
 	init: function() {
 		this.requires("Gun")
 			.setProjectileType("PlayerFiringMyLazor")
-			.setDamage(5)
+			.setDamage(3)
 			.setUnique(true)
 			.setShootDelay(0);
+	}
+});
+
+Crafty.c("PlayerForkYou", {
+	init: function() {
+		this.requires("Gun")
+			.setProjectileType("PlayerForkLazor")
+			.setDamage(20)
+			.setShootDelay(30);
 	}
 });
 
@@ -265,5 +274,13 @@ Crafty.c("PlayerFiringMyLazor", {
 			this.x = oBounds._x + oBounds._w/2 - this.w/2;
 			this.collision();
 		});
+	}
+});
+
+Crafty.c("PlayerForkLazor", {
+	init: function() {
+		this.requires("PlayerPewpew, pewpewlazors")
+            .crop(18,0,7,12)
+            .setSpeed(17);
 	}
 });
