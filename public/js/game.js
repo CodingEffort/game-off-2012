@@ -92,8 +92,6 @@ function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, 
 }
 
 function startGame() {
-    reusable = {};
-
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
     var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
