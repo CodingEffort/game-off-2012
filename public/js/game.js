@@ -102,11 +102,19 @@ function startGame() {
     nc.connect();
 
     /*
+     * TODO: Bind the event 'join'
+     * nc.bind('join', function(player) {
+     *    // ==> player.id
+     *    // The only important bit of information so far
+     * });
+     */
+
+    /*
      * TODO: Bind the event 'shooting'
      * nc.bind('shooting', function(player, shooting) {
      *    // Here 'player' is the player.id from 'connect'
      *    // And 'shooting' is a bool for... well... fuck it, it's pretty obvious
-     * }
+     * });
      */
 
     /*
@@ -114,7 +122,7 @@ function startGame() {
      * nc.bind('position', function(player, pos) {
      *    // Same here, 'player' is the 'player.id' from 'connect'
      *    // And 'pos' is an object like this { x: 0, y: 0 }
-     * }
+     * });
      */
 
     // Create an infinite background illusion with 2 images moving

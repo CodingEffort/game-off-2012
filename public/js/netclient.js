@@ -50,10 +50,10 @@ function NetClient() {
 
     // Rx
     self.socket.on('spawn', function(data) {
-      if (self.events.spawn) self.events.spawn(data.spawn);
+      if (self.events.spawn) self.events.spawn(data.type, data.spawn);
     });
     self.socket.on('despawn', function(data) {
-      if (self.events.despawn) self.events.despawn(data.despawn);
+      if (self.events.despawn) self.events.despawn(data.type, data.despawn);
     });
     self.socket.on('join', function(data) {
       if (self.events.join) self.events.join(data.player);
