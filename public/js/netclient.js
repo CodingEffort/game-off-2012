@@ -80,14 +80,16 @@ function NetClient() {
 
   // Tx
   this.position = function(x, y) {
-    self.player.pos = { x: x, y: y };
+    self.player.pos = { x: Math.round(x), y: Math.round(y) };
     if (self.positionTimeout === null) {
       self.socket.emit('position', self.player.pos);
       self.positionTimeout = setTimeout(function() {
-        self.socket.emit('position', { pos: self.positionBuffer });
-        self.positionBuffer = null;
+        if (self.positionBuffer) {
+          self.socket.emit('position', { pos: self.positionBuffer });
+          self.positionBuffer = null;
+        }
         self.positionTimeout = null;
-      }, 500);
+      }, 250);
     } else {
       self.positionBuffer = self.player.pos;
     }

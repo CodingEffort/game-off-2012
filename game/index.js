@@ -27,14 +27,30 @@ function Player(socket) {
     };
   };
 
+  this.socket.on('disconnect', function() {
+    self.socket.broadcast.emit('despawn', { type: 'player', despawn: self.id });
+    delete players[self.id];
+  });
+
   this.socket.emit('setup', { player: this.serialize() });
+  this.socket.broadcast.emit('spawn', { type: 'player', spawn: this.serialize() });
+  for (var i in players) {
+    if (i != this.id) {
+      this.socket.emit('spawn', { type: 'player', spawn: players[i].serialize() });
+    }
+  }
 
   this.socket.on('shooting', function(data) {
-    self.socket.broadcast.emit('shooting', { player: self.id, shooting: data.shooting });
+    if (data.shooting !== undefined)
+      self.socket.broadcast.emit('shooting', { player: self.id, shooting: data.shooting });
   });
   this.socket.on('position', function(data) {
-    self.pos = data.pos;
-    self.socket.broadcast.emit('position', { player: self.id, pos: self.pos });
+    if (data.pos && data.pos.x !== undefined && data.pos.y !== undefined) {
+      self.pos = data.pos;
+      self.pos.x = Math.round(self.pos.x);
+      self.pos.y = Math.round(self.pos.y);
+      self.socket.broadcast.emit('position', { player: self.id, pos: self.pos });
+    }
   });
 }
 

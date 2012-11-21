@@ -13,6 +13,9 @@ var SCREEN_H = 600;
 // Initialize the network
 var nc = new NetClient();
 
+var players = [];
+var me = null;
+
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.canvas.init();
@@ -35,6 +38,15 @@ Crafty.sprite(50, "assets/back.png", {
     easyboss: [14, 12],
     firinmylazor: [5, 13]
     });
+
+function getPlayerById(playerID) {
+  for (var i = players.length; i >= 0; --i) {
+    if (players[i].playerID == playerID) {
+      return players[i];
+    }
+  }
+  return null;
+}
 
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
@@ -95,54 +107,52 @@ function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, 
 }
 
 function startGame() {
-    var players = [];
     nc.bind('connected', function(player) {
-      // TODO: do some shit fuck with 'player'
-      // ==> player.id
-      // pretty much the only relevent and useful info for now (note, it's a string)
-      spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
+      me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
     });
     nc.connect();
 
-    /*
-     * TODO: Bind the event 'join'*/
-     nc.bind('join', function(player) {
-            // ==> player.id
-            // The only important bit of information so far
-            spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
-     });
-
-    /*
-     * TODO: Bind the event 'shooting'*/
     nc.bind('shooting', function(player, shooting) {
-        // Here 'player' is the player.id from 'connect'
-        // And 'shooting' is a bool for... well... fuck it, it's pretty obvious
-        for (var i = 0; i < players.length; ++i) {
-            if (players[i].playerID === player) {
-                players[i].shooting = shooting;
-            }
-        }
+      var p = getPlayerById(player);
+      if (p) p.shooting = shooting;
     });
 
-    /*
-     * TODO: Bind the event 'position'*/
     nc.bind('position', function(player, pos) {
-       // Same here, 'player' is the 'player.id' from 'connect'
-       // And 'pos' is an object like this { x: 0, y: 0 }
-       forcePlayerPosition(player, pos.x, pos.y, 500);
+      forcePlayerPosition(player, pos.x, pos.y, 5);
+    });
+
+    nc.bind('spawn', function(type, spawn) {
+      if (type == 'player') {
+        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerForkYou", "#FF0000");
+      } else if (type == 'enemy') {
+        // TODO: spawn the enemy
+      } else if (type == 'powerup') {
+        // TODO: spawn the powerup
+      }
+    });
+
+    nc.bind('despawn', function(type, despawn) {
+      if (type == 'player') {
+        var p = getPlayerById(despawn);
+        if (p) p.destroy();
+      } else if (type == 'enemy') {
+        // TODO: destroy the enemy
+      } else if (type == 'powerup') {
+        // TODO: destroy the powerup
+      }
     });
 
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
-    var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
+    var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // LOL WTF?
 
     // Create the player space ship
-    var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerHomingPewPew", "#FF9900");
-    /*spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
-    spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerParrallelFastPewPew", 2000, 100);
-    spawnInterwebz(400, 200, 69, "#0000FF", "PlayerFastPewPewSplit3", 5000, 200);
-    spawnInterwebz(100, 400, 101, "#FFFFFF", "PlayerFastPewPewSplit5", 3000, 300);
-    spawnInterwebz(600, 200, 5, "#AAAAAA", "PlayerFireBigPewPew", 3000, 300);*/
+    //var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerHomingPewPew", "#FF9900");
+    //spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
+    //spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerParrallelFastPewPew", 2000, 100);
+    //spawnInterwebz(400, 200, 69, "#0000FF", "PlayerFastPewPewSplit3", 5000, 200);
+    //spawnInterwebz(100, 400, 101, "#FFFFFF", "PlayerFastPewPewSplit5", 3000, 300);
+    //spawnInterwebz(600, 200, 5, "#AAAAAA", "PlayerFireBigPewPew", 3000, 300);
 
     // TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
     var spawner = Crafty.e("Spawner").setSpawnFunction(spawnNextEnemy);
@@ -153,26 +163,26 @@ function startGame() {
 
         var position = $("#cr-stage").position();
 
-        var targetX = Crafty.math.clamp(e.x - position.left - player.w/2, 0, SCREEN_W - player.w);
-        var targetY = Crafty.math.clamp(e.y - position.top - player.h/2, 0, SCREEN_H - player.h);
-        player.x = Crafty.math.lerp(player.x, targetX, MOVE_LERP_SPEED);
-        player.y = Crafty.math.lerp(player.y, targetY, MOVE_LERP_SPEED);
-        nc.position(player.x, player.y);
+        var targetX = Crafty.math.clamp(e.x - position.left - me.w/2, 0, SCREEN_W - me.w);
+        var targetY = Crafty.math.clamp(e.y - position.top - me.h/2, 0, SCREEN_H - me.h);
+        me.x = Crafty.math.lerp(me.x, targetX, MOVE_LERP_SPEED);
+        me.y = Crafty.math.lerp(me.y, targetY, MOVE_LERP_SPEED);
+        nc.position(me.x, me.y);
     });
 
     // Check to fire for the player.
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
-        player.shooting = true;
+        me.shooting = true;
         nc.shooting(true);
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseup", function(e) {
-        player.shooting = false;
+        me.shooting = false;
         nc.shooting(false);
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseout", function(e) {
-        player.shooting = false;
+        me.shooting = false;
         nc.shooting(false);
     });
 
@@ -181,8 +191,8 @@ function startGame() {
     spawner.startSpawning();
 
     this.ui = Crafty.e("UI");
-    player.bind("CashChanged", function() {
-        ui.setCashAmount(player.cash);
+    me.bind("CashChanged", function() {
+        ui.setCashAmount(me.cash);
     });
 
 
