@@ -86,24 +86,26 @@ Crafty.c("Spawner", {
 
 //TEMP UNTIL MULTIPLAYER
 function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, lerpTime) {
-    var interwebz = spawnPlayer(startX, startY, playerID, gun, color).bind("EnterFrame", function() { this.shoot(); });
+    var interwebz = spawnPlayer(startX, startY, playerID, gun, color).bind("EnterFrame", function() { this.shooting = true; });
     setInterval(function() { forcePlayerPosition(interwebz.playerID, Crafty.math.randomInt(0, SCREEN_W),
         Crafty.math.randomInt(0, SCREEN_H), lerpTime); }, timeForChangePos);
 }
 
 function startGame() {
+    reusable = {};
+
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
     var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H;
 
-    // Create the player space shit
+    // Create the player space ship
     this.players = [];
     var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerHomingPewPew", "#FF9900");
     spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
     spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerParrallelFastPewPew", 2000, 100);
     spawnInterwebz(400, 200, 69, "#0000FF", "PlayerFastPewPewSplit3", 5000, 200);
     spawnInterwebz(100, 400, 101, "#FFFFFF", "PlayerFastPewPewSplit5", 3000, 300);
-    spawnInterwebz(700, 200, 5, "#AAAAAA", "PlayerFireBigPewPew", 3000, 300);
+    spawnInterwebz(600, 200, 5, "#AAAAAA", "PlayerFireBigPewPew", 3000, 300);
 
     // TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
     var spawner = Crafty.e("Spawner").setSpawnFunction(spawnNextEnemy);
@@ -173,9 +175,10 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, pathType, gunType, speedModificator, cashValue) {
-    var enemy = Crafty.e(enemyType).attr({x:startX, y:startY})
-                                    .collision()
-                                    .onHit("Spaceship", onPlayerHitEnemy);
+    var enemy = Crafty.e(enemyType);
+    enemy.attr({x:startX, y:startY})
+        .collision()
+        .onHit("Spaceship", onPlayerHitEnemy);
     enemy.followPath(getPath(pathType, startX, startY), speedModificator);
     enemy.cash = cashValue;
     enemy.bind("Dead", function() { enemy.explode(Crafty.e("Explosion")); });
