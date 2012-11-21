@@ -89,7 +89,7 @@ Crafty.c("LameShotgunEnemyPewPew", {
 			.setProjectilesAngleDeltas([-1,0,1]);
 	}
 });
-Crafty.c("LameFastLargeShotgunEnemyPewPew", {
+Crafty.c("LameLargeShotgunEnemyPewPew", {
 	init: function() {
 		this.requires("Gun")
 			.setDamage(5)

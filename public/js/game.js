@@ -190,8 +190,8 @@ function spawnNextEnemy() {
     else if (r <= 20) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontal", "LameConeEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
     else if (r <= 40) spawnEnemy('Grunt', Crafty.math.randomInt(50, SCREEN_W/2), -50, "TopLeftBottomRight", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 1);
     else if (r <= 60) spawnEnemy('Grunt', Crafty.math.randomInt(SCREEN_W/2, SCREEN_W-50), -50, "TopRightBottomLeft", "LameEnemyPewPew", Crafty.math.randomNumber(0.7, 1.3), 1);
-    else if (r <= 65) spawnEnemy('EasiestBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZag", "LameFastLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 70) spawnEnemy('EasiestBossAiming', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "LameFastLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 65) spawnEnemy('EasiestBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZag", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 70) spawnEnemy('EasiestBossAiming', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
     else if (r <= 75) spawnEnemy('EasyBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "CircularEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
     else if (r <= 80) spawnPowerup('ShieldPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
     else if (r <= 85) spawnPowerup('HealPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
