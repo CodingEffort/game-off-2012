@@ -99,32 +99,37 @@ function startGame() {
       // TODO: do some shit fuck with 'player'
       // ==> player.id
       // pretty much the only relevent and useful info for now (note, it's a string)
+      spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
     });
     nc.connect();
 
     /*
-     * TODO: Bind the event 'join'
-     * nc.bind('join', function(player) {
-     *    // ==> player.id
-     *    // The only important bit of information so far
-     * });
-     */
+     * TODO: Bind the event 'join'*/
+     nc.bind('join', function(player) {
+            // ==> player.id
+            // The only important bit of information so far
+            spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
+     });
 
     /*
-     * TODO: Bind the event 'shooting'
-     * nc.bind('shooting', function(player, shooting) {
-     *    // Here 'player' is the player.id from 'connect'
-     *    // And 'shooting' is a bool for... well... fuck it, it's pretty obvious
-     * });
-     */
+     * TODO: Bind the event 'shooting'*/
+    nc.bind('shooting', function(player, shooting) {
+        // Here 'player' is the player.id from 'connect'
+        // And 'shooting' is a bool for... well... fuck it, it's pretty obvious
+        for (var i = 0; i < this.players.length; ++i) {
+            if (this.players[i].playerID === player) {
+                this.players[i].shooting = shooting;
+            }
+        }
+    });
 
     /*
-     * TODO: Bind the event 'position'
-     * nc.bind('position', function(player, pos) {
-     *    // Same here, 'player' is the 'player.id' from 'connect'
-     *    // And 'pos' is an object like this { x: 0, y: 0 }
-     * });
-     */
+     * TODO: Bind the event 'position'*/
+    nc.bind('position', function(player, pos) {
+       // Same here, 'player' is the 'player.id' from 'connect'
+       // And 'pos' is an object like this { x: 0, y: 0 }
+       forcePlayerPosition(player, pos.x, pos.y, 500);
+    });
 
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
