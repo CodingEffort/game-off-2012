@@ -37,6 +37,10 @@ module.exports = function(socket) {
     // TODO
   });
 
+  this.socket.on('disconnect', function() {
+    self.worldline.removePlayer(self);
+  });
+
   this.socket.on('shooting', function(data) {
     if (data.shooting !== undefined) {
       self.shooting = !!data.shooting;

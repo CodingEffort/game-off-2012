@@ -47,7 +47,9 @@ Crafty.sprite(50, "assets/back.png", {
 function onLazorHitEnemy(e) {
     e[0].obj.hurt(this.damage); // hurt the enemy
     checkToGiveEnemyCashToPlayer(e[0].obj, this.owner);
-    if (this.owner === undefined || !this.owner.gun.isUnique) this.destroy(); // remove the pew pew lazor
+    if (this.owner === undefined || (!this.owner.gun.isUnique &&
+        this.destroyedOnContact))
+        this.destroy(); // remove the pew pew lazor
 }
 
 function onPlayerHitEnemy(e) {
@@ -62,7 +64,7 @@ function checkToGiveEnemyCashToPlayer(enemy, player) {
 
 function onProjectileHitPlayer(e) {
     hurtPlayer(e[0].obj, this.damage);
-    this.destroy();
+    if (this.destroyedOnContact) this.destroy();
 }
 
 function hurtPlayer(player, dmg) {
@@ -113,7 +115,7 @@ function startGame() {
         me = players[player.id];
         delete players[player.id];
       } else {
-        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerHomingPewPew", "#FF0000");
+        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
       }
       me.bind('CashChanged', function() {
         ui.setCashAmount(me.cash);
@@ -131,7 +133,7 @@ function startGame() {
 
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
-        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerHomingPewPew", "#FF0000");
+        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerForkYou", "#FF0000");
       } else if (type == 'enemy') {
         // TODO: spawn the enemy
       } else if (type == 'powerup') {
@@ -181,22 +183,28 @@ function startGame() {
 
     // Check to fire for the player.
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
-        me.shooting = true;
-        nc.shooting(true);
+        if (me) {
+            me.shooting = true;
+            nc.shooting(true);
+        }
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseup", function(e) {
-        me.shooting = false;
-        nc.shooting(false);
+        if (me) {
+            me.shooting = false;
+            nc.shooting(false);
+        }
     });
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseout", function(e) {
-        me.shooting = false;
-        nc.shooting(false);
+        if (me) {
+            me.shooting = false;
+            nc.shooting(false);
+        }
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("NormalBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "PulseEnemyPewPew", 1.0, 10);
+    spawnEnemy("EasyBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "PulseEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();

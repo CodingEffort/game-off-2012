@@ -135,7 +135,7 @@ Crafty.c("EnemyRegularLazor", {
 	init: function() {
         this.requires("EnemyProjectile, enemypewpew")
             .setSpeed(10)
-            .crop(0,0,3,12);
+            .crop(28,0,12,3);
     }
 });
 
@@ -143,25 +143,29 @@ Crafty.c("EnemySmallLazor", {
 	init: function() {
 		this.requires("EnemyProjectile, enemypewpew")
 			.setSpeed(12)
-			.crop(9,0,3,12);
+			.crop(28,9,12,3);
 	}
 });
 
 Crafty.c("EnemyPulseLazor", {
 	init: function() {
 		this.requires("EnemyProjectile, enemypewpew, FadeOut")
-			.setSpeed(10)
-			.crop(0,18,24,22)
-			.fadeOut(0.05);
+			.setSpeed(0)
+			.crop(0,0,22,24)
+			.fadeOut(0.05)
+			.setIsDestroyedOnContact(false)
+			.origin("center");
 
 		this.bind("EnterFrame", function() {
-			var SCALE_MOD = 1.1;
+			var SCALE_MOD = 1.2;
+			this.damage *= 0.9;
 			this.w *= SCALE_MOD;
 			this.h *= SCALE_MOD;
 			var ownerB = this.owner.mbr();
-			this.x = ownerB._x + ownerB._w/2 + this.w/2;
-			this.y = ownerB._y + ownerB._h/2 + this.h/2;
-			this.collision(Crafty.circle(this.x, this.y, this.w));
+			var thisB = this.mbr();
+			this.x = ownerB._x + ownerB._w/2 - thisB._w/2;
+			this.y = ownerB._y + ownerB._h/2 - thisB._h/2;
+			this.origin("center").collision();
 		});
 	}
 });
@@ -212,7 +216,7 @@ Crafty.c("PlayerMelee", {
 	init: function() {
 		this.requires("Gun")
 			.setProjectileType("PlayerMeleeLazor")
-			.setDamage(20)
+			.setDamage(10)
 			.setShootDelay(50);
 	}
 });
@@ -252,7 +256,7 @@ Crafty.c("PlayerForkYou", {
 Crafty.c("PlayerSmallLazor", {
     init: function() {
         this.requires("PlayerPewpew, pewpewlazors")
-            .crop(6,0,3,12)
+            .crop(28,6,12,3)
             .setSpeed(16);
     }
 });
@@ -261,7 +265,7 @@ Crafty.c("PlayerSmallLazor", {
 Crafty.c("PlayerParrallelLazor", {
     init: function() {
         this.requires("PlayerPewpew, pewpewlazors")
-            .crop(3,0,3,12)
+            .crop(28,3,12,3)
             .setSpeed(15);
     }
 });
@@ -269,7 +273,7 @@ Crafty.c("PlayerParrallelLazor", {
 Crafty.c("PlayerSplit3Lazor", {
 	init: function() {
 		this.requires("PlayerPewpew, pewpewlazors")
-            .crop(12,0,3,12)
+            .crop(28,12,12,3)
             .setSpeed(14);
 	}
 });
@@ -277,7 +281,7 @@ Crafty.c("PlayerSplit3Lazor", {
 Crafty.c("PlayerSplit5Lazor", {
 	init: function() {
 		this.requires("PlayerPewpew, pewpewlazors")
-            .crop(15,0,3,12)
+            .crop(28,15,12,3)
             .setSpeed(13);
 	}
 });
@@ -285,19 +289,29 @@ Crafty.c("PlayerSplit5Lazor", {
 Crafty.c("PlayerMeleeLazor", {
 	init: function() {
 		this.requires("PlayerPewpew, pewpewlazors, FadeOut")
-			.crop(0,12,40,6)
+			.crop(0,36,40,6)
 			.setSpeed(15)
-			.fadeOut(0.1);
+			.setIsDestroyedOnContact(false)
+			.fadeOut(0.1)
+			.setAllowRotation(false)
+			.origin("center");
+
+		this.moveY = -1;
 
 		this.bind("EnterFrame", function() {
+			if (!this.startX)
+			{
+				var oBounds = this.owner.mbr();
+				this.startX = oBounds._x + oBounds._w/2;
+			}
 			this.damage *= 0.8;
+			var thisB = this.mbr();
 			var SCALE_MOD = 1.2;
-			var wDiff = this.w * (SCALE_MOD - 1.0);
-			var hDiff = this.h * (SCALE_MOD - 1.0);
 			this.w *= SCALE_MOD;
 			this.h *= SCALE_MOD;
-			this.x -= wDiff / 2;
-			this.y -= hDiff / 2;
+
+			this.x = this.startX - this.w/2;
+
 			this.collision();
 		});
 	}
@@ -306,7 +320,7 @@ Crafty.c("PlayerMeleeLazor", {
 Crafty.c("PlayerHomingMissile", {
 	init: function() {
 		this.requires("PlayerPewpew, pewpewlazors")
-			.crop(25, 0, 11, 12)
+			.crop(28, 25, 12, 11)
 			.setSpeed(10);
 
 		this.bind("EnterFrame", function() {
@@ -356,7 +370,7 @@ Crafty.c("PlayerHomingMissile", {
 
 				var newAngleRad = Math.atan2(currentY + steerY, currentX + steerX);
 				var newAngle = Crafty.math.radToDeg(newAngleRad);
-				this.rotation = newAngle+90;
+				this.rotation = newAngle;
 				this.moveX = Math.cos(newAngleRad);
                 this.moveY = Math.sin(newAngleRad);
 			}
@@ -370,6 +384,7 @@ Crafty.c("PlayerFiringMyLazor", {
 			.crop(0,0,25,50)
 			.setSpeed(0)
 			.attr({z:105})
+			.setAllowRotation(false)
 			.fadeIn(0.2);
 
 		this.bind("EnterFrame", function() {
@@ -385,7 +400,7 @@ Crafty.c("PlayerFiringMyLazor", {
 Crafty.c("PlayerForkLazor", {
 	init: function() {
 		this.requires("PlayerPewpew, pewpewlazors")
-            .crop(18,0,7,12)
+            .crop(28,18,12,7)
             .setSpeed(17);
 	}
 });

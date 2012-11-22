@@ -72,6 +72,9 @@ Crafty.c("Projectile", {
         this.requires("NotifyWhenOutOfScreen, 2D, Canvas, Collision")
           .attr({z:50});
 
+        this.destroyedOnContact = true;
+        this.allowRotation = true;
+
         this.bind("EnterFrame", function() {
             this.x += this.moveX * this.speed;
             this.y += this.moveY * this.speed;
@@ -81,19 +84,28 @@ Crafty.c("Projectile", {
             this.destroy();
         });
     },
+    setAllowRotation: function(allowRotation) {
+      this.allowRotation = allowRotation; return this;
+    },
     setDamage: function(dmg) {
         this.damage = dmg;
         return this;
     },
     setAngle: function(angle) {
-        this.rotation = angle;
-        this.moveX = Math.cos(toRadians(angle-90));
-        this.moveY = Math.sin(toRadians(angle-90));
+        if (this.allowRotation) this.rotation = angle;
+        else angle = 0;
+
+        this.moveX = Math.cos(toRadians(this.rotation));
+        this.moveY = Math.sin(toRadians(this.rotation));
         return this;
     },
     setSpeed: function(speed) {
         this.speed = speed;
         return this;
+    },
+    setIsDestroyedOnContact: function(destroyedOnContact) {
+      this.destroyedOnContact = destroyedOnContact;
+      return this;
     }
 });
 
@@ -148,7 +160,8 @@ Crafty.c("FollowPath", {
     },
     followPath: function(func, speedModificator) { this.path = func; this.speedModificator = speedModificator; return this; },
     allowRotation: function(allow) { this.showRotation = allow; return this; },
-    alwaysLookDown: function() { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation = 90; }); return this; },
+    alwaysKeepRotation: function(rot) { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation = rot; }); return this; },
+    alwaysLookDown: function() { return this.alwaysKeepRotation(90); },
     rotateEveryFrame: function(amount) { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation += amount; }); }
 });
 
@@ -226,7 +239,9 @@ Crafty.c("HealthBar", {
         });
 
         this.bind("EnterFrame", function() {
-            this.bar.text(Math.floor(this.health));
+            var displayHP = Math.floor(this.health);
+            if (displayHP < 1 && displayHP > 0) displayHP=1; // don't show 0 when it's 0.xxxx
+            this.bar.text(displayHP);
             if (this.hpBarColor === null)
             {
                 var percent = this.health / this.maxHealth;

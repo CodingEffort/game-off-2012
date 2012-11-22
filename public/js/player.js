@@ -9,11 +9,12 @@
  // Main spaceship object
 Crafty.c("Spaceship", {
     init: function() {
-        this.requires("2D, Canvas, ship, SpriteColor, Living, HealthBar, Tween")
+        this.requires("2D, Canvas, ship, SpriteColor, Living, HealthBar, Tween, Collision")
             .setMaxHealth(100)
             .setIsPlayer(true)
             .crop(0,0,35,35)
-            .attr({z:this.z+10});
+            .attr({z:this.z+10})
+            .collision();
         this.canShoot = true;
         this.powerups = {};
         this.playerID = null;
@@ -82,6 +83,7 @@ Crafty.c("Spaceship", {
             }
 
             this.shootingUniqueWeapon = this.gun.isUnique;
+            var bounds = this.mbr();
             for (var i = 0; i < Math.max(this.gun.xDeltas.length, this.gun.shootAngles.length); ++i) {
                 var pew = Crafty.e(this.gun.projectileName);
 
@@ -90,14 +92,37 @@ Crafty.c("Spaceship", {
                     this.uniqueAmmoShot = pew;
                 }
 
+
                 pew.owner = this;
-                pew.collision()
-                    .onHit("Enemy", onLazorHitEnemy)
-                    .setDamage(this.gun.damage);
-                // Spawn it above the player's center, to shoot them pewpews
-                pew.x = this.x + this.w/2 - pew.w/2 + (this.gun.xDeltas[i] || 0);
-                pew.y = this.y - this.h/2 - 0.3*pew.h;
-                pew.setAngle(this.gun.shootAngles[i] || 0);
+                pew.setDamage(this.gun.damage);
+                var pewBounds = pew.mbr();
+                var relPewPos;
+                if (pew.allowRotation)
+                {
+                    pew.setAngle(-90 + (this.gun.shootAngles[i] || 0));//shoot upwards
+                    var angleRad = toRadians(pew.rotation);
+                    var noRotX = bounds._w/2 - pewBounds._w/2;
+                    var noRotY = -pewBounds._h/2;
+                    var noRotationPewPos = new Crafty.math.Vector2D(noRotX, noRotY);
+
+                    var rotMat = new Crafty.math.Matrix2D();
+                    rotMat.rotate(angleRad);
+                    relPewPos = rotMat.apply(noRotationPewPos);
+                }
+                else
+                {
+                    relPewPos = new Crafty.math.Vector2D(-pewBounds._w/2, -bounds._h/2 - pewBounds._h/2);
+                    console.log(relPewPos);
+                }
+
+                var thisCenterX = bounds._x + bounds._w/2;
+                var thisCenterY = bounds._y + bounds._h/2;
+
+                pew.x = thisCenterX + relPewPos.x + (this.gun.xDeltas[i] || 0);
+                pew.y = thisCenterY + relPewPos.y;
+
+
+                pew.collision().onHit("Enemy", onLazorHitEnemy);
             }
             this.reload();
         }

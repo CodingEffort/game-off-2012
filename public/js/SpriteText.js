@@ -20,7 +20,6 @@ Crafty.c("SpriteText", {
         this.setter("alpha", function() {
             for (var e in this._entities)
             {
-                console.log("HELLO" + this.alpha);
                 e.alpha = this.alpha;
             }
         });

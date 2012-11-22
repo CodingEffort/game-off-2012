@@ -32,15 +32,33 @@ Crafty.c("Enemy", {
                 }
 
                 pew.owner = this;
-                pew
-                    .setDamage(this.gun.damage)
+                pew.setDamage(this.gun.damage)
                     .collision()
                     .onHit("Spaceship", onProjectileHitPlayer);
+                pew.setAngle(this.rotation + this.gun.shootAngles[angleDiff]);
                 var bounds = this.mbr();
+                var pewBounds = pew.mbr();
                 var angleRad = toRadians(this.rotation);
-                pew.x = bounds._x + bounds._w/2 + Math.cos(angleRad) * bounds._w/2 - pew.w/2;
-                pew.y = bounds._y + bounds._h/2 + Math.sin(angleRad) * bounds._h/2 - pew.h/2;
-                pew.setAngle(90 + this.rotation + this.gun.shootAngles[angleDiff]);
+                var noRotX = bounds._w/2 - pewBounds._w/2;
+                var noRotY = -pewBounds._h/2;
+                var noRotationPewPos = new Crafty.math.Vector2D(noRotX, noRotY);
+
+                var rotMat = new Crafty.math.Matrix2D();
+                rotMat.rotate(angleRad);
+                var relPewPos = rotMat.apply(noRotationPewPos);
+
+                var thisCenterX = bounds._x + bounds._w/2;
+                var thisCenterY = bounds._y + bounds._h/2;
+
+                pew.x = thisCenterX + relPewPos.x;
+                pew.y = thisCenterY + relPewPos.y;
+
+/*console.log("rel " + relX + ", " + relY);
+console.log("c " + thisCenterX + ", " + thisCenterY);
+console.log(pew.x + " , " + pew.y);
+                console.log(bounds);
+console.log(pew.mbr());
+throw "hello";*/
             }
 
             this.timeout(this.shoot, this.gun.shootDelay);
