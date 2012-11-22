@@ -150,7 +150,7 @@ function startGame() {
 
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
-    var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // LOL WTF?
+    var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // 2 backgrounds for the effect: the other one starts above the first
 
     // Create the player space ship
     //var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerHomingPewPew", "#FF9900");
@@ -165,15 +165,17 @@ function startGame() {
 
     // Update the player according to the movement
     Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
-        var MOVE_LERP_SPEED = 0.9;
+        if (me) {
+            var MOVE_LERP_SPEED = 0.9;
 
-        var position = $("#cr-stage").position();
+            var position = $("#cr-stage").position();
 
-        var targetX = Crafty.math.clamp(e.x - position.left - me.w/2, 0, SCREEN_W - me.w);
-        var targetY = Crafty.math.clamp(e.y - position.top - me.h/2, 0, SCREEN_H - me.h);
-        me.x = Crafty.math.lerp(me.x, targetX, MOVE_LERP_SPEED);
-        me.y = Crafty.math.lerp(me.y, targetY, MOVE_LERP_SPEED);
-        nc.position(me.x, me.y);
+            var targetX = Crafty.math.clamp(e.x - position.left - me.w/2, 0, SCREEN_W - me.w);
+            var targetY = Crafty.math.clamp(e.y - position.top - me.h/2, 0, SCREEN_H - me.h);
+            me.x = Crafty.math.lerp(me.x, targetX, MOVE_LERP_SPEED);
+            me.y = Crafty.math.lerp(me.y, targetY, MOVE_LERP_SPEED);
+            nc.position(me.x, me.y);
+        }
     });
 
     // Check to fire for the player.
@@ -235,13 +237,13 @@ function spawnEnemy(enemyType, startX, startY, pathType, gunType, speedModificat
 /*
 function spawnNextEnemy() {
     var r = Crafty.math.randomInt(0,100);
-    if (r <= 10) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontal", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 20) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontal", "LameConeEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    if (r <= 10) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontalStartLeft", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 20) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontalStartRight", "LameConeEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
     else if (r <= 40) spawnEnemy('Grunt', Crafty.math.randomInt(50, SCREEN_W/2), -50, "TopLeftBottomRight", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 1);
     else if (r <= 60) spawnEnemy('Grunt', Crafty.math.randomInt(SCREEN_W/2, SCREEN_W-50), -50, "TopRightBottomLeft", "LameEnemyPewPew", Crafty.math.randomNumber(0.7, 1.3), 1);
-    else if (r <= 65) spawnEnemy('EasiestBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZag", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 70) spawnEnemy('EasiestBossAiming', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 75) spawnEnemy('EasyBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "Circle", "CircularEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 65) spawnEnemy('EasiestBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 70) spawnEnemy('EasiestBossAiming', Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
+    else if (r <= 75) spawnEnemy('EasyBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartLeft", "CircularEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
     else if (r <= 80) spawnPowerup('ShieldPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
     else if (r <= 85) spawnPowerup('HealPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
     

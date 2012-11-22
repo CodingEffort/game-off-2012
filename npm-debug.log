@@ -1,0 +1,893 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@1.1.61
+3 info using node@v0.8.9
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose read json C:\Users\Jesse Emond\Documents\GitHub\game-off-2012\package.json
+6 warn package.json nixie@0.0.1 No README.md file found!
+7 verbose readDependencies using package.json deps
+8 verbose install where, deps [ 'C:\\Users\\Jesse Emond\\Documents\\GitHub\\game-off-2012',
+8 verbose install   [ 'express',
+8 verbose install     'connect',
+8 verbose install     'consolidate',
+8 verbose install     'hogan.js',
+8 verbose install     'mongoose',
+8 verbose install     'Array.prototype.forEachAsync',
+8 verbose install     'socket.io',
+8 verbose install     'passport',
+8 verbose install     'passport-local',
+8 verbose install     'passport-google',
+8 verbose install     'passport-github',
+8 verbose install     'passport.socketio' ] ]
+9 verbose from cache C:\Users\Jesse Emond\Documents\GitHub\game-off-2012\package.json
+10 info preinstall nixie@0.0.1
+11 verbose from cache C:\Users\Jesse Emond\Documents\GitHub\game-off-2012\package.json
+12 verbose readDependencies using package.json deps
+13 verbose cache add [ 'express@3.0.x', null ]
+14 silly cache add name=undefined spec="express@3.0.x" args=["express@3.0.x",null]
+15 verbose parsed url { pathname: 'express@3.0.x',
+15 verbose parsed url   path: 'express@3.0.x',
+15 verbose parsed url   href: 'express@3.0.x' }
+16 silly cache add name="express" spec="3.0.x" args=["express","3.0.x"]
+17 verbose parsed url { pathname: '3.0.x', path: '3.0.x', href: '3.0.x' }
+18 verbose addNamed [ 'express', '3.0.x' ]
+19 verbose addNamed [ null, '>=3.0.0- <3.1.0-' ]
+20 verbose cache add [ 'connect@2.7.x', null ]
+21 silly cache add name=undefined spec="connect@2.7.x" args=["connect@2.7.x",null]
+22 verbose parsed url { pathname: 'connect@2.7.x',
+22 verbose parsed url   path: 'connect@2.7.x',
+22 verbose parsed url   href: 'connect@2.7.x' }
+23 silly cache add name="connect" spec="2.7.x" args=["connect","2.7.x"]
+24 verbose parsed url { pathname: '2.7.x', path: '2.7.x', href: '2.7.x' }
+25 verbose addNamed [ 'connect', '2.7.x' ]
+26 verbose addNamed [ null, '>=2.7.0- <2.8.0-' ]
+27 verbose cache add [ 'consolidate@git://github.com/simov/consolidate.js.git#hogan-partials',
+27 verbose cache add   null ]
+28 silly cache add name=undefined spec="consolidate@git://github.com/simov/consolidate.js.git#hogan-partials" args=["consolidate@git://github.com/simov/consolidate.js.git#hogan-partials",null]
+29 verbose parsed url { hash: '#hogan-partials',
+29 verbose parsed url   pathname: 'consolidate@git://github.com/simov/consolidate.js.git',
+29 verbose parsed url   path: 'consolidate@git://github.com/simov/consolidate.js.git',
+29 verbose parsed url   href: 'consolidate@git://github.com/simov/consolidate.js.git#hogan-partials' }
+30 silly cache add name="consolidate" spec="git://github.com/simov/consolidate.js.git#hogan-partials" args=["consolidate","git://github.com/simov/consolidate.js.git#hogan-partials"]
+31 verbose parsed url { protocol: 'git:',
+31 verbose parsed url   slashes: true,
+31 verbose parsed url   host: 'github.com',
+31 verbose parsed url   hostname: 'github.com',
+31 verbose parsed url   href: 'git://github.com/simov/consolidate.js.git#hogan-partials',
+31 verbose parsed url   hash: '#hogan-partials',
+31 verbose parsed url   pathname: '/simov/consolidate.js.git',
+31 verbose parsed url   path: '/simov/consolidate.js.git' }
+32 verbose cache add [ 'hogan.js@2.0.x', null ]
+33 silly cache add name=undefined spec="hogan.js@2.0.x" args=["hogan.js@2.0.x",null]
+34 verbose parsed url { pathname: 'hogan.js@2.0.x',
+34 verbose parsed url   path: 'hogan.js@2.0.x',
+34 verbose parsed url   href: 'hogan.js@2.0.x' }
+35 silly cache add name="hogan.js" spec="2.0.x" args=["hogan.js","2.0.x"]
+36 verbose parsed url { pathname: '2.0.x', path: '2.0.x', href: '2.0.x' }
+37 verbose addNamed [ 'hogan.js', '2.0.x' ]
+38 verbose addNamed [ null, '>=2.0.0- <2.1.0-' ]
+39 verbose cache add [ 'mongoose@3.4.x', null ]
+40 silly cache add name=undefined spec="mongoose@3.4.x" args=["mongoose@3.4.x",null]
+41 verbose parsed url { pathname: 'mongoose@3.4.x',
+41 verbose parsed url   path: 'mongoose@3.4.x',
+41 verbose parsed url   href: 'mongoose@3.4.x' }
+42 silly cache add name="mongoose" spec="3.4.x" args=["mongoose","3.4.x"]
+43 verbose parsed url { pathname: '3.4.x', path: '3.4.x', href: '3.4.x' }
+44 verbose addNamed [ 'mongoose', '3.4.x' ]
+45 verbose addNamed [ null, '>=3.4.0- <3.5.0-' ]
+46 verbose cache add [ 'Array.prototype.forEachAsync@2.1.x', null ]
+47 silly cache add name=undefined spec="Array.prototype.forEachAsync@2.1.x" args=["Array.prototype.forEachAsync@2.1.x",null]
+48 verbose parsed url { pathname: 'Array.prototype.forEachAsync@2.1.x',
+48 verbose parsed url   path: 'Array.prototype.forEachAsync@2.1.x',
+48 verbose parsed url   href: 'Array.prototype.forEachAsync@2.1.x' }
+49 silly cache add name="Array.prototype.forEachAsync" spec="2.1.x" args=["Array.prototype.forEachAsync","2.1.x"]
+50 verbose parsed url { pathname: '2.1.x', path: '2.1.x', href: '2.1.x' }
+51 verbose addNamed [ 'Array.prototype.forEachAsync', '2.1.x' ]
+52 verbose addNamed [ null, '>=2.1.0- <2.2.0-' ]
+53 verbose cache add [ 'socket.io@0.9.x', null ]
+54 silly cache add name=undefined spec="socket.io@0.9.x" args=["socket.io@0.9.x",null]
+55 verbose parsed url { pathname: 'socket.io@0.9.x',
+55 verbose parsed url   path: 'socket.io@0.9.x',
+55 verbose parsed url   href: 'socket.io@0.9.x' }
+56 silly cache add name="socket.io" spec="0.9.x" args=["socket.io","0.9.x"]
+57 verbose parsed url { pathname: '0.9.x', path: '0.9.x', href: '0.9.x' }
+58 verbose addNamed [ 'socket.io', '0.9.x' ]
+59 verbose addNamed [ null, '>=0.9.0- <0.10.0-' ]
+60 verbose cache add [ 'passport@0.1.x', null ]
+61 silly cache add name=undefined spec="passport@0.1.x" args=["passport@0.1.x",null]
+62 verbose parsed url { pathname: 'passport@0.1.x',
+62 verbose parsed url   path: 'passport@0.1.x',
+62 verbose parsed url   href: 'passport@0.1.x' }
+63 silly cache add name="passport" spec="0.1.x" args=["passport","0.1.x"]
+64 verbose parsed url { pathname: '0.1.x', path: '0.1.x', href: '0.1.x' }
+65 verbose addNamed [ 'passport', '0.1.x' ]
+66 verbose addNamed [ null, '>=0.1.0- <0.2.0-' ]
+67 verbose cache add [ 'passport-local@0.1.x', null ]
+68 silly cache add name=undefined spec="passport-local@0.1.x" args=["passport-local@0.1.x",null]
+69 verbose parsed url { pathname: 'passport-local@0.1.x',
+69 verbose parsed url   path: 'passport-local@0.1.x',
+69 verbose parsed url   href: 'passport-local@0.1.x' }
+70 silly cache add name="passport-local" spec="0.1.x" args=["passport-local","0.1.x"]
+71 verbose parsed url { pathname: '0.1.x', path: '0.1.x', href: '0.1.x' }
+72 verbose addNamed [ 'passport-local', '0.1.x' ]
+73 verbose addNamed [ null, '>=0.1.0- <0.2.0-' ]
+74 verbose cache add [ 'passport-google@0.2.x', null ]
+75 silly cache add name=undefined spec="passport-google@0.2.x" args=["passport-google@0.2.x",null]
+76 verbose parsed url { pathname: 'passport-google@0.2.x',
+76 verbose parsed url   path: 'passport-google@0.2.x',
+76 verbose parsed url   href: 'passport-google@0.2.x' }
+77 silly cache add name="passport-google" spec="0.2.x" args=["passport-google","0.2.x"]
+78 verbose parsed url { pathname: '0.2.x', path: '0.2.x', href: '0.2.x' }
+79 verbose addNamed [ 'passport-google', '0.2.x' ]
+80 verbose addNamed [ null, '>=0.2.0- <0.3.0-' ]
+81 verbose cache add [ 'passport-github@0.1.x', null ]
+82 silly cache add name=undefined spec="passport-github@0.1.x" args=["passport-github@0.1.x",null]
+83 verbose parsed url { pathname: 'passport-github@0.1.x',
+83 verbose parsed url   path: 'passport-github@0.1.x',
+83 verbose parsed url   href: 'passport-github@0.1.x' }
+84 silly cache add name="passport-github" spec="0.1.x" args=["passport-github","0.1.x"]
+85 verbose parsed url { pathname: '0.1.x', path: '0.1.x', href: '0.1.x' }
+86 verbose addNamed [ 'passport-github', '0.1.x' ]
+87 verbose addNamed [ null, '>=0.1.0- <0.2.0-' ]
+88 verbose cache add [ 'passport.socketio@0.0.x', null ]
+89 silly cache add name=undefined spec="passport.socketio@0.0.x" args=["passport.socketio@0.0.x",null]
+90 verbose parsed url { pathname: 'passport.socketio@0.0.x',
+90 verbose parsed url   path: 'passport.socketio@0.0.x',
+90 verbose parsed url   href: 'passport.socketio@0.0.x' }
+91 silly cache add name="passport.socketio" spec="0.0.x" args=["passport.socketio","0.0.x"]
+92 verbose parsed url { pathname: '0.0.x', path: '0.0.x', href: '0.0.x' }
+93 verbose addNamed [ 'passport.socketio', '0.0.x' ]
+94 verbose addNamed [ null, '>=0.0.0- <0.1.0-' ]
+95 silly lockFile b0465bbd-express-3-0-x express@3.0.x
+96 verbose lock express@3.0.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\b0465bbd-express-3-0-x.lock
+97 silly lockFile 9a1b93d2-connect-2-7-x connect@2.7.x
+98 verbose lock connect@2.7.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\9a1b93d2-connect-2-7-x.lock
+99 silly lockFile f637f717-onsolidate-js-git-hogan-partials git://github.com/simov/consolidate.js.git#hogan-partials
+100 verbose lock git://github.com/simov/consolidate.js.git#hogan-partials C:\Users\Jesse Emond\AppData\Roaming\npm-cache\f637f717-onsolidate-js-git-hogan-partials.lock
+101 silly lockFile ead0d5c5-hogan-js-2-0-x hogan.js@2.0.x
+102 verbose lock hogan.js@2.0.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\ead0d5c5-hogan-js-2-0-x.lock
+103 silly lockFile 87537dd2-mongoose-3-4-x mongoose@3.4.x
+104 verbose lock mongoose@3.4.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\87537dd2-mongoose-3-4-x.lock
+105 silly lockFile a3fbf5be-ray-prototype-forEachAsync-2-1-x Array.prototype.forEachAsync@2.1.x
+106 verbose lock Array.prototype.forEachAsync@2.1.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\a3fbf5be-ray-prototype-forEachAsync-2-1-x.lock
+107 silly lockFile 4eb97b2b-socket-io-0-9-x socket.io@0.9.x
+108 verbose lock socket.io@0.9.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\4eb97b2b-socket-io-0-9-x.lock
+109 silly lockFile 78b583a1-passport-0-1-x passport@0.1.x
+110 verbose lock passport@0.1.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\78b583a1-passport-0-1-x.lock
+111 silly lockFile c2836a23-passport-local-0-1-x passport-local@0.1.x
+112 verbose lock passport-local@0.1.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\c2836a23-passport-local-0-1-x.lock
+113 silly lockFile a2b7e09a-passport-google-0-2-x passport-google@0.2.x
+114 verbose lock passport-google@0.2.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\a2b7e09a-passport-google-0-2-x.lock
+115 silly lockFile 19a9f375-passport-github-0-1-x passport-github@0.1.x
+116 verbose lock passport-github@0.1.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\19a9f375-passport-github-0-1-x.lock
+117 silly lockFile 597f606a-passport-socketio-0-0-x passport.socketio@0.0.x
+118 verbose lock passport.socketio@0.0.x C:\Users\Jesse Emond\AppData\Roaming\npm-cache\597f606a-passport-socketio-0-0-x.lock
+119 silly addNameRange { name: 'express', range: '>=3.0.0- <3.1.0-', hasData: false }
+120 silly addNameRange { name: 'connect', range: '>=2.7.0- <2.8.0-', hasData: false }
+121 silly addNameRange { name: 'hogan.js', range: '>=2.0.0- <2.1.0-', hasData: false }
+122 silly addNameRange { name: 'mongoose', range: '>=3.4.0- <3.5.0-', hasData: false }
+123 silly addNameRange { name: 'Array.prototype.forEachAsync',
+123 silly addNameRange   range: '>=2.1.0- <2.2.0-',
+123 silly addNameRange   hasData: false }
+124 silly addNameRange { name: 'socket.io', range: '>=0.9.0- <0.10.0-', hasData: false }
+125 silly addNameRange { name: 'passport', range: '>=0.1.0- <0.2.0-', hasData: false }
+126 silly addNameRange { name: 'passport-local',
+126 silly addNameRange   range: '>=0.1.0- <0.2.0-',
+126 silly addNameRange   hasData: false }
+127 silly addNameRange { name: 'passport-github',
+127 silly addNameRange   range: '>=0.1.0- <0.2.0-',
+127 silly addNameRange   hasData: false }
+128 silly addNameRange { name: 'passport.socketio',
+128 silly addNameRange   range: '>=0.0.0- <0.1.0-',
+128 silly addNameRange   hasData: false }
+129 silly addNameRange { name: 'passport-google',
+129 silly addNameRange   range: '>=0.2.0- <0.3.0-',
+129 silly addNameRange   hasData: false }
+130 verbose addRemoteGit [ 'git://github.com/simov/consolidate.js.git',
+130 verbose addRemoteGit   'hogan-partials' ]
+131 verbose url raw express
+132 verbose url resolving [ 'https://registry.npmjs.org/', './express' ]
+133 verbose url resolved https://registry.npmjs.org/express
+134 info trying registry request attempt 1 at 01:56:44
+135 verbose etag "E6IN5IUROYKA0XOZ5W5ZSNAJH"
+136 http GET https://registry.npmjs.org/express
+137 verbose url raw connect
+138 verbose url resolving [ 'https://registry.npmjs.org/', './connect' ]
+139 verbose url resolved https://registry.npmjs.org/connect
+140 info trying registry request attempt 1 at 01:56:44
+141 verbose etag "CDYC7Y209AZF1LOXVSLUR2E49"
+142 http GET https://registry.npmjs.org/connect
+143 verbose url raw hogan.js
+144 verbose url resolving [ 'https://registry.npmjs.org/', './hogan.js' ]
+145 verbose url resolved https://registry.npmjs.org/hogan.js
+146 info trying registry request attempt 1 at 01:56:44
+147 verbose etag "CZU6JODLGPMB835CSMZGUPS4P"
+148 http GET https://registry.npmjs.org/hogan.js
+149 verbose url raw passport
+150 verbose url resolving [ 'https://registry.npmjs.org/', './passport' ]
+151 verbose url resolved https://registry.npmjs.org/passport
+152 info trying registry request attempt 1 at 01:56:44
+153 verbose etag "50UCJPMG7OQPQ36CR1E31307P"
+154 http GET https://registry.npmjs.org/passport
+155 verbose url raw Array.prototype.forEachAsync
+156 verbose url resolving [ 'https://registry.npmjs.org/',
+156 verbose url resolving   './Array.prototype.forEachAsync' ]
+157 verbose url resolved https://registry.npmjs.org/Array.prototype.forEachAsync
+158 info trying registry request attempt 1 at 01:56:45
+159 verbose etag "9WEPXGLDYJ6KHC5BSDE8HZ38B"
+160 http GET https://registry.npmjs.org/Array.prototype.forEachAsync
+161 verbose url raw socket.io
+162 verbose url resolving [ 'https://registry.npmjs.org/', './socket.io' ]
+163 verbose url resolved https://registry.npmjs.org/socket.io
+164 info trying registry request attempt 1 at 01:56:45
+165 verbose etag "7YE1HAIQ4K6BF6PKFJ5GUE7KV"
+166 http GET https://registry.npmjs.org/socket.io
+167 verbose url raw mongoose
+168 verbose url resolving [ 'https://registry.npmjs.org/', './mongoose' ]
+169 verbose url resolved https://registry.npmjs.org/mongoose
+170 info trying registry request attempt 1 at 01:56:45
+171 verbose etag "AULAE5A87QIM3V4R8MWQPHEBQ"
+172 http GET https://registry.npmjs.org/mongoose
+173 silly exec git "clone" "git://github.com/simov/consolidate.js.git" "C:\\Users\\Jesse Emond\\AppData\\Local\\Temp\\npm-9140\\1353567404511-0.8979158166330308"
+174 silly git,clone,git://github.com/simov/consolidate.js.git,C:\Users\Jesse Emond\AppData\Local\Temp\npm-9140\1353567404511-0.8979158166330308, spawning
+175 verbose url raw passport-local
+176 verbose url resolving [ 'https://registry.npmjs.org/', './passport-local' ]
+177 verbose url resolved https://registry.npmjs.org/passport-local
+178 info trying registry request attempt 1 at 01:56:45
+179 verbose etag "4MDRF6L7VGLRKDSNIRPH94PG8"
+180 http GET https://registry.npmjs.org/passport-local
+181 verbose url raw passport-github
+182 verbose url resolving [ 'https://registry.npmjs.org/', './passport-github' ]
+183 verbose url resolved https://registry.npmjs.org/passport-github
+184 info trying registry request attempt 1 at 01:56:45
+185 verbose etag "39ASJDA2RU9WZCKKCXHOO2H9G"
+186 http GET https://registry.npmjs.org/passport-github
+187 verbose url raw passport.socketio
+188 verbose url resolving [ 'https://registry.npmjs.org/', './passport.socketio' ]
+189 verbose url resolved https://registry.npmjs.org/passport.socketio
+190 info trying registry request attempt 1 at 01:56:45
+191 verbose etag "AD45C2P7KCMA1E86HFPOGXLFD"
+192 http GET https://registry.npmjs.org/passport.socketio
+193 verbose url raw passport-google
+194 verbose url resolving [ 'https://registry.npmjs.org/', './passport-google' ]
+195 verbose url resolved https://registry.npmjs.org/passport-google
+196 info trying registry request attempt 1 at 01:56:45
+197 verbose etag "CTA3IR6ZUA2F1712W21LW5E5C"
+198 http GET https://registry.npmjs.org/passport-google
+199 http 304 https://registry.npmjs.org/express
+200 silly registry.get cb [ 304,
+200 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+200 silly registry.get     etag: '"E6IN5IUROYKA0XOZ5W5ZSNAJH"',
+200 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+200 silly registry.get     'content-length': '0' } ]
+201 verbose etag express from cache
+202 http 304 https://registry.npmjs.org/hogan.js
+203 silly registry.get cb [ 304,
+203 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+203 silly registry.get     etag: '"CZU6JODLGPMB835CSMZGUPS4P"',
+203 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+203 silly registry.get     'content-length': '0' } ]
+204 verbose etag hogan.js from cache
+205 http 304 https://registry.npmjs.org/connect
+206 silly registry.get cb [ 304,
+206 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+206 silly registry.get     etag: '"CDYC7Y209AZF1LOXVSLUR2E49"',
+206 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+206 silly registry.get     'content-length': '0' } ]
+207 verbose etag connect from cache
+208 http 304 https://registry.npmjs.org/Array.prototype.forEachAsync
+209 silly registry.get cb [ 304,
+209 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+209 silly registry.get     etag: '"9WEPXGLDYJ6KHC5BSDE8HZ38B"',
+209 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+209 silly registry.get     'content-length': '0' } ]
+210 verbose etag Array.prototype.forEachAsync from cache
+211 http 304 https://registry.npmjs.org/passport
+212 silly registry.get cb [ 304,
+212 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+212 silly registry.get     etag: '"50UCJPMG7OQPQ36CR1E31307P"',
+212 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+212 silly registry.get     'content-length': '0' } ]
+213 verbose etag passport from cache
+214 http 304 https://registry.npmjs.org/socket.io
+215 silly registry.get cb [ 304,
+215 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+215 silly registry.get     etag: '"7YE1HAIQ4K6BF6PKFJ5GUE7KV"',
+215 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+215 silly registry.get     'content-length': '0' } ]
+216 verbose etag socket.io from cache
+217 silly addNameRange number 2 { name: 'hogan.js', range: '>=2.0.0- <2.1.0-', hasData: true }
+218 silly addNameRange versions [ 'hogan.js',
+218 silly addNameRange   [ '1.0.0', '1.0.2', '1.0.4-dev', '1.0.5-dev', '2.0.0' ] ]
+219 verbose addNamed [ 'hogan.js', '2.0.0' ]
+220 verbose addNamed [ '2.0.0', '2.0.0' ]
+221 silly lockFile fe7ba41d-hogan-js-2-0-0 hogan.js@2.0.0
+222 verbose lock hogan.js@2.0.0 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\fe7ba41d-hogan-js-2-0-0.lock
+223 silly addNameRange number 2 { name: 'Array.prototype.forEachAsync',
+223 silly addNameRange   range: '>=2.1.0- <2.2.0-',
+223 silly addNameRange   hasData: true }
+224 silly addNameRange versions [ 'Array.prototype.forEachAsync', [ '2.1.1' ] ]
+225 verbose addNamed [ 'Array.prototype.forEachAsync', '2.1.1' ]
+226 verbose addNamed [ '2.1.1', '2.1.1' ]
+227 silly lockFile 2615252d-ray-prototype-forEachAsync-2-1-1 Array.prototype.forEachAsync@2.1.1
+228 verbose lock Array.prototype.forEachAsync@2.1.1 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\2615252d-ray-prototype-forEachAsync-2-1-1.lock
+229 http 304 https://registry.npmjs.org/mongoose
+230 silly registry.get cb [ 304,
+230 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+230 silly registry.get     etag: '"AULAE5A87QIM3V4R8MWQPHEBQ"',
+230 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+230 silly registry.get     'content-length': '0' } ]
+231 verbose etag mongoose from cache
+232 http 304 https://registry.npmjs.org/passport-github
+233 silly registry.get cb [ 304,
+233 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+233 silly registry.get     etag: '"39ASJDA2RU9WZCKKCXHOO2H9G"',
+233 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+233 silly registry.get     'content-length': '0' } ]
+234 verbose etag passport-github from cache
+235 http 304 https://registry.npmjs.org/passport-local
+236 silly registry.get cb [ 304,
+236 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+236 silly registry.get     etag: '"4MDRF6L7VGLRKDSNIRPH94PG8"',
+236 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+236 silly registry.get     'content-length': '0' } ]
+237 verbose etag passport-local from cache
+238 http 304 https://registry.npmjs.org/passport.socketio
+239 silly registry.get cb [ 304,
+239 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+239 silly registry.get     etag: '"AD45C2P7KCMA1E86HFPOGXLFD"',
+239 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+239 silly registry.get     'content-length': '0' } ]
+240 verbose etag passport.socketio from cache
+241 http 304 https://registry.npmjs.org/passport-google
+242 silly registry.get cb [ 304,
+242 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+242 silly registry.get     etag: '"CTA3IR6ZUA2F1712W21LW5E5C"',
+242 silly registry.get     date: 'Thu, 22 Nov 2012 06:56:17 GMT',
+242 silly registry.get     'content-length': '0' } ]
+243 verbose etag passport-google from cache
+244 silly addNameRange number 2 { name: 'passport', range: '>=0.1.0- <0.2.0-', hasData: true }
+245 silly addNameRange versions [ 'passport',
+245 silly addNameRange   [ '0.1.0',
+245 silly addNameRange     '0.1.1',
+245 silly addNameRange     '0.1.2',
+245 silly addNameRange     '0.1.3',
+245 silly addNameRange     '0.1.4',
+245 silly addNameRange     '0.1.5',
+245 silly addNameRange     '0.1.6',
+245 silly addNameRange     '0.1.7',
+245 silly addNameRange     '0.1.8',
+245 silly addNameRange     '0.1.9',
+245 silly addNameRange     '0.1.10',
+245 silly addNameRange     '0.1.11',
+245 silly addNameRange     '0.1.12',
+245 silly addNameRange     '0.1.13',
+245 silly addNameRange     '0.1.14',
+245 silly addNameRange     '0.1.15' ] ]
+246 verbose addNamed [ 'passport', '0.1.15' ]
+247 verbose addNamed [ '0.1.15', '0.1.15' ]
+248 silly lockFile 98e131b7-passport-0-1-15 passport@0.1.15
+249 verbose lock passport@0.1.15 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\98e131b7-passport-0-1-15.lock
+250 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\Array.prototype.forEachAsync\2.1.1\package\package.json
+251 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\hogan.js\2.0.0\package\package.json
+252 silly addNameRange number 2 { name: 'express', range: '>=3.0.0- <3.1.0-', hasData: true }
+253 silly addNameRange versions [ 'express',
+253 silly addNameRange   [ '0.14.0',
+253 silly addNameRange     '0.14.1',
+253 silly addNameRange     '1.0.0beta',
+253 silly addNameRange     '1.0.0beta2',
+253 silly addNameRange     '1.0.0rc',
+253 silly addNameRange     '1.0.0rc2',
+253 silly addNameRange     '1.0.0rc3',
+253 silly addNameRange     '1.0.0rc4',
+253 silly addNameRange     '1.0.0',
+253 silly addNameRange     '1.0.1',
+253 silly addNameRange     '1.0.2',
+253 silly addNameRange     '1.0.3',
+253 silly addNameRange     '1.0.4',
+253 silly addNameRange     '1.0.5',
+253 silly addNameRange     '1.0.6',
+253 silly addNameRange     '1.0.7',
+253 silly addNameRange     '2.0.0beta',
+253 silly addNameRange     '1.0.8',
+253 silly addNameRange     '2.0.0beta2',
+253 silly addNameRange     '2.0.0beta3',
+253 silly addNameRange     '2.0.0rc',
+253 silly addNameRange     '2.0.0rc2',
+253 silly addNameRange     '2.0.0rc3',
+253 silly addNameRange     '2.0.0',
+253 silly addNameRange     '2.1.0',
+253 silly addNameRange     '2.1.1',
+253 silly addNameRange     '2.2.0',
+253 silly addNameRange     '2.2.1',
+253 silly addNameRange     '2.2.2',
+253 silly addNameRange     '2.3.0',
+253 silly addNameRange     '2.3.1',
+253 silly addNameRange     '2.3.2',
+253 silly addNameRange     '2.3.3',
+253 silly addNameRange     '2.3.4',
+253 silly addNameRange     '2.3.5',
+253 silly addNameRange     '2.3.6',
+253 silly addNameRange     '2.3.7',
+253 silly addNameRange     '2.3.8',
+253 silly addNameRange     '2.3.9',
+253 silly addNameRange     '2.3.10',
+253 silly addNameRange     '2.3.11',
+253 silly addNameRange     '2.3.12',
+253 silly addNameRange     '2.4.0',
+253 silly addNameRange     '2.4.1',
+253 silly addNameRange     '2.4.2',
+253 silly addNameRange     '2.4.3',
+253 silly addNameRange     '2.4.4',
+253 silly addNameRange     '2.4.5',
+253 silly addNameRange     '2.4.6',
+253 silly addNameRange     '2.4.7',
+253 silly addNameRange     '2.5.0',
+253 silly addNameRange     '2.5.1',
+253 silly addNameRange     '2.5.2',
+253 silly addNameRange     '2.5.3',
+253 silly addNameRange     '2.5.4',
+253 silly addNameRange     '2.5.5',
+253 silly addNameRange     '2.5.6',
+253 silly addNameRange     '2.5.7',
+253 silly addNameRange     '2.5.8',
+253 silly addNameRange     '2.5.9',
+253 silly addNameRange     '3.0.0alpha1',
+253 silly addNameRange     '3.0.0alpha2',
+253 silly addNameRange     '3.0.0alpha3',
+253 silly addNameRange     '3.0.0alpha4',
+253 silly addNameRange     '3.0.0alpha5',
+253 silly addNameRange     '3.0.0beta1',
+253 silly addNameRange     '3.0.0beta2',
+253 silly addNameRange     '3.0.0beta3',
+253 silly addNameRange     '2.5.10',
+253 silly addNameRange     '3.0.0beta4',
+253 silly addNameRange     '2.5.11',
+253 silly addNameRange     '3.0.0beta6',
+253 silly addNameRange     '3.0.0beta7',
+253 silly addNameRange     '3.0.0rc1',
+253 silly addNameRange     '3.0.0rc2',
+253 silly addNameRange     '3.0.0rc3',
+253 silly addNameRange     '3.0.0rc4',
+253 silly addNameRange     '3.0.0rc5',
+253 silly addNameRange     '3.0.0',
+253 silly addNameRange     '3.0.1',
+253 silly addNameRange     '3.0.2',
+253 silly addNameRange     '3.0.3' ] ]
+254 verbose addNamed [ 'express', '3.0.3' ]
+255 verbose addNamed [ '3.0.3', '3.0.3' ]
+256 silly lockFile 96ff5894-express-3-0-3 express@3.0.3
+257 verbose lock express@3.0.3 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\96ff5894-express-3-0-3.lock
+258 silly addNameRange number 2 { name: 'connect', range: '>=2.7.0- <2.8.0-', hasData: true }
+259 silly addNameRange versions [ 'connect',
+259 silly addNameRange   [ '0.0.1',
+259 silly addNameRange     '0.0.2',
+259 silly addNameRange     '0.0.3',
+259 silly addNameRange     '0.0.4',
+259 silly addNameRange     '0.0.5',
+259 silly addNameRange     '0.0.6',
+259 silly addNameRange     '0.1.0',
+259 silly addNameRange     '0.2.0',
+259 silly addNameRange     '0.2.1',
+259 silly addNameRange     '0.2.2',
+259 silly addNameRange     '0.2.3',
+259 silly addNameRange     '0.2.4',
+259 silly addNameRange     '0.2.5',
+259 silly addNameRange     '0.2.6',
+259 silly addNameRange     '0.2.7',
+259 silly addNameRange     '0.3.0',
+259 silly addNameRange     '0.4.0',
+259 silly addNameRange     '0.5.0',
+259 silly addNameRange     '0.5.1',
+259 silly addNameRange     '0.5.2',
+259 silly addNameRange     '0.5.3',
+259 silly addNameRange     '0.5.4',
+259 silly addNameRange     '0.5.5',
+259 silly addNameRange     '0.5.6',
+259 silly addNameRange     '0.5.7',
+259 silly addNameRange     '0.5.8',
+259 silly addNameRange     '0.5.9',
+259 silly addNameRange     '0.5.10',
+259 silly addNameRange     '1.0.0',
+259 silly addNameRange     '1.0.1',
+259 silly addNameRange     '1.0.2',
+259 silly addNameRange     '1.0.3',
+259 silly addNameRange     '1.0.4',
+259 silly addNameRange     '1.0.5',
+259 silly addNameRange     '1.0.6',
+259 silly addNameRange     '1.1.0',
+259 silly addNameRange     '1.1.1',
+259 silly addNameRange     '1.1.2',
+259 silly addNameRange     '1.1.3',
+259 silly addNameRange     '1.1.4',
+259 silly addNameRange     '1.1.5',
+259 silly addNameRange     '1.2.0',
+259 silly addNameRange     '1.2.1',
+259 silly addNameRange     '1.2.2',
+259 silly addNameRange     '1.2.3',
+259 silly addNameRange     '1.3.0',
+259 silly addNameRange     '1.4.0',
+259 silly addNameRange     '1.4.1',
+259 silly addNameRange     '1.4.2',
+259 silly addNameRange     '1.4.3',
+259 silly addNameRange     '1.4.4',
+259 silly addNameRange     '1.4.5',
+259 silly addNameRange     '1.4.6',
+259 silly addNameRange     '1.5.0',
+259 silly addNameRange     '1.5.1',
+259 silly addNameRange     '1.5.2',
+259 silly addNameRange     '1.6.0',
+259 silly addNameRange     '1.6.1',
+259 silly addNameRange     '1.6.2',
+259 silly addNameRange     '1.6.3',
+259 silly addNameRange     '1.6.4',
+259 silly addNameRange     '1.7.0',
+259 silly addNameRange     '1.7.1',
+259 silly addNameRange     '1.7.2',
+259 silly addNameRange     '1.7.3',
+259 silly addNameRange     '1.8.0',
+259 silly addNameRange     '1.8.1',
+259 silly addNameRange     '1.8.2',
+259 silly addNameRange     '1.8.3',
+259 silly addNameRange     '1.8.4',
+259 silly addNameRange     '1.8.5',
+259 silly addNameRange     '2.0.0',
+259 silly addNameRange     '2.0.1',
+259 silly addNameRange     '2.0.2',
+259 silly addNameRange     '2.0.3',
+259 silly addNameRange     '1.8.6',
+259 silly addNameRange     '2.1.0',
+259 silly addNameRange     '2.1.1',
+259 silly addNameRange     '2.1.2',
+259 silly addNameRange     '1.8.7',
+259 silly addNameRange     '2.1.3',
+259 silly addNameRange     '2.2.0',
+259 silly addNameRange     '2.2.1',
+259 silly addNameRange     '2.2.2',
+259 silly addNameRange     '2.3.0',
+259 silly addNameRange     '2.3.1',
+259 silly addNameRange     '2.3.2',
+259 silly addNameRange     '2.3.3',
+259 silly addNameRange     '1.9.0',
+259 silly addNameRange     '1.9.1',
+259 silly addNameRange     '2.3.4',
+259 silly addNameRange     '2.3.5',
+259 silly addNameRange     '2.3.6',
+259 silly addNameRange     '2.3.7',
+259 silly addNameRange     '1.9.2',
+259 silly addNameRange     '2.3.8',
+259 silly addNameRange     '2.3.9',
+259 silly addNameRange     '2.4.0',
+259 silly addNameRange     '2.4.1',
+259 silly addNameRange     '2.4.2',
+259 silly addNameRange     '2.4.3',
+259 silly addNameRange     '2.4.4',
+259 silly addNameRange     '2.4.5',
+259 silly addNameRange     '2.4.6',
+259 silly addNameRange     '2.5.0',
+259 silly addNameRange     '2.6.0',
+259 silly addNameRange     '2.6.1',
+259 silly addNameRange     '2.6.2',
+259 silly addNameRange     '2.7.0' ] ]
+260 verbose addNamed [ 'connect', '2.7.0' ]
+261 verbose addNamed [ '2.7.0', '2.7.0' ]
+262 silly lockFile 2429b342-connect-2-7-0 connect@2.7.0
+263 verbose lock connect@2.7.0 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\2429b342-connect-2-7-0.lock
+264 silly addNameRange number 2 { name: 'socket.io', range: '>=0.9.0- <0.10.0-', hasData: true }
+265 silly addNameRange versions [ 'socket.io',
+265 silly addNameRange   [ '0.3.8',
+265 silly addNameRange     '0.4.0',
+265 silly addNameRange     '0.4.1',
+265 silly addNameRange     '0.5.1',
+265 silly addNameRange     '0.5.3',
+265 silly addNameRange     '0.6.0',
+265 silly addNameRange     '0.6.1',
+265 silly addNameRange     '0.6.3',
+265 silly addNameRange     '0.6.4',
+265 silly addNameRange     '0.6.5',
+265 silly addNameRange     '0.6.6',
+265 silly addNameRange     '0.6.7',
+265 silly addNameRange     '0.6.8',
+265 silly addNameRange     '0.6.9',
+265 silly addNameRange     '0.6.10',
+265 silly addNameRange     '0.6.11',
+265 silly addNameRange     '0.6.12',
+265 silly addNameRange     '0.6.14',
+265 silly addNameRange     '0.6.15',
+265 silly addNameRange     '0.6.16',
+265 silly addNameRange     '0.6.17',
+265 silly addNameRange     '0.6.18',
+265 silly addNameRange     '0.7.0',
+265 silly addNameRange     '0.7.1',
+265 silly addNameRange     '0.7.2',
+265 silly addNameRange     '0.7.3',
+265 silly addNameRange     '0.7.4',
+265 silly addNameRange     '0.7.5',
+265 silly addNameRange     '0.7.6',
+265 silly addNameRange     '0.7.7',
+265 silly addNameRange     '0.7.8',
+265 silly addNameRange     '0.7.9',
+265 silly addNameRange     '0.7.10',
+265 silly addNameRange     '0.7.11',
+265 silly addNameRange     '0.8.0',
+265 silly addNameRange     '0.8.1',
+265 silly addNameRange     '0.8.2',
+265 silly addNameRange     '0.8.3',
+265 silly addNameRange     '0.8.4',
+265 silly addNameRange     '0.8.5',
+265 silly addNameRange     '0.8.6',
+265 silly addNameRange     '0.8.7',
+265 silly addNameRange     '0.9.0',
+265 silly addNameRange     '0.9.1',
+265 silly addNameRange     '0.9.1-1',
+265 silly addNameRange     '0.9.2',
+265 silly addNameRange     '0.9.3',
+265 silly addNameRange     '0.9.4',
+265 silly addNameRange     '0.9.5',
+265 silly addNameRange     '0.9.6',
+265 silly addNameRange     '0.9.7',
+265 silly addNameRange     '0.9.8',
+265 silly addNameRange     '0.9.9',
+265 silly addNameRange     '0.9.10',
+265 silly addNameRange     '0.9.11' ] ]
+266 verbose addNamed [ 'socket.io', '0.9.11' ]
+267 verbose addNamed [ '0.9.11', '0.9.11' ]
+268 silly lockFile 7211798e-socket-io-0-9-11 socket.io@0.9.11
+269 verbose lock socket.io@0.9.11 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\7211798e-socket-io-0-9-11.lock
+270 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\passport\0.1.15\package\package.json
+271 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\express\3.0.3\package\package.json
+272 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\connect\2.7.0\package\package.json
+273 warn package.json Array.prototype.forEachAsync@2.1.1 No README.md file found!
+274 silly lockFile 2615252d-ray-prototype-forEachAsync-2-1-1 Array.prototype.forEachAsync@2.1.1
+275 silly addNameRange number 2 { name: 'passport-local',
+275 silly addNameRange   range: '>=0.1.0- <0.2.0-',
+275 silly addNameRange   hasData: true }
+276 silly addNameRange versions [ 'passport-local',
+276 silly addNameRange   [ '0.1.0', '0.1.1', '0.1.2', '0.1.3', '0.1.4', '0.1.5', '0.1.6' ] ]
+277 verbose addNamed [ 'passport-local', '0.1.6' ]
+278 verbose addNamed [ '0.1.6', '0.1.6' ]
+279 silly lockFile 91e070c6-passport-local-0-1-6 passport-local@0.1.6
+280 verbose lock passport-local@0.1.6 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\91e070c6-passport-local-0-1-6.lock
+281 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\socket.io\0.9.11\package\package.json
+282 silly addNameRange number 2 { name: 'passport.socketio',
+282 silly addNameRange   range: '>=0.0.0- <0.1.0-',
+282 silly addNameRange   hasData: true }
+283 silly addNameRange versions [ 'passport.socketio', [ '0.0.1', '0.0.2', '0.0.3', '0.0.4' ] ]
+284 verbose addNamed [ 'passport.socketio', '0.0.4' ]
+285 verbose addNamed [ '0.0.4', '0.0.4' ]
+286 silly lockFile 5e5ac6fa-passport-socketio-0-0-4 passport.socketio@0.0.4
+287 verbose lock passport.socketio@0.0.4 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\5e5ac6fa-passport-socketio-0-0-4.lock
+288 silly addNameRange number 2 { name: 'passport-github',
+288 silly addNameRange   range: '>=0.1.0- <0.2.0-',
+288 silly addNameRange   hasData: true }
+289 silly addNameRange versions [ 'passport-github', [ '0.1.0', '0.1.1', '0.1.2', '0.1.3' ] ]
+290 verbose addNamed [ 'passport-github', '0.1.3' ]
+291 verbose addNamed [ '0.1.3', '0.1.3' ]
+292 silly lockFile 60eb374c-passport-github-0-1-3 passport-github@0.1.3
+293 verbose lock passport-github@0.1.3 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\60eb374c-passport-github-0-1-3.lock
+294 silly lockFile a3fbf5be-ray-prototype-forEachAsync-2-1-x Array.prototype.forEachAsync@2.1.x
+295 silly addNameRange number 2 { name: 'passport-google',
+295 silly addNameRange   range: '>=0.2.0- <0.3.0-',
+295 silly addNameRange   hasData: true }
+296 silly addNameRange versions [ 'passport-google', [ '0.1.0', '0.1.1', '0.2.0' ] ]
+297 verbose addNamed [ 'passport-google', '0.2.0' ]
+298 verbose addNamed [ '0.2.0', '0.2.0' ]
+299 silly lockFile 85ede362-passport-google-0-2-0 passport-google@0.2.0
+300 verbose lock passport-google@0.2.0 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\85ede362-passport-google-0-2-0.lock
+301 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\passport-local\0.1.6\package\package.json
+302 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\passport.socketio\0.0.4\package\package.json
+303 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\passport-github\0.1.3\package\package.json
+304 silly lockFile fe7ba41d-hogan-js-2-0-0 hogan.js@2.0.0
+305 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\passport-google\0.2.0\package\package.json
+306 silly lockFile ead0d5c5-hogan-js-2-0-x hogan.js@2.0.x
+307 silly lockFile 98e131b7-passport-0-1-15 passport@0.1.15
+308 silly lockFile 96ff5894-express-3-0-3 express@3.0.3
+309 silly lockFile 2429b342-connect-2-7-0 connect@2.7.0
+310 warn package.json passport-local@0.1.6 No README.md file found!
+311 silly lockFile 91e070c6-passport-local-0-1-6 passport-local@0.1.6
+312 silly lockFile 78b583a1-passport-0-1-x passport@0.1.x
+313 warn package.json passport-github@0.1.3 No README.md file found!
+314 silly lockFile 60eb374c-passport-github-0-1-3 passport-github@0.1.3
+315 silly lockFile b0465bbd-express-3-0-x express@3.0.x
+316 silly lockFile 9a1b93d2-connect-2-7-x connect@2.7.x
+317 warn package.json passport-google@0.2.0 No README.md file found!
+318 silly lockFile 85ede362-passport-google-0-2-0 passport-google@0.2.0
+319 silly lockFile 7211798e-socket-io-0-9-11 socket.io@0.9.11
+320 silly lockFile c2836a23-passport-local-0-1-x passport-local@0.1.x
+321 silly lockFile 19a9f375-passport-github-0-1-x passport-github@0.1.x
+322 silly lockFile a2b7e09a-passport-google-0-2-x passport-google@0.2.x
+323 silly lockFile 4eb97b2b-socket-io-0-9-x socket.io@0.9.x
+324 silly lockFile 5e5ac6fa-passport-socketio-0-0-4 passport.socketio@0.0.4
+325 silly lockFile 597f606a-passport-socketio-0-0-x passport.socketio@0.0.x
+326 silly addNameRange number 2 { name: 'mongoose', range: '>=3.4.0- <3.5.0-', hasData: true }
+327 silly addNameRange versions [ 'mongoose',
+327 silly addNameRange   [ '0.0.1',
+327 silly addNameRange     '0.0.2',
+327 silly addNameRange     '0.0.3',
+327 silly addNameRange     '0.0.4',
+327 silly addNameRange     '0.0.5',
+327 silly addNameRange     '1.0.0',
+327 silly addNameRange     '1.0.1',
+327 silly addNameRange     '1.0.2',
+327 silly addNameRange     '0.0.6',
+327 silly addNameRange     '1.0.3',
+327 silly addNameRange     '1.0.4',
+327 silly addNameRange     '1.0.5',
+327 silly addNameRange     '1.0.6',
+327 silly addNameRange     '1.0.7',
+327 silly addNameRange     '1.0.8',
+327 silly addNameRange     '1.0.10',
+327 silly addNameRange     '1.0.11',
+327 silly addNameRange     '1.0.12',
+327 silly addNameRange     '1.0.13',
+327 silly addNameRange     '1.0.14',
+327 silly addNameRange     '1.0.15',
+327 silly addNameRange     '1.0.16',
+327 silly addNameRange     '1.1.0',
+327 silly addNameRange     '1.1.1',
+327 silly addNameRange     '1.1.2',
+327 silly addNameRange     '1.1.3',
+327 silly addNameRange     '1.1.4',
+327 silly addNameRange     '1.1.5',
+327 silly addNameRange     '1.1.6',
+327 silly addNameRange     '1.1.7',
+327 silly addNameRange     '1.1.8',
+327 silly addNameRange     '1.1.9',
+327 silly addNameRange     '1.1.10',
+327 silly addNameRange     '1.1.11',
+327 silly addNameRange     '1.1.12',
+327 silly addNameRange     '1.1.13',
+327 silly addNameRange     '1.1.14',
+327 silly addNameRange     '1.1.15',
+327 silly addNameRange     '1.1.16',
+327 silly addNameRange     '1.1.17',
+327 silly addNameRange     '1.1.18',
+327 silly addNameRange     '1.1.19',
+327 silly addNameRange     '1.1.20',
+327 silly addNameRange     '1.1.21',
+327 silly addNameRange     '1.1.22',
+327 silly addNameRange     '1.1.23',
+327 silly addNameRange     '1.1.24',
+327 silly addNameRange     '1.1.25',
+327 silly addNameRange     '1.2.0',
+327 silly addNameRange     '1.3.0',
+327 silly addNameRange     '1.3.1',
+327 silly addNameRange     '1.3.2',
+327 silly addNameRange     '1.3.3',
+327 silly addNameRange     '1.3.4',
+327 silly addNameRange     '1.3.5',
+327 silly addNameRange     '1.3.6',
+327 silly addNameRange     '1.3.7',
+327 silly addNameRange     '1.4.0',
+327 silly addNameRange     '1.5.0',
+327 silly addNameRange     '1.6.0',
+327 silly addNameRange     '1.7.2',
+327 silly addNameRange     '1.7.3',
+327 silly addNameRange     '1.7.4',
+327 silly addNameRange     '1.8.0',
+327 silly addNameRange     '1.8.1',
+327 silly addNameRange     '1.8.2',
+327 silly addNameRange     '1.8.3',
+327 silly addNameRange     '1.8.4',
+327 silly addNameRange     '2.0.0',
+327 silly addNameRange     '2.0.1',
+327 silly addNameRange     '2.0.2',
+327 silly addNameRange     '2.0.3',
+327 silly addNameRange     '2.0.4',
+327 silly addNameRange     '2.1.0',
+327 silly addNameRange     '2.1.1',
+327 silly addNameRange     '2.1.2',
+327 silly addNameRange     '2.1.3',
+327 silly addNameRange     '2.1.4',
+327 silly addNameRange     '2.2.0',
+327 silly addNameRange     '2.2.1',
+327 silly addNameRange     '2.2.2',
+327 silly addNameRange     '2.2.3',
+327 silly addNameRange     '2.2.4',
+327 silly addNameRange     '2.3.0',
+327 silly addNameRange     '2.3.1',
+327 silly addNameRange     '2.3.2',
+327 silly addNameRange     '2.3.3',
+327 silly addNameRange     '2.3.4',
+327 silly addNameRange     '2.3.5',
+327 silly addNameRange     '2.3.6',
+327 silly addNameRange     '2.3.7',
+327 silly addNameRange     '2.3.8',
+327 silly addNameRange     '2.3.9',
+327 silly addNameRange     '2.3.10',
+327 silly addNameRange     '2.3.11',
+327 silly addNameRange     '2.3.12',
+327 silly addNameRange     '2.3.13',
+327 silly addNameRange     '2.4.0',
+327 silly addNameRange     '2.4.1',
+327 silly addNameRange     '2.4.2',
+327 silly addNameRange     '2.4.3',
+327 silly addNameRange     '2.4.4',
+327 silly addNameRange     '2.4.5',
+327 silly addNameRange     '2.4.6',
+327 silly addNameRange     '2.4.7',
+327 silly addNameRange     '2.4.8',
+327 silly addNameRange     '2.4.9',
+327 silly addNameRange     '2.4.10',
+327 silly addNameRange     '2.5.0',
+327 silly addNameRange     '2.5.1',
+327 silly addNameRange     '2.5.2',
+327 silly addNameRange     '2.5.3',
+327 silly addNameRange     '2.5.4',
+327 silly addNameRange     '2.5.5',
+327 silly addNameRange     '2.5.6',
+327 silly addNameRange     '2.5.7',
+327 silly addNameRange     '2.5.8',
+327 silly addNameRange     '2.5.9',
+327 silly addNameRange     '2.5.10',
+327 silly addNameRange     '2.5.11',
+327 silly addNameRange     '2.5.12',
+327 silly addNameRange     '2.5.13',
+327 silly addNameRange     '2.5.14',
+327 silly addNameRange     '2.6.0',
+327 silly addNameRange     '2.6.1',
+327 silly addNameRange     '2.6.2',
+327 silly addNameRange     '2.6.3',
+327 silly addNameRange     '2.6.4',
+327 silly addNameRange     '2.6.5',
+327 silly addNameRange     '2.6.6',
+327 silly addNameRange     '2.6.7',
+327 silly addNameRange     '2.6.8',
+327 silly addNameRange     '2.7.0',
+327 silly addNameRange     '3.0.0alpha1',
+327 silly addNameRange     '2.7.1',
+327 silly addNameRange     '2.7.2',
+327 silly addNameRange     '3.0.0alpha2',
+327 silly addNameRange     '3.0.0rc0',
+327 silly addNameRange     '2.7.4',
+327 silly addNameRange     '2.7.3',
+327 silly addNameRange     '3.0.0',
+327 silly addNameRange     '3.0.1',
+327 silly addNameRange     '3.0.2',
+327 silly addNameRange     '2.8.0',
+327 silly addNameRange     '3.0.3',
+327 silly addNameRange     '3.1.0',
+327 silly addNameRange     '2.8.1',
+327 silly addNameRange     '3.1.2-pre',
+327 silly addNameRange     '3.1.1',
+327 silly addNameRange     '2.8.2',
+327 silly addNameRange     '2.8.3',
+327 silly addNameRange     '3.1.2',
+327 silly addNameRange     '2.9.0',
+327 silly addNameRange     '3.2.0',
+327 silly addNameRange     '2.9.1',
+327 silly addNameRange     '3.2.1',
+327 silly addNameRange     '2.9.2',
+327 silly addNameRange     '3.2.2',
+327 silly addNameRange     '3.3.0',
+327 silly addNameRange     '3.3.1',
+327 silly addNameRange     '2.9.3',
+327 silly addNameRange     '3.4.0' ] ]
+328 verbose addNamed [ 'mongoose', '3.4.0' ]
+329 verbose addNamed [ '3.4.0', '3.4.0' ]
+330 silly lockFile 92b068d7-mongoose-3-4-0 mongoose@3.4.0
+331 verbose lock mongoose@3.4.0 C:\Users\Jesse Emond\AppData\Roaming\npm-cache\92b068d7-mongoose-3-4-0.lock
+332 verbose read json C:\Users\Jesse Emond\AppData\Roaming\npm-cache\mongoose\3.4.0\package\package.json
+333 silly lockFile 92b068d7-mongoose-3-4-0 mongoose@3.4.0
+334 silly lockFile 87537dd2-mongoose-3-4-x mongoose@3.4.x
+335 error git clone git://github.com/simov/consolidate.js.git Cloning into 'C:\Users\Jesse Emond\AppData\Local\Temp\npm-9140\1353567404511-0.8979158166330308'...
+335 error git clone git://github.com/simov/consolidate.js.git
+335 error git clone git://github.com/simov/consolidate.js.git fatal: unable to connect to github.com:
+335 error git clone git://github.com/simov/consolidate.js.git github.com[0: 207.97.227.239]: errno=No error
+336 silly lockFile 1413dab5-hub-com-simov-consolidate-js-git git://github.com/simov/consolidate.js.git
+337 error Error: `git "clone" "git://github.com/simov/consolidate.js.git" "C:\\Users\\Jesse Emond\\AppData\\Local\\Temp\\npm-9140\\1353567404511-0.8979158166330308"` failed with 128
+337 error     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\exec.js:56:20)
+337 error     at ChildProcess.EventEmitter.emit (events.js:91:17)
+337 error     at Process._handle.onexit (child_process.js:678:10)
+338 error If you need help, you may report this log at:
+338 error     <http://github.com/isaacs/npm/issues>
+338 error or email it to:
+338 error     <npm-@googlegroups.com>
+339 error System Windows_NT 6.1.7601
+340 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+341 error cwd C:\Users\Jesse Emond\Documents\GitHub\game-off-2012
+342 error node -v v0.8.9
+343 error npm -v 1.1.61
+344 verbose exit [ 1, true ]
