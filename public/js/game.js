@@ -34,6 +34,7 @@ Crafty.sprite(50, "assets/back.png", {
     patrol: [8, 12], // the patrol enemy
     trapeze: [8, 12],
     deltoid: [7, 13],
+    rectbox: [8, 13],
     enemypewpew: [1, 12],
     shield: [9, 12],
     shieldObject: [10, 12],
@@ -207,7 +208,7 @@ function startGame() {
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("Deltoid", Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "LameShotgunEnemyPewPew", 1.0, 10);
+    spawnEnemy("RectBox", Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "LameShotgunEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();

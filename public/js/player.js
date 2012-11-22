@@ -112,7 +112,6 @@ Crafty.c("Spaceship", {
                 else
                 {
                     relPewPos = new Crafty.math.Vector2D(-pewBounds._w/2, -bounds._h/2 - pewBounds._h/2);
-                    console.log(relPewPos);
                 }
 
                 var thisCenterX = bounds._x + bounds._w/2;

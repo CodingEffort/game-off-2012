@@ -42,6 +42,15 @@ Crafty.c("Deltoid", {
 	}
 });
 
+Crafty.c("RectBox", {
+	init: function() {
+		this.requires("Enemy, rectbox")
+			.crop(0,0,18,28)
+			.alwaysLookDown()
+			.setMaxHealth(65);
+	}
+});
+
 Crafty.c("EasiestBoss", {
 	init: function() {
 		this.requires("Enemy, easiestboss")
