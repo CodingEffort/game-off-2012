@@ -10,6 +10,7 @@ a rotation towards the bottom of the screen.
 - **EasiestBossAiming**: Same as the previous enemy, but this one aims in front of it. This allows it to take circular paths instead.
 - **EasyBoss**: Higher health enemy. Usually used with circular weapons and circular paths. It slowly rotates every frame (to allow circular weapons to
 be less predictable).
+- **NormalBoss**: Even higher health enemy, Usually used with a pulse weapon and a circular path.
 
 ## Enemy guns
 
@@ -19,12 +20,12 @@ be less predictable).
 - **LameShotgunEnemyPewPew**: Shoots 3 regular projectiles in a small cone, giving a shotgun effect.
 - **LameLargeShotgunEnemyPewPew**: Shoots 4 regular projectiles in a small cone, giving a larger shotgun effect.
 - **CircularEnemyPewPew**: Shoots 23 projectiles evenly spreaded around the enemy, spreading bullets all accross the screen.
+- **PulseEnemyPewPew**: Shoots melee pulses relatively quickly, hurting people in a melee range, hurting the closest ones even more.
 
 ## Enemy paths
 Note: All the **50**s represent the max width of an enemy. They are there to make sure no enemy **spawns** in-screen, instead of off-screen.
 - **TopLeftBottomRight**: Chases the bottom right of the screen starting from its current position. Recommended starting position: (from 50 to SCREEN_W/2, -50)
 - **TopRightBottomLeft**: Chases the bottom left of the screen starting from its current position. Recommended starting position: (from SCREEN_W/2-50 to SCREEN_W-50, -50)
-
 - **LeftRight**: Chases the right of the screen starting from its current position. Recommended starting position: (-50, from 50 to SCREEN_H-50)
 - **RightLeft**: Chases the left of the screen starting from its current position. Recommended starting position: (SCREEN_W+50, from 50 to SCREEN_H-50)
 - **TopBottom**: Chases the bottom of the screen starting from its current position. Recommended starting position: (from 50 to SCREEN_W-50, -50)
@@ -36,8 +37,6 @@ Note: All the **50**s represent the max width of an enemy. They are there to mak
 - **CircleStartLeft**: Starts from the top of the screen, goes to a certain y position, then patrols in a circle-like fashion, counter-clockwise. Recommended starting position: (from 50 to SCREEN_W-50, -50)
 - **CircleStartRight**: Starts from the top of the screen, goes to a certain y position, then patrols in a circle-like fashion, clockwise. Recommended starting position: (from 50 to SCREEN_W-50, -50)
 
-
-
 ## Player guns
 - **PlayerFastPewPew**: Pretty fast lame weapon.
 - **PlayerParrallelFastPewPew**: Fast weapon that shoots two parrallel projectiles.
@@ -48,8 +47,6 @@ depends on the range (closer means higher damage, far away means close to no dam
 - **PlayerHomingPewPew**: Slow weapon that deals high amounts of damage and chases the enemies that are close enough to it.
 - **PlayerFireBigPewPew**: Instant weapon that deals damage on frame to the enemies in its ray. (**IMMA FIRIN' MY LAZER**)
 - **PlayerForkYou**: Very fast weapon that deals high amounts of damage to enemies. It is the ultimate weapon, pretty much.
-
-
 
 ## Powerups
 - **ShieldPowerup**: Gives additional protection, blocking damage until it is destroyed.

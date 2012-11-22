@@ -148,7 +148,7 @@ Crafty.c("FollowPath", {
     },
     followPath: function(func, speedModificator) { this.path = func; this.speedModificator = speedModificator; return this; },
     allowRotation: function(allow) { this.showRotation = allow; return this; },
-    alwaysLookDown: function() { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation = 90; });},
+    alwaysLookDown: function() { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation = 90; }); return this; },
     rotateEveryFrame: function(amount) { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation += amount; }); }
 });
 

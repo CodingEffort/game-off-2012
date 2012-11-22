@@ -52,6 +52,15 @@ Crafty.c("EasyBoss", {
 	}
 });
 
+Crafty.c("NormalBoss", {
+	init: function() {
+		this.requires("Enemy, normalboss")
+			.crop(0,0,40,37)
+			.setMaxHealth(750)
+			.alwaysLookDown();
+	}
+});
+
 
 
 /************************************************************************/
@@ -107,6 +116,14 @@ Crafty.c("CircularEnemyPewPew", {
 			.setProjectilesAngleDeltas([-150,-135,-120,-105,-90,-75,-60,-45,-30,-15,0,15,30,45,60,75,90,105,120,135,150,165,180]);
 	}
 });
+Crafty.c("PulseEnemyPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setDamage(20)
+			.setProjectileType("EnemyPulseLazor")
+			.setShootDelay(500);
+	}
+});
 
 
 
@@ -130,6 +147,24 @@ Crafty.c("EnemySmallLazor", {
 	}
 });
 
+Crafty.c("EnemyPulseLazor", {
+	init: function() {
+		this.requires("EnemyProjectile, enemypewpew, FadeOut")
+			.setSpeed(10)
+			.crop(0,18,24,22)
+			.fadeOut(0.05);
+
+		this.bind("EnterFrame", function() {
+			var SCALE_MOD = 1.1;
+			this.w *= SCALE_MOD;
+			this.h *= SCALE_MOD;
+			var ownerB = this.owner.mbr();
+			this.x = ownerB._x + ownerB._w/2 + this.w/2;
+			this.y = ownerB._y + ownerB._h/2 + this.h/2;
+			this.collision(Crafty.circle(this.x, this.y, this.w));
+		});
+	}
+});
 
 /************************************************************************/
 /**************************    PLAYER GUNS    ***************************/
