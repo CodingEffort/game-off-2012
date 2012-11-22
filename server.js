@@ -162,6 +162,7 @@ io.set('authorization', passportSio.authorize({
   }
 }));
 io.set('trasports', ['websocket', 'flash']);
+io.set('log level', 1);
 
 var game = new Game(io.sockets, db, config.game);
 
