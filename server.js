@@ -15,7 +15,8 @@ var parseCookie = require('connect').utils.parseCookie,
         GitHubStrategy = require('passport-github').Strategy,
     sio = require('socket.io'),
       passportSio = require('passport.socketio'),
-    db = require('./models');
+    db = require('./models'),
+    Game = require('./game');
 
 var config = require('./config');
 
@@ -160,5 +161,7 @@ io.set('authorization', passportSio.authorize({
     accept(null, true);
   }
 }));
-require('./game')(io.sockets, db, config.game);
+io.set('trasports', ['websocket', 'flash']);
+
+var game = new Game(io.sockets, db, config.game);
 

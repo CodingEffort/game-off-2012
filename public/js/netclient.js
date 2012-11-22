@@ -14,7 +14,6 @@ function NetClient() {
     connected: null,
     spawn: null,
     despawn: null,
-    join: null,
     shooting: null,
     position: null,
     powerup: null,
@@ -30,6 +29,7 @@ function NetClient() {
       self.events[event] = callback;
     }
   };
+
   this.unbind = function(event) {
     if (event in self.events) {
       self.events[event] = null;
@@ -40,39 +40,44 @@ function NetClient() {
     // Connection boostrapping
     self.socket = io.connect();
 
-    self.socket.on('ping', function(data) {
-      self.socket.emit('pong', { t: new Date(), rx: new Date() - data.t });
-    });
     self.socket.on('setup', function(data) {
       self.player = data.player;
       if (self.events.connected) self.events.connected(self.player);
+    });
+
+    self.socket.on('ping', function(data) {
+      self.socket.emit('pong', { t: Number(new Date()), rx: new Date() - data.t });
     });
 
     // Rx
     self.socket.on('spawn', function(data) {
       if (self.events.spawn) self.events.spawn(data.type, data.spawn);
     });
+
     self.socket.on('despawn', function(data) {
       if (self.events.despawn) self.events.despawn(data.type, data.despawn);
     });
-    self.socket.on('join', function(data) {
-      if (self.events.join) self.events.join(data.player);
-    });
+
     self.socket.on('shooting', function(data) {
-      if (self.events.shooting) self.events.shooting(data.player, data.shooting);
+      if (data.player !== self.player.id && self.events.shooting) self.events.shooting(data.player, data.shooting);
     });
+
     self.socket.on('position', function(data) {
-      if (self.events.position) self.events.position(data.player, data.pos);
+      if (data.player !== self.player.id && self.events.position) self.events.position(data.player, data.pos);
     });
+
     self.socket.on('powerup', function(data) {
       if (self.events.powerup) self.events.powerup(data.player, data.powerup);
     });
+
     self.socket.on('money', function(data) {
       if (self.events.money) self.events.money(data.money);
     });
+
     self.socket.on('score', function(data) {
       if (self.events.score) self.events.score(data.score);
     });
+
     self.socket.on('gun', function(data) {
       if (self.events.gun) self.events.gun(data.player, data.gun);
     });
@@ -89,7 +94,7 @@ function NetClient() {
           self.positionBuffer = null;
         }
         self.positionTimeout = null;
-      }, 250);
+      }, 100);
     } else {
       self.positionBuffer = self.player.pos;
     }
