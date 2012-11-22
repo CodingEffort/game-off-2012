@@ -61,6 +61,15 @@ Crafty.c("NormalBoss", {
 	}
 });
 
+Crafty.c("BigBoss", {
+	init: function() {
+		this.requires("Enemy, bigboss")
+			.crop(0,0,37,38)
+			.setMaxHealth(1500)
+			.alwaysLookDown();
+	}
+});
+
 
 
 /************************************************************************/

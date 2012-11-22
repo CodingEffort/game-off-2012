@@ -40,7 +40,8 @@ Crafty.sprite(50, "assets/back.png", {
     easiestboss: [13, 12],
     easyboss: [14, 12],
     firinmylazor: [5, 13],
-    normalboss: [6, 13]
+    normalboss: [6, 13],
+    bigboss: [15,12]
     });
 
 // Called when an enemy is hit by a pewpewlazors
@@ -204,7 +205,7 @@ function startGame() {
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("EasyBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10);
+    spawnEnemy("BigBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();

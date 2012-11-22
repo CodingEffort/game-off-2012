@@ -11,6 +11,7 @@ a rotation towards the bottom of the screen.
 - **EasyBoss**: Higher health enemy. Usually used with circular weapons and circular paths. It slowly rotates every frame (to allow circular weapons to
 be less predictable).
 - **NormalBoss**: Even higher health enemy, Usually used with a pulse weapon and a circular path.
+- **BigBoss**: The final boss of the game. Loads of health points, usually used with a circular/zigzag path and a highpulse/pulse/circular weapon.
 
 ## Enemy guns
 

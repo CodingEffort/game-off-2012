@@ -176,7 +176,7 @@ Crafty.c("HealPowerup", {
 		this.requires("PowerupObject");
 
 		var HEAL_AMOUNT = 25;
-		var HEAL_TIME = 50;
+		var HEAL_TIME = 30;
 
 		this.bind("OwnerSet", function() {
 			var targetHealth = Math.min(this.player.health + HEAL_AMOUNT, this.player.maxHealth);
