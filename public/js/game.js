@@ -39,7 +39,8 @@ Crafty.sprite(50, "assets/back.png", {
     teleport: [0, 13],
     easiestboss: [13, 12],
     easyboss: [14, 12],
-    firinmylazor: [5, 13]
+    firinmylazor: [5, 13],
+    normalboss: [6, 13]
     });
 
 // Called when an enemy is hit by a pewpewlazors
@@ -112,7 +113,7 @@ function startGame() {
         me = players[player.id];
         delete players[player.id];
       } else {
-        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
+        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerHomingPewPew", "#FF0000");
       }
       me.bind('CashChanged', function() {
         ui.setCashAmount(me.cash);
@@ -130,7 +131,7 @@ function startGame() {
 
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
-        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerForkYou", "#FF0000");
+        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerHomingPewPew", "#FF0000");
       } else if (type == 'enemy') {
         // TODO: spawn the enemy
       } else if (type == 'powerup') {
@@ -193,6 +194,9 @@ function startGame() {
         me.shooting = false;
         nc.shooting(false);
     });
+
+    //TOREMOVE: Use to test new enemy types:
+    spawnEnemy("NormalBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "PulseEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();

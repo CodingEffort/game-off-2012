@@ -31,6 +31,7 @@ Crafty.c("Enemy", {
                     return;
                 }
 
+                pew.owner = this;
                 pew
                     .setDamage(this.gun.damage)
                     .collision()
