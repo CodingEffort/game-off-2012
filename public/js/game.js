@@ -204,7 +204,7 @@ function startGame() {
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("EasyBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "PulseEnemyPewPew", 1.0, 10);
+    spawnEnemy("EasyBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();

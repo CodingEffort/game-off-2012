@@ -124,6 +124,14 @@ Crafty.c("PulseEnemyPewPew", {
 			.setShootDelay(500);
 	}
 });
+Crafty.c("HighPulseEnemyPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setDamage(20)
+			.setProjectileType("EnemyPulseLazor")
+			.setShootDelay(100);
+	}
+});
 
 
 
