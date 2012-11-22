@@ -48,11 +48,17 @@ Note: All the "50"s represent the max width of an enemy. They are there to make 
 
 #. "BottomTop": Chases the top of the screen starting from its current position. Recommended starting position: (from 50 to SCREEN_W-50, SCREEN_H+50)
 
-#. "PatrolHorizontal": Starts from the top of the screen, goes to a certain y position, then patrols left/right. Recommended starting position: (from 50 to SCREEN_W-50, -50)
+#. "PatrolHorizontalStartLeft": Starts from the top of the screen, goes to a certain y position, then patrols left/right. Recommended starting position: (from 50 to SCREEN_W-50, -50)
 
-#. "ZigZag": Starts from the top of the screen, goes to a certain y position, then patrols left/right while going up/down. Recommended starting position: (from 50 to SCREEN_W-50, -50)
+#. "PatrolHorizontalStartRight": Starts from the top of the screen, goes to a certain y position, then patrols right/left. Recommended starting position: (from 50 to SCREEN_W-50, -50)
 
-#. "Circle": Starts from the top of the screen, goes to a certain y position, then patrols in a circle-like fashion. Recommended starting position: (from 50 to SCREEN_W-50, -50)
+#. "ZigZagStartLeft": Starts from the top of the screen, goes to a certain y position, then patrols left/right while going up/down. Recommended starting position: (from 50 to SCREEN_W-50, -50)
+
+#. "ZigZagStartRight": Starts from the top of the screen, goes to a certain y position, then patrols right/left while going up/down. Recommended starting position: (from 50 to SCREEN_W-50, -50)
+
+#. "CircleStartLeft": Starts from the top of the screen, goes to a certain y position, then patrols in a circle-like fashion, counter-clockwise. Recommended starting position: (from 50 to SCREEN_W-50, -50)
+
+#. "CircleStartRight": Starts from the top of the screen, goes to a certain y position, then patrols in a circle-like fashion, clockwise. Recommended starting position: (from 50 to SCREEN_W-50, -50)
 
 
 
