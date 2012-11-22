@@ -26,6 +26,14 @@ Crafty.c("Patrol", {
     }
 });
 
+Crafty.c("Trapeze", {
+	init: function() {
+		this.requires("Enemy, trapeze")
+			.crop(25, 0, 20, 47)
+			.setMaxHealth(50);
+	}
+});
+
 Crafty.c("EasiestBoss", {
 	init: function() {
 		this.requires("Enemy, easiestboss")

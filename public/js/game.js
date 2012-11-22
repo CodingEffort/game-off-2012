@@ -32,6 +32,7 @@ Crafty.sprite(50, "assets/back.png", {
     grunt: [2, 12], // the grunt enemy
     explosion: [3, 12], // the explosion animation
     patrol: [8, 12], // the patrol enemy
+    trapeze: [8, 12],
     enemypewpew: [1, 12],
     shield: [9, 12],
     shieldObject: [10, 12],
@@ -205,7 +206,7 @@ function startGame() {
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("BigBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10);
+    spawnEnemy("Trapeze", Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontalStartLeft", "LameShotgunEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();
