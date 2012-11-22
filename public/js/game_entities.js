@@ -134,7 +134,7 @@ Crafty.c("FollowPath", {
     _path: function(x) { return x; },
     _deltaT: 0,
     init: function() {
-        this.requires("NotifyWhenOutOfScreen");
+        this.requires("NotifyWhenOutOfScreen, Tween");
 
         this.deltaT = 0;
         this.showRotation = true;
@@ -151,7 +151,8 @@ Crafty.c("FollowPath", {
             if (this.showRotation)
             {
                 var nextPos = this.path(this.deltaT);
-                this.rotation = Crafty.math.radToDeg(Math.atan2(nextPos.y - newPos.y, nextPos.x - newPos.x));
+                var targetAngle = Crafty.math.radToDeg(Math.atan2(nextPos.y - newPos.y, nextPos.x - newPos.x));
+                this.tween({rotation: targetAngle}, 5);
             }
         });
         this.bind("OutOfScreen", function () {

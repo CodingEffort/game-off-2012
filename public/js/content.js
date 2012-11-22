@@ -34,6 +34,14 @@ Crafty.c("Trapeze", {
 	}
 });
 
+Crafty.c("Deltoid", {
+	init: function() {
+		this.requires("Enemy, deltoid")
+			.crop(0,0,35,39)
+			.setMaxHealth(65);
+	}
+});
+
 Crafty.c("EasiestBoss", {
 	init: function() {
 		this.requires("Enemy, easiestboss")

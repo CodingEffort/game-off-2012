@@ -6,6 +6,7 @@
 - **Patrol**: Reasonable target. Usually used with regular weapons and patrol paths staying in. Warning: this enemy always keeps a rotation towards the
 bottom of the screen.
 - **Trapeze**: A little more health than the patrol.
+- **Deltoid**: A tad stronger than the trapeze.
 - **EasiestBoss**: High health enemy (not too much, it's the first boss). Usually used with shotguns and zigzag paths. Warning: this enemy always keeps
 a rotation towards the bottom of the screen.
 - **EasiestBossAiming**: Same as the previous enemy, but this one aims in front of it. This allows it to take circular paths instead.

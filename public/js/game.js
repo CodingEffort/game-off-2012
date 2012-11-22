@@ -33,6 +33,7 @@ Crafty.sprite(50, "assets/back.png", {
     explosion: [3, 12], // the explosion animation
     patrol: [8, 12], // the patrol enemy
     trapeze: [8, 12],
+    deltoid: [7, 13],
     enemypewpew: [1, 12],
     shield: [9, 12],
     shieldObject: [10, 12],
@@ -117,7 +118,7 @@ function startGame() {
         me = players[player.id];
         delete players[player.id];
       } else {
-        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
+        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerMelee", "#FF0000");
       }
       me.bind('CashChanged', function() {
         ui.setCashAmount(me.cash);
@@ -135,7 +136,7 @@ function startGame() {
 
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
-        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerForkYou", "#FF0000");
+        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerMelee", "#FF0000");
       } else if (type == 'enemy') {
         // TODO: spawn the enemy
       } else if (type == 'powerup') {
@@ -206,7 +207,7 @@ function startGame() {
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("Trapeze", Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontalStartLeft", "LameShotgunEnemyPewPew", 1.0, 10);
+    spawnEnemy("Deltoid", Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "LameShotgunEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();
