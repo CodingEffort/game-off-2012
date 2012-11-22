@@ -25,7 +25,7 @@ var sessions = new express.session.MemoryStore();
 
 passport.use(new LocalStrategy(function(username, password, done) {
   db.user.getByUsername(username, function(user) {
-    if (!err && user) {
+    if (user) {
       // I find the lack of encryption disturbing
       if (user.password === password) {
         done(null, user);
@@ -34,7 +34,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
       }
     } else {
       db.user.getByEmail(username, function(user) {
-        if (!err && user) {
+        if (user) {
           if (user.password == password) {
             done(null, user);
           } else {
