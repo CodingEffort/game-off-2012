@@ -16,7 +16,7 @@ Crafty.c("Spaceship", {
             .attr({z:this.z+10});
         this.canShoot = true;
         this.powerups = {};
-        this.playerID = -1;
+        this.playerID = null;
         this.cash = 0;
         this.shooting = false;
         this.shootingUniqueWeapon = false;

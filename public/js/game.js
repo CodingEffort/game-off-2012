@@ -13,7 +13,10 @@ var SCREEN_H = 600;
 // Initialize the network
 var nc = new NetClient();
 
-var players = [];
+var players = {};
+var enemies = {};
+var powerups = {};
+var ui = null;
 var me = null;
 
 // Initialize the game screen
@@ -38,15 +41,6 @@ Crafty.sprite(50, "assets/back.png", {
     easyboss: [14, 12],
     firinmylazor: [5, 13]
     });
-
-function getPlayerById(playerID) {
-  for (var i = players.length; i >= 0; --i) {
-    if (players[i].playerID == playerID) {
-      return players[i];
-    }
-  }
-  return null;
-}
 
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
@@ -87,6 +81,7 @@ function hurtPlayer(player, dmg) {
 }
 
 //TEMP UNTIL SERVER SPAWNS ENEMIES
+/*
 Crafty.c("Spawner", {
     init: function() { },
     setSpawnFunction: function(func) {
@@ -98,27 +93,39 @@ Crafty.c("Spawner", {
         this.timeout(this.startSpawning, Crafty.math.randomInt(50, 1500));
     }
 });
+*/
 
 //TEMP UNTIL MULTIPLAYER
+/*
 function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, lerpTime) {
     var interwebz = spawnPlayer(startX, startY, playerID, gun, color).bind("EnterFrame", function() { this.shooting = true; });
     setInterval(function() { forcePlayerPosition(interwebz.playerID, Crafty.math.randomInt(0, SCREEN_W),
         Crafty.math.randomInt(0, SCREEN_H), lerpTime); }, timeForChangePos);
 }
+*/
 
 function startGame() {
+    ui = Crafty.e('UI');
+
     nc.bind('connected', function(player) {
-      me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
+      if (players[player.id]) {
+        me = players[player.id];
+        delete players[player.id];
+      } else {
+        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerForkYou", "#FF0000");
+      }
+      me.bind('CashChanged', function() {
+        ui.setCashAmount(me.cash);
+      });
     });
     nc.connect();
 
-    nc.bind('shooting', function(player, shooting) {
-      var p = getPlayerById(player);
-      if (p) p.shooting = shooting;
+    nc.bind('shooting', function(id, shooting) {
+      players[id].shooting = shooting;
     });
 
-    nc.bind('position', function(player, pos) {
-      forcePlayerPosition(player, pos.x, pos.y, 5);
+    nc.bind('position', function(id, pos) {
+      forcePlayerPosition(id, pos.x, pos.y, 5);
     });
 
     nc.bind('spawn', function(type, spawn) {
@@ -131,10 +138,9 @@ function startGame() {
       }
     });
 
-    nc.bind('despawn', function(type, despawn) {
+    nc.bind('despawn', function(type, id) {
       if (type == 'player') {
-        var p = getPlayerById(despawn);
-        if (p) p.destroy();
+        players[id].destroy();
       } else if (type == 'enemy') {
         // TODO: destroy the enemy
       } else if (type == 'powerup') {
@@ -155,19 +161,21 @@ function startGame() {
     //spawnInterwebz(600, 200, 5, "#AAAAAA", "PlayerFireBigPewPew", 3000, 300);
 
     // TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
-    var spawner = Crafty.e("Spawner").setSpawnFunction(spawnNextEnemy);
+    //var spawner = Crafty.e("Spawner").setSpawnFunction(spawnNextEnemy);
 
     // Update the player according to the movement
     Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
-        var MOVE_LERP_SPEED = 0.9;
+        if (me) {
+            var MOVE_LERP_SPEED = 0.9;
 
-        var position = $("#cr-stage").position();
+            var position = $("#cr-stage").position();
 
-        var targetX = Crafty.math.clamp(e.x - position.left - me.w/2, 0, SCREEN_W - me.w);
-        var targetY = Crafty.math.clamp(e.y - position.top - me.h/2, 0, SCREEN_H - me.h);
-        me.x = Crafty.math.lerp(me.x, targetX, MOVE_LERP_SPEED);
-        me.y = Crafty.math.lerp(me.y, targetY, MOVE_LERP_SPEED);
-        nc.position(me.x, me.y);
+            var targetX = Crafty.math.clamp(e.x - position.left - me.w/2, 0, SCREEN_W - me.w);
+            var targetY = Crafty.math.clamp(e.y - position.top - me.h/2, 0, SCREEN_H - me.h);
+            me.x = Crafty.math.lerp(me.x, targetX, MOVE_LERP_SPEED);
+            me.y = Crafty.math.lerp(me.y, targetY, MOVE_LERP_SPEED);
+            nc.position(me.x, me.y);
+        }
     });
 
     // Check to fire for the player.
@@ -186,20 +194,13 @@ function startGame() {
         nc.shooting(false);
     });
 
-
     // We bring the enemies
-    spawner.startSpawning();
+    //spawner.startSpawning();
 
-    this.ui = Crafty.e("UI");
-    me.bind("CashChanged", function() {
-        ui.setCashAmount(me.cash);
-    });
-
-
-    spawnPowerup('ShieldPowerup', 100, 100);
-    spawnPowerup('ShieldPowerup', SCREEN_W-300, 100);
-    spawnPowerup('HealPowerup', 300, 100);
-    spawnPowerup('HealPowerup', SCREEN_W-100, 100);
+    //spawnPowerup('ShieldPowerup', 100, 100);
+    //spawnPowerup('ShieldPowerup', SCREEN_W-300, 100);
+    //spawnPowerup('HealPowerup', 300, 100);
+    //spawnPowerup('HealPowerup', SCREEN_W-100, 100);
 }
 
 function spawnPlayer(x, y, playerID, currentGun, color) {
@@ -209,16 +210,12 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     player.bind("Dead", function() { player.explode(Crafty.e("Implosion")); });
     player.setPlayerColor(color);
     player.setGun(currentGun);
-    players.push(player);
+    players[playerID] = player;
     return player;
 }
 
 function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
-    for (var i = 0; i < players.length; ++i) {
-        if (players[i].playerID === playerID) {
-            players[i].tween({x:xPos, y:yPos}, tweenTime);
-        }
-    }
+    players[playerID].tween({x:xPos, y:yPos}, tweenTime);
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
@@ -237,6 +234,7 @@ function spawnEnemy(enemyType, startX, startY, pathType, gunType, speedModificat
 
 
 //TEMP UNTIL SERVER SPAWNS ENEMIES
+/*
 function spawnNextEnemy() {
     var r = Crafty.math.randomInt(0,100);
     if (r <= 10) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontalStartLeft", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
@@ -250,3 +248,4 @@ function spawnNextEnemy() {
     else if (r <= 85) spawnPowerup('HealPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
     
 }
+*/
