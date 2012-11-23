@@ -1,5 +1,5 @@
-var Worldline = require('./worldline');
-var Player = require('./player.js')
+var Branch = require('./branch');
+var Player = require('./player')
 
 module.exports = function(sockets, db, config) {
   var self = this;
@@ -7,13 +7,13 @@ module.exports = function(sockets, db, config) {
   this.sockets = sockets;
   this.db = db;
   this.config = config;
-  this.worldlines = {};
-
-  this.worldlines['A'] = new Worldline(self.sockets, 'A');
+  this.repo = {
+    master: new Branch(self.sockets, 'master')
+  };
 
   this.sockets.on('connection', function(socket) {
     var client = new Player(socket);
-    self.worldlines['A'].addPlayer(client);
+    self.repo['master'].addPlayer(client);
     client.init();
   });
 };

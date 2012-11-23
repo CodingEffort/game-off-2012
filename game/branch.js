@@ -18,10 +18,10 @@ module.exports = function(sockets, id) {
   }
 
   this.addPlayer = function(player) {
-    if (player.worldline)
-      player.worldline.removePlayer(player);
+    if (player.branch)
+      player.branch.removePlayer(player);
     player.socket.join(self.id);
-    player.worldline = self;
+    player.branch = self;
     self.players[player.id] = player;
     self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
     for (var id in self.players) {
@@ -36,7 +36,7 @@ module.exports = function(sockets, id) {
   this.removePlayer = function(player) {
     if (self.hasPlayer(player.id)) {
       player.socket.leave(self.id);
-      player.worldline = null;
+      player.branch = null;
       delete self.players[player.id];
       self.broadcast('despawn', { type: 'player', despawn: player.id });
     }

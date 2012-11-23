@@ -6,7 +6,7 @@ module.exports = function(socket) {
   this.user = {};
   this.latency = 0;
 
-  this.worldline = null;
+  this.branch = null;
   this.health = 0;
   this.pos = { x: 0, y: 0 };
   this.gun = null;
@@ -19,7 +19,7 @@ module.exports = function(socket) {
     return {
       id: self.id,
       //username: self.user.username,
-      worldline: (self.worldline) ? self.worldline.id : null,
+      branch: (self.branch) ? self.branch.id : null,
       health: self.health,
       pos: self.pos,
       gun: (self.gun) ? self.gun.serialize() : null,
@@ -38,13 +38,13 @@ module.exports = function(socket) {
   });
 
   this.socket.on('disconnect', function() {
-    self.worldline.removePlayer(self);
+    self.branch.removePlayer(self);
   });
 
   this.socket.on('shooting', function(data) {
     if (data.shooting !== undefined) {
       self.shooting = !!data.shooting;
-      self.socket.broadcast.to(self.worldline.id).emit('shooting', { player: self.id, shooting: self.shooting });
+      self.socket.broadcast.to(self.branch.id).emit('shooting', { player: self.id, shooting: self.shooting });
     }
   });
 
@@ -52,7 +52,7 @@ module.exports = function(socket) {
     if (data.pos && data.pos.x !== undefined && data.pos.y !== undefined) {
       self.pos.x = Math.round(data.pos.x);
       self.pos.y = Math.round(data.pos.y);
-      self.socket.broadcast.to(self.worldline.id).emit('position', { player: self.id, pos: self.pos });
+      self.socket.broadcast.to(self.branch.id).emit('position', { player: self.id, pos: self.pos });
     }
   });
 };
