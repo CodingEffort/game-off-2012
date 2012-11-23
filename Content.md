@@ -8,6 +8,7 @@ bottom of the screen.
 - **Trapeze**: A little more health than the patrol.
 - **Deltoid**: A tad stronger than the trapeze.
 - **RectBox**: A bit better than the deltoid. Warning: this enemy always keeps a rotation towards the bottom of the screen.
+- **HalfCircle**: A bit better than the rectbox.
 - **EasiestBoss**: High health enemy (not too much, it's the first boss). Usually used with shotguns and zigzag paths. Warning: this enemy always keeps
 a rotation towards the bottom of the screen.
 - **EasiestBossAiming**: Same as the previous enemy, but this one aims in front of it. This allows it to take circular paths instead.

@@ -47,7 +47,15 @@ Crafty.c("RectBox", {
 		this.requires("Enemy, rectbox")
 			.crop(0,0,18,28)
 			.alwaysLookDown()
-			.setMaxHealth(65);
+			.setMaxHealth(75);
+	}
+});
+
+Crafty.c("HalfCircle", {
+	init: function() {
+		this.requires("Enemy, halfcircle")
+			.crop(18,0,16,29)
+			.setMaxHealth(90);
 	}
 });
 
