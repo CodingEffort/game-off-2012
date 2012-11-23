@@ -125,7 +125,7 @@ Crafty.c("ShieldPowerup", {
 		this.requires("Living, PowerupObject, shieldObject, HealthBar")
 			.setMaxHealth(50)
 			.setHpBarYOffset(10)
-			.setHpBarColor('#0094FF');
+			.setHpBarFont("ShieldHealthFont");
 
 		this.bind("OwnerSet", function() {
 			this.setHpBarFollow(this.player);

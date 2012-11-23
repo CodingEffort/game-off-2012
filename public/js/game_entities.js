@@ -12,6 +12,7 @@
 // Use 2 of those to create a vertical scrolling background
 Crafty.c("ScreenScrolldown", {
     init: function() {
+        this.attr({z:-100});
         this.bind("EnterFrame", function() {
             this.y += 5;
             if (this.y >= SCREEN_H)
@@ -173,14 +174,19 @@ Crafty.c("HasHealth", {
   },
   setMaxHealth: function(amount) {
     this.maxHealth = amount;
-    this.health = this.maxHealth;
+    this.setHealth(this.maxHealth);
     return this;
+  },
+  setHealth: function(amount) {
+    this.health = amount;
+    this.health = Crafty.math.clamp(this.health, 0, this.maxHealth);
+    this.trigger("HealthChanged");
   },
   hurt: function(amount) {
     this.hurtAmount = amount;
     this.trigger("Hurt");
-    this.health -= amount;
-    this.health = Crafty.math.clamp(this.health, 0, this.maxHealth);
+    this.setHealth(this.health - amount);
+    
     if (this.health === 0)
     {
       this.trigger("Dead");
@@ -228,30 +234,44 @@ Crafty.c("HealthBar", {
         this.hpBarColor = null;
         this.barFollow = this;
 
-        this.bar = Crafty.e("2D, Canvas, Text")
-          //.textFont({weight: 'bold', family:'Arial', size:'12px'})
-          .textColor("#FFFFFF")
+        this.bar = Crafty.e("2D, Canvas, SpriteText")
           .attr({z:10000});
 
+        this.setHpBarFont("HighHealthFont");
+        this.hpBarColor = null;
+        
         this.bind("Change", function() {
             var rect = this.barFollow.mbr();
             this.bar.x = rect._x + rect._w/2 - this.bar.w/2;
             this.bar.y = rect._y + rect._h + 20 + this.barYOffset;
         });
 
-        this.bind("EnterFrame", function() {
+        this.bind("HealthChanged", function() {
             var displayHP = Math.floor(this.health);
-            if (displayHP < 1 && displayHP > 0) displayHP=1; // don't show 0 when it's 0.xxxx
-            this.bar.text(displayHP);
+            if (displayHP < 1 && displayHP > 0) displayHP=1; // don't show 0 when it's 0,14901249
+            var hpStr = displayHP.toString();
+            this.bar.text(hpStr);
+            this.bar.attr({w: hpStr.length * this.bar.FONT_SIZE, h: this.bar.FONT_SIZE});
             if (this.hpBarColor === null)
             {
                 var percent = this.health / this.maxHealth;
+                var desiredFont;
                 if (percent >= 0.7)
-                    this.bar.textColor("#00FF00");
+                    desiredFont = "HighHealthFont";
+                else if (percent >= 0.5)
+                    desiredFont = "NormalHealthFont";
                 else if (percent >= 0.3)
-                    this.bar.textColor("#FFFF00");
+                    desiredFont = "LowHealthFont";
                 else
-                    this.bar.textColor("#FF0000");
+                    desiredFont = "CriticalHealthFont";
+
+                if (desiredFont !== this.bar.oldFont)
+                {
+                  this.setHpBarFont(desiredFont);
+                  console.log("new");
+                }
+
+                this.hpBarColor = null;
             }
         });
 
@@ -267,9 +287,26 @@ Crafty.c("HealthBar", {
       this.barFollow = entity;
       return this;
     },
-    setHpBarColor: function(color) {
-      this.hpBarColor = color;
-      this.bar.textColor(color);
+    setHpBarFont: function(font) {
+      this.hpBarColor = font;
+      var bar = this.bar;
+      this.bar.FONT_SIZE = 8;
+      var FONT_HIGH_HEALTH = "assets/FontHighHealth.png",
+          FONT_NORMAL_HEALTH = "assets/FontNormalHealth.png",
+          FONT_LOW_HEALTH = "assets/FontLowHealth.png",
+          FONT_CRITICAL_HEALTH = "assets/FontCriticalHealth.png",
+          FONT_SHIELD_HEALTH = "assets/FontShieldHealth.png";
+      Crafty.load([FONT_HIGH_HEALTH, FONT_NORMAL_HEALTH, FONT_LOW_HEALTH, FONT_CRITICAL_HEALTH, FONT_SHIELD_HEALTH], function() {
+        bar.registerFont("HighHealthFont", bar.FONT_SIZE, FONT_HIGH_HEALTH);
+        bar.registerFont("NormalHealthFont", bar.FONT_SIZE, FONT_NORMAL_HEALTH);
+        bar.registerFont("LowHealthFont", bar.FONT_SIZE, FONT_LOW_HEALTH);
+        bar.registerFont("CriticalHealthFont", bar.FONT_SIZE, FONT_CRITICAL_HEALTH);
+        bar.registerFont("ShieldHealthFont", bar.FONT_SIZE, FONT_SHIELD_HEALTH);
+
+        bar.font(font);
+        bar.oldFont = font;
+      });
+
       return this;
     }
 });

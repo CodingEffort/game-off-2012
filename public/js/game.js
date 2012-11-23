@@ -21,6 +21,7 @@ var me = null;
 
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
+Crafty.background("#000000");
 Crafty.canvas.init();
 
 // Load the spritesheet
@@ -209,12 +210,12 @@ function startGame() {
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("HalfCircle", Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "DiagonalEnemyPewPew", 1.0, 10);
+    spawnEnemy("BigBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "PulseEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();
 
-    //spawnPowerup('ShieldPowerup', 100, 100);
+    spawnPowerup('ShieldPowerup', 100, 100);
     //spawnPowerup('ShieldPowerup', SCREEN_W-300, 100);
     //spawnPowerup('HealPowerup', 300, 100);
     //spawnPowerup('HealPowerup', SCREEN_W-100, 100);

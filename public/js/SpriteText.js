@@ -17,12 +17,6 @@ Crafty.c("SpriteText", {
     _registeredSpriteFonts: {},
     
     init: function() {
-        this.setter("alpha", function() {
-            for (var e in this._entities)
-            {
-                e.alpha = this.alpha;
-            }
-        });
         this.bind("Change", function(obj) {
             var tileSize = this._registeredSpriteFonts[this._font],
                 txt, l, posx, i, type, e, chExists, ch, startx, textwidth;

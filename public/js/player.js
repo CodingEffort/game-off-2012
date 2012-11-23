@@ -56,8 +56,6 @@ Crafty.c("Spaceship", {
         var firstGun  = this.gun === undefined;
         this.gun = gun;
         this.shooting = false;
-        if (firstGun && this.gun.shootDelay >= 0)
-            this.timeout(this.shoot, this.gun.shootDelay);
         return this;
     },
     removeUniqueAmmosShotByUs: function() {
