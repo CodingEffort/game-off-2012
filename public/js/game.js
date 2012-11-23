@@ -209,7 +209,7 @@ function startGame() {
     });
 
     //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("HalfCircle", Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "LameShotgunEnemyPewPew", 1.0, 10);
+    spawnEnemy("HalfCircle", Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "DiagonalEnemyPewPew", 1.0, 10);
 
     // We bring the enemies
     //spawner.startSpawning();

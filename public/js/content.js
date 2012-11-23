@@ -149,6 +149,15 @@ Crafty.c("LameLargeShotgunEnemyPewPew", {
 			.setProjectilesAngleDeltas([-2,-1,1,2]);
 	}
 });
+Crafty.c("DiagonalEnemyPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setDamage(10)
+			.setShootDelay(800)
+			.setProjectileType("EnemySmallLazor")
+			.setProjectilesAngleDeltas([-135, -45, 45, 135]);
+	}
+});
 Crafty.c("CircularEnemyPewPew", {
 	init: function() {
 		this.requires("Gun")

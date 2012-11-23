@@ -24,6 +24,7 @@ be less predictable).
 - **LameConeEnemyPewPew**: Shoots 3 spreaded regular projectiles in a cone.
 - **LameShotgunEnemyPewPew**: Shoots 3 regular projectiles in a small cone, giving a shotgun effect.
 - **LameLargeShotgunEnemyPewPew**: Shoots 4 regular projectiles in a small cone, giving a larger shotgun effect.
+- **DiagonalEnemyPewPew**: Shoots 4 projectiles in its 4 corners.
 - **CircularEnemyPewPew**: Shoots 23 projectiles evenly spreaded around the enemy, spreading bullets all accross the screen.
 - **PulseEnemyPewPew**: Shoots melee pulses relatively quickly, hurting people in a melee range, hurting the closest ones even more.
 - **HighPulseEnemyPewPew**: Shoots melee pulses extremely fast, hurting people in the range, causing more damage to the closest ones. Use this with an enemy that NEEDS to be avoided, since it kills so fast.
