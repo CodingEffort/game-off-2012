@@ -268,7 +268,6 @@ Crafty.c("HealthBar", {
                 if (desiredFont !== this.bar.oldFont)
                 {
                   this.setHpBarFont(desiredFont);
-                  console.log("new");
                 }
 
                 this.hpBarColor = null;
@@ -405,4 +404,60 @@ Crafty.c("Gun", {
     setUnique: function(isUnique) {
         this.isUnique = isUnique; return this;
     }
+});
+
+Crafty.c("Boss", {
+  init: function() {
+    this.requires("Enemy, BossHealthBar");
+  }
+});
+
+Crafty.c("BossHealthBar", {
+  init: function() {
+    this.bg = Crafty.e("2D, Canvas, bosshealthbarbg")
+      .crop(22,0,1,1);
+    this.fill = Crafty.e("2D, Canvas, bosshealthbarfill")
+      .crop(23,0,1,1);
+
+    var SCREEN_H_SPACE = 0.8;
+    var BG_OFFSET = 2;
+    this.fill.w = 10;
+    this.bg.w = this.fill.w + BG_OFFSET*2;
+    this.fill.h = SCREEN_H_SPACE * SCREEN_H;
+    this.bg.h = this.fill.h + BG_OFFSET*2;
+
+    this.fill.x = 10;
+    this.bg.x = this.fill.x - BG_OFFSET;
+
+    this.fill.y = (1.0 - SCREEN_H_SPACE) * SCREEN_H / 2;
+    this.bg.y = this.fill.y - BG_OFFSET;
+
+    var bg = this.bg;
+    var bossTxtText = "BOSS";
+    this.bossTxt = Crafty.e("2D, Canvas, SpriteText")
+      .text(bossTxtText);
+    var FONT_PATH = "assets/FontCriticalHealth.png";
+    var FONT_SIZE = 8;
+    var bossTxt = this.bossTxt;
+    Crafty.load([FONT_PATH], function () {
+      bossTxt.registerFont("FontCriticalHealth", FONT_SIZE, FONT_PATH)
+        .font("FontCriticalHealth")
+        .attr({x: bg.x, y: bg.y - bossTxt.h - 12, w: bossTxtText.length * FONT_SIZE, h:FONT_SIZE});
+    });
+
+    var fullFillY = this.fill.y;
+    var fullFillH = this.fill.h;
+
+    this.bind("Remove", function() {
+      this.fill.destroy();
+      this.bg.destroy();
+      this.bossTxt.destroy();
+    });
+
+    this.bind("Hurt", function() {
+      var percent = this.health / this.maxHealth;
+      this.fill.h = fullFillH * percent;
+      this.fill.y = fullFillY + fullFillH - this.fill.h;
+    });
+  }
 });

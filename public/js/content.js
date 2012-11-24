@@ -61,7 +61,7 @@ Crafty.c("HalfCircle", {
 
 Crafty.c("EasiestBoss", {
 	init: function() {
-		this.requires("Enemy, easiestboss")
+		this.requires("Boss, easiestboss")
 			.crop(0,0,40,40)
 			.setMaxHealth(250)
 			.alwaysLookDown();
@@ -70,7 +70,7 @@ Crafty.c("EasiestBoss", {
 
 Crafty.c("EasiestBossAiming", {
 	init: function() {
-		this.requires("Enemy, easiestboss")
+		this.requires("Boss, easiestboss")
 			.crop(0,0,40,40)
 			.setMaxHealth(250);
 	}
@@ -78,7 +78,7 @@ Crafty.c("EasiestBossAiming", {
 
 Crafty.c("EasyBoss", {
 	init: function() {
-		this.requires("Enemy, easyboss")
+		this.requires("Boss, easyboss")
 			.crop(0,0,40,40)
 			.setMaxHealth(500)
 			.rotateEveryFrame(1);
@@ -87,7 +87,7 @@ Crafty.c("EasyBoss", {
 
 Crafty.c("NormalBoss", {
 	init: function() {
-		this.requires("Enemy, normalboss")
+		this.requires("Boss, normalboss")
 			.crop(0,0,40,37)
 			.setMaxHealth(750)
 			.alwaysLookDown();
@@ -96,7 +96,7 @@ Crafty.c("NormalBoss", {
 
 Crafty.c("BigBoss", {
 	init: function() {
-		this.requires("Enemy, bigboss")
+		this.requires("Boss, bigboss")
 			.crop(0,0,37,38)
 			.setMaxHealth(1500)
 			.alwaysLookDown();
