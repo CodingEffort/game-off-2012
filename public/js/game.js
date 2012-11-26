@@ -94,30 +94,6 @@ function hurtPlayer(player, dmg) {
     }
 }
 
-//TEMP UNTIL SERVER SPAWNS ENEMIES
-/*
-Crafty.c("Spawner", {
-    init: function() { },
-    setSpawnFunction: function(func) {
-        this.spawnFunction = func;
-        return this;
-    },
-    startSpawning: function() {
-        this.spawnFunction();
-        this.timeout(this.startSpawning, Crafty.math.randomInt(50, 1500));
-    }
-});
-*/
-
-//TEMP UNTIL MULTIPLAYER
-/*
-function spawnInterwebz(startX, startY, playerID, color, gun, timeForChangePos, lerpTime) {
-    var interwebz = spawnPlayer(startX, startY, playerID, gun, color).bind("EnterFrame", function() { this.shooting = true; });
-    setInterval(function() { forcePlayerPosition(interwebz.playerID, Crafty.math.randomInt(0, SCREEN_W),
-        Crafty.math.randomInt(0, SCREEN_H), lerpTime); }, timeForChangePos);
-}
-*/
-
 function startGame() {
     ui = Crafty.e('UI');
 
@@ -147,7 +123,9 @@ function startGame() {
       if (type == 'player') {
         spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
       } else if (type == 'enemy') {
-        spawnEnemy("Grunt", 100, -50, spawn.id, "CircleStartRight", "LameEnemyPewPew", 1.0, 10, spawn.dTStart);
+        console.log(spawn);
+        spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
+            spawn.path, "LameEnemyPewPew", 1.0, 10, spawn.dTStart);
       } else if (type == 'powerup') {
         // TODO: spawn the powerup
       }
@@ -175,17 +153,6 @@ function startGame() {
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
     var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // 2 backgrounds for the effect: the other one starts above the first
-
-    // Create the player space ship
-    //var player = spawnPlayer(SCREEN_W/2, SCREEN_H/2, 0, "PlayerHomingPewPew", "#FF9900");
-    //spawnInterwebz(300, 300, 42, "#00FF00", "PlayerFastPewPew", 1000, 50);
-    //spawnInterwebz(200, 400, 1337, "#FF0000", "PlayerParrallelFastPewPew", 2000, 100);
-    //spawnInterwebz(400, 200, 69, "#0000FF", "PlayerFastPewPewSplit3", 5000, 200);
-    //spawnInterwebz(100, 400, 101, "#FFFFFF", "PlayerFastPewPewSplit5", 3000, 300);
-    //spawnInterwebz(600, 200, 5, "#AAAAAA", "PlayerFireBigPewPew", 3000, 300);
-
-    // TODO: use more sophisticated spawner with different enemies + handle difficulty + random enemies
-    //var spawner = Crafty.e("Spawner").setSpawnFunction(spawnNextEnemy);
 
     // Update the player according to the movement
     Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
@@ -227,14 +194,6 @@ function startGame() {
     Crafty.bind("EnterFrame", function() {
         dT += dTSpeed;
     });
-
-    // We bring the enemies
-    //spawner.startSpawning();
-
-    //spawnPowerup('ShieldPowerup', 100, 100);
-    //spawnPowerup('ShieldPowerup', SCREEN_W-300, 100);
-    //spawnPowerup('HealPowerup', 300, 100);
-    //spawnPowerup('HealPowerup', SCREEN_W-100, 100);
 }
 
 function spawnPlayer(x, y, playerID, currentGun, color) {
@@ -255,6 +214,7 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, cashValue, dTStart) {
     var enemy = Crafty.e(enemyType);
+    console.log(enemyType + startX + "," + startY);
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)
