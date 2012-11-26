@@ -76,7 +76,6 @@ module.exports = function(sockets, id) {
   };
 
   this.addEnemy = function(enemy) {
-    console.log(enemy);
     self.enemies[enemy.id] = enemy;
     self.broadcast('spawn', { type: 'enemy', spawn: enemy.serialize() });
   };
