@@ -21,7 +21,7 @@ function NetClient() {
     money: null,
     score: null,
     gun: null,
-    updatedt: null
+    dt: null
   };
 
   // Event management
@@ -50,8 +50,8 @@ function NetClient() {
       self.socket.emit('pong', { t: Number(new Date()), rx: new Date() - data.t });
     });
 
-    self.socket.on('updatedt', function(data) {
-      if (self.events.updatedt) self.events.updatedt(data.dT);
+    self.socket.on('dt', function(data) {
+      if (self.events.dt) self.events.dt(data.dt);
     });
 
     // Rx

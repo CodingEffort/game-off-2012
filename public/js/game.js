@@ -165,7 +165,7 @@ function startGame() {
       }
     });
 
-    nc.bind('updatedt', function(newDT) {
+    nc.bind('dt', function(newDT) {
         var DT_SPEED_MOD = 0.1;
         if (dT < newDT)
             dTSpeed *= (1 + DT_SPEED_MOD);
