@@ -20,7 +20,8 @@ function NetClient() {
     health: null,
     money: null,
     score: null,
-    gun: null
+    gun: null,
+    updatedt: null
   };
 
   // Event management
@@ -47,6 +48,10 @@ function NetClient() {
 
     self.socket.on('ping', function(data) {
       self.socket.emit('pong', { t: Number(new Date()), rx: new Date() - data.t });
+    });
+
+    self.socket.on('updatedt', function(data) {
+      if (self.events.updatedt) self.events.updatedt(data.dT);
     });
 
     // Rx

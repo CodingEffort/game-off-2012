@@ -12,6 +12,9 @@ module.exports = function(sockets, id) {
 
   this.doFrame = function() {
     ++self.dT;
+    if (self.dT % 10 === 0) { // broad cast every n frames the current dT (refucktor me please, just makin' it work for now)
+      self.broadcast('updatedt', { dT: self.dT });
+    }
   };
 
   var frameInterval = setInterval(this.doFrame, 1000/30);

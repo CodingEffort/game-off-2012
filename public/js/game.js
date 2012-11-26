@@ -14,6 +14,8 @@ var SCREEN_H = 600;
 var nc = new NetClient();
 
 var dT = 0;
+var dTSpeed = 1;
+
 var players = {};
 var enemies = {};
 var powerups = {};
@@ -161,6 +163,15 @@ function startGame() {
       }
     });
 
+    nc.bind('updatedt', function(newDT) {
+        var DT_SPEED_MOD = 0.1;
+        if (dT < newDT)
+            dTSpeed *= (1 + DT_SPEED_MOD);
+        else if (dT > newDT)
+            dTSpeed *= (1 - DT_SPEED_MOD);
+        dT = Crafty.math.lerp(dT, newDT, 0.1);
+    });
+
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
     var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // 2 backgrounds for the effect: the other one starts above the first
@@ -214,7 +225,7 @@ function startGame() {
     });
 
     Crafty.bind("EnterFrame", function() {
-        ++dT;
+        dT += dTSpeed;
     });
 
     // We bring the enemies
