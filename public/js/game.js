@@ -126,7 +126,7 @@ function startGame() {
         me = players[player.id];
         delete players[player.id];
       } else {
-        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerFireBigPewPew", "#FF0000");
+        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerParrallelFastPewPew", "#FF0000");
       }
       dT = player.dT;
       me.bind('CashChanged', function() {
@@ -145,9 +145,9 @@ function startGame() {
 
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
-        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerFireBigPewPew", "#FF0000");
+        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
       } else if (type == 'enemy') {
-        spawnEnemy("BigBoss", 100, -50, spawn.id, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10, spawn.dTStart);
+        spawnEnemy("Grunt", 100, -50, spawn.id, "CircleStartRight", "LameEnemyPewPew", 1.0, 10, spawn.dTStart);
       } else if (type == 'powerup') {
         // TODO: spawn the powerup
       }
@@ -261,8 +261,11 @@ function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModif
         .setDeltaTStart(dTStart);
     enemy.followPath(getPath(pathType, startX, startY), speedModificator);
     enemy.cash = cashValue;
-    enemy.bind("Dead", function() { enemy.explode(Crafty.e("Explosion")); });
+    enemy.bind("Dead", function() {
+        enemy.explode(Crafty.e("Explosion"));
+    });
     enemy.setGun(gunType);
+    enemy.id = id;
     enemies[id] = enemy;
 
     return enemy;

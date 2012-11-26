@@ -119,7 +119,7 @@ Crafty.c("LameEnemyPewPew", {
 		this.requires("Gun")
 			.setDamage(5)
 			.setShootDelay(1000)
-			.setProjectileType("RegularPewPew");
+			.setProjectileType("EnemyRegularLazor");
 	}
 });
 Crafty.c("LameConeEnemyPewPew", {
