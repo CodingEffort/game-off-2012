@@ -9,7 +9,7 @@ module.exports = function(socket) {
 
   this.branch = null;
   this.health = 0;
-  this.pos = { x: 0, y: 0 };
+  this.pos = { x: 350, y: 300 };
   this.gun = null;
   this.score = 0;
   this.money = 0;

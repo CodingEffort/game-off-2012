@@ -147,7 +147,9 @@ function startGame() {
       if (type == 'player') {
         spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
       } else if (type == 'enemy') {
-        spawnEnemy("Grunt", 100, -50, spawn.id, "CircleStartRight", "LameEnemyPewPew", 1.0, 10, spawn.dTStart);
+        console.log(spawn);
+        spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
+            spawn.path, "LameEnemyPewPew", 1.0, 10, spawn.dTStart);
       } else if (type == 'powerup') {
         // TODO: spawn the powerup
       }

@@ -1,4 +1,5 @@
 var Enemy = require('./enemy');
+var Waves = require('./waves_content');
 
 module.exports = function(sockets, id) {
   var self = this;
@@ -49,7 +50,7 @@ module.exports = function(sockets, id) {
       player.socket.emit('spawn', { type: 'enemy', spawn: self.enemies[eid].serialize() });
     }
     //TESTING ZONE
-    self.addEnemy(new Enemy(100, -50, self.dT));
+    self.spawnWave();
   };
 
   this.hasPlayer = function(playerId) {
@@ -93,6 +94,21 @@ module.exports = function(sockets, id) {
     if (self.hasEnemy(enemyId)) {
       delete self.enemies[enemyId];
       self.broadcast('despawn', { type: 'enemy', despawn: enemyId });
+    }
+  };
+
+  this.spawnWave = function() {
+    var waves = new Waves();
+    var enemies = waves.waves[Math.floor(Math.random()*waves.waves.length)];
+    for (var i in enemies)
+    {
+      var path = waves.getWaveParamValue(enemies[i].path);
+      var pos = waves.getStartPosForPath(path);
+      var enemy = new Enemy(pos.x, pos.y,
+        waves.getWaveParamValue(enemies[i].type),
+        path,
+        self.dT);
+      this.addEnemy(enemy);
     }
   };
 };
