@@ -31,7 +31,7 @@ module.exports = function(socket) {
   this.init = function() {
     self.socket.emit('setup', { player: self.serialize() });
     //this.socket.emit('ping', { t: Number(new Date()) });
-  }
+  };
 
   this.socket.on('pong', function(data) {
     // TODO

@@ -13,6 +13,7 @@ var SCREEN_H = 600;
 // Initialize the network
 var nc = new NetClient();
 
+var dT = 0;
 var players = {};
 var enemies = {};
 var powerups = {};
@@ -143,7 +144,7 @@ function startGame() {
       if (type == 'player') {
         spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerFireBigPewPew", "#FF0000");
       } else if (type == 'enemy') {
-        // TODO: spawn the enemy
+        spawnEnemy("BigBoss", 100, -50, spawn.id, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10);
       } else if (type == 'powerup') {
         // TODO: spawn the powerup
       }
@@ -153,11 +154,13 @@ function startGame() {
       if (type == 'player') {
         players[id].destroy();
       } else if (type == 'enemy') {
-        // TODO: destroy the enemy
+        enemies[id].destroy();
       } else if (type == 'powerup') {
         // TODO: destroy the powerup
       }
     });
+
+    //setTimeout()
 
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
@@ -211,13 +214,14 @@ function startGame() {
         }
     });
 
-    //TOREMOVE: Use to test new enemy types:
-    spawnEnemy("BigBoss", Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10);
+    Crafty.bind("EnterFrame", function() {
+        ++dT;
+    });
 
     // We bring the enemies
     //spawner.startSpawning();
 
-    spawnPowerup('ShieldPowerup', 100, 100);
+    //spawnPowerup('ShieldPowerup', 100, 100);
     //spawnPowerup('ShieldPowerup', SCREEN_W-300, 100);
     //spawnPowerup('HealPowerup', 300, 100);
     //spawnPowerup('HealPowerup', SCREEN_W-100, 100);
@@ -239,15 +243,17 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, pathType, gunType, speedModificator, cashValue) {
+function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, cashValue) {
     var enemy = Crafty.e(enemyType);
     enemy.attr({x:startX, y:startY})
         .collision()
-        .onHit("Spaceship", onPlayerHitEnemy);
+        .onHit("Spaceship", onPlayerHitEnemy)
+        .setDeltaTStart(dT);
     enemy.followPath(getPath(pathType, startX, startY), speedModificator);
     enemy.cash = cashValue;
     enemy.bind("Dead", function() { enemy.explode(Crafty.e("Explosion")); });
     enemy.setGun(gunType);
+    enemies[id] = enemy;
 
     return enemy;
 }

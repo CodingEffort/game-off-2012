@@ -1,5 +1,5 @@
 var Branch = require('./branch');
-var Player = require('./player')
+var Player = require('./player');
 
 module.exports = function(sockets, db, config) {
   var self = this;

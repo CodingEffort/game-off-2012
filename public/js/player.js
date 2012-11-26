@@ -9,7 +9,7 @@
  // Main spaceship object
 Crafty.c("Spaceship", {
     init: function() {
-        this.requires("2D, Canvas, ship, SpriteColor, Living, HealthBar, Tween, Collision")
+        this.requires("2D, Canvas, ship, SpriteColor, Living, Tween, Collision, HealthBar")
             .setMaxHealth(100)
             .setIsPlayer(true)
             .crop(0,0,35,35)

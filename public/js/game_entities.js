@@ -133,25 +133,21 @@ Crafty.c("NotifyWhenOutOfScreen", {
 // Makes a component that follows a path specified by a mathematical function that returns the y based on a x.
 Crafty.c("FollowPath", {
     _path: function(x) { return x; },
-    _deltaT: 0,
     init: function() {
         this.requires("NotifyWhenOutOfScreen, Tween");
 
-        this.deltaT = 0;
         this.showRotation = true;
 
         this.bind("EnterFrame", function() {
-            var newPos = this.path(this.deltaT);
+            var newPos = this.path((dT - this.dTStart) * this.speedModificator);
             var rect = this.mbr();
             this.x = newPos.x + rect._w / 2;
             this.y = newPos.y + rect._h / 2;
 
-            this.deltaT += this.speedModificator;
-
             // find the orientation that we should have based on our next position
             if (this.showRotation)
             {
-                var nextPos = this.path(this.deltaT);
+                var nextPos = this.path((dT + 1 - this.dTStart) * this.speedModificator);
                 var targetAngle = Crafty.math.radToDeg(Math.atan2(nextPos.y - newPos.y, nextPos.x - newPos.x));
                 this.tween({rotation: targetAngle}, 5);
             }
@@ -160,6 +156,7 @@ Crafty.c("FollowPath", {
             this.destroy();
         });
     },
+    setDeltaTStart: function(deltaT) { this.dTStart = deltaT; return this; },
     followPath: function(func, speedModificator) { this.path = func; this.speedModificator = speedModificator; return this; },
     allowRotation: function(allow) { this.showRotation = allow; return this; },
     alwaysKeepRotation: function(rot) { this.allowRotation(false); this.bind("EnterFrame", function() { this.rotation = rot; }); return this; },
@@ -290,17 +287,16 @@ Crafty.c("HealthBar", {
       this.hpBarColor = font;
       var bar = this.bar;
       this.bar.FONT_SIZE = 8;
-      var FONT_HIGH_HEALTH = "assets/FontHighHealth.png",
-          FONT_NORMAL_HEALTH = "assets/FontNormalHealth.png",
-          FONT_LOW_HEALTH = "assets/FontLowHealth.png",
-          FONT_CRITICAL_HEALTH = "assets/FontCriticalHealth.png",
-          FONT_SHIELD_HEALTH = "assets/FontShieldHealth.png";
-      Crafty.load([FONT_HIGH_HEALTH, FONT_NORMAL_HEALTH, FONT_LOW_HEALTH, FONT_CRITICAL_HEALTH, FONT_SHIELD_HEALTH], function() {
-        bar.registerFont("HighHealthFont", bar.FONT_SIZE, FONT_HIGH_HEALTH);
-        bar.registerFont("NormalHealthFont", bar.FONT_SIZE, FONT_NORMAL_HEALTH);
-        bar.registerFont("LowHealthFont", bar.FONT_SIZE, FONT_LOW_HEALTH);
-        bar.registerFont("CriticalHealthFont", bar.FONT_SIZE, FONT_CRITICAL_HEALTH);
-        bar.registerFont("ShieldHealthFont", bar.FONT_SIZE, FONT_SHIELD_HEALTH);
+      var fontPath;
+      if (font === "HighHealthFont") fontPath = "assets/FontHighHealth.png";
+      else if (font === "NormalHealthFont") fontPath = "assets/FontNormalHealth.png";
+      else if (font === "LowHealthFont") fontPath = "assets/FontLowHealth.png";
+      else if (font === "CriticalHealthFont") fontPath = "assets/FontCriticalHealth.png";
+      else if (font === "ShieldHealthFont") fontPath = "assets/FontShieldHealth.png";
+      else throw "Invalid font.";
+
+      Crafty.load([fontPath], function() {
+        bar.registerFont(font, bar.FONT_SIZE, fontPath);
 
         bar.font(font);
         bar.oldFont = font;
