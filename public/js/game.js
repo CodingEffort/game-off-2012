@@ -104,7 +104,7 @@ function startGame() {
       } else {
         me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerParrallelFastPewPew", "#FF0000");
       }
-      dT = player.dT;
+      dT = player.dt;
       me.bind('CashChanged', function() {
         ui.setCashAmount(me.cash);
       });
@@ -123,9 +123,8 @@ function startGame() {
       if (type == 'player') {
         spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
       } else if (type == 'enemy') {
-        console.log(spawn);
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
-            spawn.path, "LameEnemyPewPew", 1.0, 10, spawn.dTStart);
+            spawn.path, "LameEnemyPewPew", 1.0, 10, spawn.dtStart);
       } else if (type == 'powerup') {
         // TODO: spawn the powerup
       }
@@ -141,7 +140,7 @@ function startGame() {
       }
     });
 
-    nc.bind('updatedt', function(newDT) {
+    nc.bind('dt', function(newDT) {
         var DT_SPEED_MOD = 0.1;
         if (dT < newDT)
             dTSpeed *= (1 + DT_SPEED_MOD);
@@ -214,7 +213,6 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, cashValue, dTStart) {
     var enemy = Crafty.e(enemyType);
-    console.log(enemyType + startX + "," + startY);
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)
@@ -230,21 +228,3 @@ function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModif
 
     return enemy;
 }
-
-
-//TEMP UNTIL SERVER SPAWNS ENEMIES
-/*
-function spawnNextEnemy() {
-    var r = Crafty.math.randomInt(0,100);
-    if (r <= 10) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontalStartLeft", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 20) spawnEnemy('Patrol', Crafty.math.randomInt(50, SCREEN_W-50), -50, "PatrolHorizontalStartRight", "LameConeEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 40) spawnEnemy('Grunt', Crafty.math.randomInt(50, SCREEN_W/2), -50, "TopLeftBottomRight", "LameShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 1);
-    else if (r <= 60) spawnEnemy('Grunt', Crafty.math.randomInt(SCREEN_W/2, SCREEN_W-50), -50, "TopRightBottomLeft", "LameEnemyPewPew", Crafty.math.randomNumber(0.7, 1.3), 1);
-    else if (r <= 65) spawnEnemy('EasiestBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "ZigZagStartLeft", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 70) spawnEnemy('EasiestBossAiming', Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartRight", "LameLargeShotgunEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 75) spawnEnemy('EasyBoss', Crafty.math.randomInt(50, SCREEN_W-50), -50, "CircleStartLeft", "CircularEnemyPewPew", Crafty.math.randomNumber(0.8, 1.2), 2);
-    else if (r <= 80) spawnPowerup('ShieldPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
-    else if (r <= 85) spawnPowerup('HealPowerup', Crafty.math.randomInt(50, SCREEN_W-50), Crafty.math.randomInt(50, SCREEN_H-50));
-    
-}
-*/

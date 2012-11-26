@@ -1,5 +1,5 @@
 var Enemy = require('./enemy');
-var Waves = require('./waves_content');
+var wave = require('./waves_content');
 
 module.exports = function(sockets, id) {
   var self = this;
@@ -9,12 +9,12 @@ module.exports = function(sockets, id) {
   this.players = {};
   this.powerups = {};
   this.enemies = {};
-  this.dT = 0;
+  this.dt = 0;
 
   this.doFrame = function() {
-    ++self.dT;
-    if (self.dT % 10 === 0) { // broad cast every n frames the current dT (refucktor me please, just makin' it work for now)
-      self.broadcast('updatedt', { dT: self.dT });
+    ++self.dt;
+    if (self.dt % 10 === 0) { // broad cast every n frames the current dt (refucktor me please, just makin' it work for now)
+      self.broadcast('dt', { dt: self.dt });
     }
   };
 
@@ -26,18 +26,12 @@ module.exports = function(sockets, id) {
 
   this.broadcast = function(event, data) {
     self.sockets.in(self.id).emit(event, data);
-    /*for (var id in self.players) {
-      if ((data.player && data.player.id && id == data.player.id) || (data.player && id == data.player)) {
-          next;
-      }
-      self.players[id].socket.emit(event, data);
-    }*/
   };
 
   this.addPlayer = function(player) {
     if (player.branch)
       player.branch.removePlayer(player);
-    player.dT = self.dT;
+    player.dt = self.dt;
     player.socket.join(self.id);
     player.branch = self;
     self.players[player.id] = player;
@@ -82,6 +76,7 @@ module.exports = function(sockets, id) {
   };
 
   this.addEnemy = function(enemy) {
+    console.log(enemy);
     self.enemies[enemy.id] = enemy;
     self.broadcast('spawn', { type: 'enemy', spawn: enemy.serialize() });
   };
@@ -98,17 +93,12 @@ module.exports = function(sockets, id) {
   };
 
   this.spawnWave = function() {
-    var waves = new Waves();
-    var enemies = waves.waves[Math.floor(Math.random()*waves.waves.length)];
-    for (var i in enemies)
-    {
-      var path = waves.getWaveParamValue(enemies[i].path);
-      var pos = waves.getStartPosForPath(path);
-      var enemy = new Enemy(pos.x, pos.y,
-        waves.getWaveParamValue(enemies[i].type),
-        path,
-        self.dT);
-      this.addEnemy(enemy);
+    var e = wave.waves[Math.floor(Math.random()*wave.waves.length)];
+    for (var i in e) {
+      var path = wave.getWaveParamValue(e[i].path);
+      var pos = wave.getStartPosForPath(path)();
+      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(e[i].type), path, self.dt);
+      self.addEnemy(enemy);
     }
   };
 };

@@ -1,5 +1,5 @@
 var enemyId = 0;
-module.exports = function(startX, startY, type, path, dTStart) {
+module.exports = function(startX, startY, type, path, dtStart) {
   var self = this;
 
   this.id = enemyId++;
@@ -10,7 +10,7 @@ module.exports = function(startX, startY, type, path, dTStart) {
   this.gun = null;
   this.path = path;
   this.money = 0;
-  this.dTStart = dTStart;
+  this.dtStart = dtStart;
 
   this.serialize = function() {
     return {
@@ -21,12 +21,8 @@ module.exports = function(startX, startY, type, path, dTStart) {
       gun: (self.gun) ? self.gun.serialize() : null,
       path: self.path,
       money: self.money,
-      dTStart: self.dTStart
+      dtStart: self.dtStart
     };
-  };
-
-  this.init = function() {
-    self.socket.emit('setup', { enemy: self.serialize() });
   };
 };
 

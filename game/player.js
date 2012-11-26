@@ -5,7 +5,7 @@ module.exports = function(socket) {
   this.socket = socket;
   this.user = {};
   this.latency = 0;
-  this.dT = 0;
+  this.dt = undefined;
 
   this.branch = null;
   this.health = 0;
@@ -19,7 +19,7 @@ module.exports = function(socket) {
   this.serialize = function() {
     return {
       id: self.id,
-      dT: self.dT,
+      dt: self.dt,
       //username: self.user.username,
       branch: (self.branch) ? self.branch.id : null,
       health: self.health,
