@@ -126,6 +126,7 @@ function startGame() {
       } else {
         me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerFireBigPewPew", "#FF0000");
       }
+      dT = player.dT;
       me.bind('CashChanged', function() {
         ui.setCashAmount(me.cash);
       });
@@ -144,7 +145,7 @@ function startGame() {
       if (type == 'player') {
         spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerFireBigPewPew", "#FF0000");
       } else if (type == 'enemy') {
-        spawnEnemy("BigBoss", 100, -50, spawn.id, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10);
+        spawnEnemy("BigBoss", 100, -50, spawn.id, "CircleStartRight", "HighPulseEnemyPewPew", 1.0, 10, spawn.dTStart);
       } else if (type == 'powerup') {
         // TODO: spawn the powerup
       }
@@ -159,8 +160,6 @@ function startGame() {
         // TODO: destroy the powerup
       }
     });
-
-    //setTimeout()
 
     // Create an infinite background illusion with 2 images moving
     var background1 = Crafty.e("ParralaxBackground");
@@ -243,12 +242,12 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, cashValue) {
+function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, cashValue, dTStart) {
     var enemy = Crafty.e(enemyType);
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)
-        .setDeltaTStart(dT);
+        .setDeltaTStart(dTStart);
     enemy.followPath(getPath(pathType, startX, startY), speedModificator);
     enemy.cash = cashValue;
     enemy.bind("Dead", function() { enemy.explode(Crafty.e("Explosion")); });

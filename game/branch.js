@@ -10,14 +10,14 @@ module.exports = function(sockets, id) {
   this.enemies = {};
   this.dT = 0;
 
+  this.doFrame = function() {
+    ++self.dT;
+  };
+
   var frameInterval = setInterval(this.doFrame, 1000/30);
 
   this.destroy = function() {
     frameInterval.clear();
-  };
-
-  this.doFrame = function() {
-    this.dT++;
   };
 
   this.broadcast = function(event, data) {
@@ -33,6 +33,7 @@ module.exports = function(sockets, id) {
   this.addPlayer = function(player) {
     if (player.branch)
       player.branch.removePlayer(player);
+    player.dT = self.dT;
     player.socket.join(self.id);
     player.branch = self;
     self.players[player.id] = player;
@@ -41,9 +42,11 @@ module.exports = function(sockets, id) {
       if (id != player.id) player.socket.emit('spawn', { type: 'player', spawn: self.players[id].serialize() });
     }
 
-    //TEST
-    if (!self.hasEnemy(42)) self.addEnemy(new Enemy(42, 100, -50));
-    else self.removeEnemy(42);
+    for (var eid in self.enemies) {
+      player.socket.emit('spawn', { type: 'enemy', spawn: self.enemies[eid].serialize() });
+    }
+    //TESTING ZONE
+    self.addEnemy(new Enemy(100, -50, self.dT));
   };
 
   this.hasPlayer = function(playerId) {

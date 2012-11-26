@@ -1,14 +1,15 @@
-module.exports = function(id, startX, startY) {
+var enemyId = 0;
+module.exports = function(startX, startY, dTStart) {
   var self = this;
 
-  this.id = id;
+  this.id = enemyId++;
 
   this.health = 0;
   this.pos = { x: startX, y: startY };
   this.gun = null;
   this.path = null;
   this.money = 0;
-  this.t = 0;
+  this.dTStart = dTStart;
 
   this.serialize = function() {
     return {
@@ -18,7 +19,7 @@ module.exports = function(id, startX, startY) {
       gun: (self.gun) ? self.gun.serialize() : null,
       path: self.path,
       money: self.money,
-      t: self.t
+      dTStart: self.dTStart
     };
   };
 
