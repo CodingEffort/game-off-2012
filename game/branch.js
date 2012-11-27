@@ -1,6 +1,11 @@
 var Enemy = require('./enemy');
 var wave = require('./waves_content');
 
+function isEmpty(obj) {
+  for (var i in obj) if (Object.prototype.hasOwnProperty.call(obj, i)) return false;
+  return true;
+}
+
 module.exports = function(sockets, id) {
   var self = this;
 
@@ -19,11 +24,12 @@ module.exports = function(sockets, id) {
     }
   };
 
+  var wavesTiming;
   var frameInterval = setInterval(self.doFrame, 1000/30);
 
   this.destroy = function() {
     frameInterval.clear();
-    wavesTiming.clear();
+    if (wavesTiming) wavesTiming.clear();
   };
 
   this.broadcast = function(event, data) {
@@ -48,12 +54,13 @@ module.exports = function(sockets, id) {
 
     player.socket.on('despawn', function(obj) {
       //TODO: vote-to-kill
-      console.log("despawn " + obj.type + " #" + obj.despawn);
       if (obj.type === "enemy")
         self.removeEnemy(obj.despawn);
       else if (obj.type === "player")
-        self.removePlayer(self.players[obj.despawn]);
+        if (self.hasPlayer(obj.despawn)) self.removePlayer(self.players[obj.despawn]);
     });
+
+    if (!wavesTiming) wavesTiming = setTimeout(self.spawnWave, 5000);
   };
 
   this.hasPlayer = function(playerId) {
@@ -62,11 +69,10 @@ module.exports = function(sockets, id) {
 
   this.removePlayer = function(player) {
     if (self.hasPlayer(player.id)) {
-      console.log("removing");
       self.broadcast('despawn', { type: 'player', despawn: player.id });
+      delete self.players[player.id];
       player.socket.leave(self.id);
       player.branch = null;
-      delete self.players[player.id];
     }
   };
 
@@ -98,6 +104,10 @@ module.exports = function(sockets, id) {
     if (self.hasEnemy(enemyId)) {
       delete self.enemies[enemyId];
       self.broadcast('despawn', { type: 'enemy', despawn: enemyId });
+
+      if (isEmpty(self.enemies)) {
+        wavesTiming = setTimeout(self.spawnWave, wavesTiming.pausetime);
+      }
     }
   };
 
@@ -105,6 +115,7 @@ module.exports = function(sockets, id) {
     ++self.waveCount;
     console.log("Wave #" + self.waveCount);
     var w = wave.waves[Math.floor(Math.random()*wave.waves.length)];
+    wavesTiming.pausetime = w.pause;
     for (var i in w.enemies) {
       var path = wave.getWaveParamValue(w.enemies[i].path);
       var pos = wave.getStartPosForPath(path)();
@@ -112,10 +123,6 @@ module.exports = function(sockets, id) {
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);
     }
-    wavesTiming = setTimeout(self.spawnWave, w.pause);
   };
-
-  // TODO: place in the removeEnemy when no enemies are left.
-  var wavesTiming = setTimeout(self.spawnWave, 10000);
 };
 

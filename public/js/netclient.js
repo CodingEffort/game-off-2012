@@ -114,8 +114,8 @@ function NetClient() {
   this.powerup = function(powerup) {
     self.socket.emit('powerup', { powerup: powerup });
   };
-  this.despawn = function(obj) {
-    self.socket.emit('despawn', { despawn: obj });
+  this.despawn = function(despawnType, obj) {
+    self.socket.emit('despawn', { type: despawnType, despawn: obj });
   };
 }
 

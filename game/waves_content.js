@@ -16,27 +16,27 @@ module.exports = {
     waves: [
         {
             enemies: [GRUNT,GRUNT],
-            pause: 4000
+            pause: 2000
         },
 
         {
             enemies: [GRUNT,GRUNT,GRUNT],
-            pause: 4000
+            pause: 2000
         },
 
         {
             enemies: [GRUNT,GRUNT,PATROL],
-            pause: 8000
+            pause: 3000
         },
 
         {
             enemies: [GRUNT,GRUNT,PATROL,PATROL],
-            pause: 10000
+            pause: 3000
         },
 
         {
             enemies: [GRUNT,GRUNT,GRUNT,PATROL,PATROL],
-            pause: 10000
+            pause: 5000
         }
     ],
 

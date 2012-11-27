@@ -115,7 +115,7 @@ function startGame() {
       }
       else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
-            spawn.path, "LameEnemyPewPew", spawn.speedmod, 10, spawn.dtStart);
+            spawn.path, "LameEnemyPewPew", spawn.speedmod, spawn.dtStart);
       }
       else if (type == 'powerup') {
         // TODO: spawn the powerup
@@ -123,14 +123,10 @@ function startGame() {
     });
 
     nc.bind('despawn', function(type, id) {
-        console.log("ds");
       if (type == 'player') {
-        console.log("badoum");
         if (id === me.id)
-        {
             me = null;
-            nc.unbind("position");
-        }
+
         players[id].destroy();
         delete players[id];
       } else if (type == 'enemy') {
@@ -206,8 +202,7 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
         this.trigger("KillMe");
     });
     player.bind("KillMe", function() {
-        console.log("killme");
-        nc.socket.emit('despawn', { type: 'player', despawn: player.id});
+        nc.despawn('player', player.id);
     });
     player.setPlayerColor(color);
     player.setGun(currentGun);
@@ -234,7 +229,7 @@ function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModif
         this.trigger("KillMe");
     });
     enemy.bind("KillMe", function() {
-        nc.socket.emit('despawn', { type: 'enemy', despawn: enemy.id});
+        nc.despawn('enemy', enemy.id);
     });
     enemy.setGun(gunType);
     enemy.id = id;
