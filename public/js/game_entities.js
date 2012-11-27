@@ -119,12 +119,14 @@ function toRadians(deg) {
 Crafty.c("NotifyWhenOutOfScreen", {
     init: function() {
         this.bind("EnterFrame", function() {
-            if (this.x + this.w * 2 < 0 ||
-                this.y + this.h * 2 < 0 ||
-                this.x - this.w * 2 > SCREEN_W ||
-                this.y - this.h * 2 > SCREEN_H)
+            var b = this.mbr();
+            var OUT_MULT = 3;
+            if (b._x + OUT_MULT*b._w < 0 ||
+                b._y + OUT_MULT*b._h < 0 ||
+                b._x - (OUT_MULT-1)*b._w > SCREEN_W ||
+                b._y - (OUT_MULT-1)*b._h > SCREEN_H)
             {
-                this.trigger("OutOfScreen");
+              this.trigger("OutOfScreen");
             }
         });
     }
@@ -153,7 +155,7 @@ Crafty.c("FollowPath", {
             }
         });
         this.bind("OutOfScreen", function () {
-            this.destroy();
+            this.trigger("KillMe");
         });
     },
     setDeltaTStart: function(deltaT) { this.dTStart = deltaT; return this; },
@@ -187,7 +189,6 @@ Crafty.c("HasHealth", {
     if (this.health === 0)
     {
       this.trigger("Dead");
-      this.destroy();
     }
   }
 

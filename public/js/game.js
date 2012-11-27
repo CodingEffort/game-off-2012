@@ -57,7 +57,6 @@ Crafty.sprite(50, "assets/back.png", {
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
     e[0].obj.hurt(this.damage); // hurt the enemy
-    checkToGiveEnemyCashToPlayer(e[0].obj, this.owner);
     if (this.owner === undefined || (!this.owner.gun.isUnique &&
         this.destroyedOnContact))
         this.destroy(); // remove the pew pew lazor
@@ -66,11 +65,6 @@ function onLazorHitEnemy(e) {
 function onPlayerHitEnemy(e) {
     // hurt the player by our current health value
     hurtPlayer(e[0].obj, this.health/100);
-}
-
-function checkToGiveEnemyCashToPlayer(enemy, player) {
-    if (enemy.health <= 0) // enemy is dead
-        player.gainCash(enemy.cash);
 }
 
 function onProjectileHitPlayer(e) {
@@ -99,9 +93,7 @@ function startGame() {
 
     nc.bind('connected', function(player) {
       dT = player.dt;
-      me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerParrallelFastPewPew", "#FF0000");
-      console.log(player.id);
-      console.log(me.id);
+      me = spawnPlayer(player.pos.x, player.pos.y, player.id, "PlayerParrallelFastPewPew", "#FF0000");
       me.bind('CashChanged', function() {
             ui.setCashAmount(me.cash);
         });
@@ -118,14 +110,12 @@ function startGame() {
 
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
-        console.log(spawn.id);
-        console.log(me.id);
         if (me.id !== spawn.id)
-            spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
+            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
       }
       else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
-            spawn.path, "LameEnemyPewPew", 1.0, 10, spawn.dtStart);
+            spawn.path, "LameEnemyPewPew", spawn.speedmod, 10, spawn.dtStart);
       }
       else if (type == 'powerup') {
         // TODO: spawn the powerup
@@ -133,10 +123,19 @@ function startGame() {
     });
 
     nc.bind('despawn', function(type, id) {
+        console.log("ds");
       if (type == 'player') {
+        console.log("badoum");
+        if (id === me.id)
+        {
+            me = null;
+            nc.unbind("position");
+        }
         players[id].destroy();
+        delete players[id];
       } else if (type == 'enemy') {
         enemies[id].destroy();
+        delete enemies[id];
       } else if (type == 'powerup') {
         // TODO: destroy the powerup
       }
@@ -201,7 +200,15 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     var player = Crafty.e("Spaceship").setPlayerID(playerID);
     player.x = x - player.w/2;
     player.y = y - player.h/2;
-    player.bind("Dead", function() { player.explode(Crafty.e("Implosion")); });
+    player.bind("Dead", function() {
+        player.explode(Crafty.e("Implosion"));
+        player.alpha = 0.5;
+        this.trigger("KillMe");
+    });
+    player.bind("KillMe", function() {
+        console.log("killme");
+        nc.socket.emit('despawn', { type: 'player', despawn: player.id});
+    });
     player.setPlayerColor(color);
     player.setGun(currentGun);
     player.id = playerID;
@@ -214,16 +221,20 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, cashValue, dTStart) {
+function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, dTStart) {
     var enemy = Crafty.e(enemyType);
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)
         .setDeltaTStart(dTStart);
     enemy.followPath(getPath(pathType, startX, startY), speedModificator);
-    enemy.cash = cashValue;
     enemy.bind("Dead", function() {
         enemy.explode(Crafty.e("Explosion"));
+        enemy.alpha = 0.5;
+        this.trigger("KillMe");
+    });
+    enemy.bind("KillMe", function() {
+        nc.socket.emit('despawn', { type: 'enemy', despawn: enemy.id});
     });
     enemy.setGun(gunType);
     enemy.id = id;
