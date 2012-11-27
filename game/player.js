@@ -30,8 +30,10 @@ module.exports = function(socket) {
     };
   };
 
-  this.init = function() {
+  this.init = function(branch) {
+    this.dt = branch.dt;
     self.socket.emit('setup', { player: self.serialize() });
+    branch.addPlayer(self);
     //this.socket.emit('ping', { t: Number(new Date()) });
   };
 

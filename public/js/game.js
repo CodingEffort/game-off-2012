@@ -98,16 +98,13 @@ function startGame() {
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
-      if (players[player.id]) {
-        me = players[player.id];
-        delete players[player.id];
-      } else {
-        me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerParrallelFastPewPew", "#FF0000");
-      }
       dT = player.dt;
+      me = spawnPlayer(SCREEN_W/2, SCREEN_H/2, player.id, "PlayerParrallelFastPewPew", "#FF0000");
+      console.log(player.id);
+      console.log(me.id);
       me.bind('CashChanged', function() {
-        ui.setCashAmount(me.cash);
-      });
+            ui.setCashAmount(me.cash);
+        });
     });
     nc.connect();
 
@@ -121,11 +118,16 @@ function startGame() {
 
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
-        spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
-      } else if (type == 'enemy') {
+        console.log(spawn.id);
+        console.log(me.id);
+        if (me.id !== spawn.id)
+            spawnPlayer(SCREEN_W/2, SCREEN_H/2, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
+      }
+      else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
             spawn.path, "LameEnemyPewPew", 1.0, 10, spawn.dtStart);
-      } else if (type == 'powerup') {
+      }
+      else if (type == 'powerup') {
         // TODO: spawn the powerup
       }
     });
@@ -202,6 +204,7 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     player.bind("Dead", function() { player.explode(Crafty.e("Implosion")); });
     player.setPlayerColor(color);
     player.setGun(currentGun);
+    player.id = playerID;
     players[playerID] = player;
     return player;
 }

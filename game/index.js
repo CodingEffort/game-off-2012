@@ -13,8 +13,7 @@ module.exports = function(sockets, db, config) {
 
   this.sockets.on('connection', function(socket) {
     var client = new Player(socket);
-    self.repo['master'].addPlayer(client);
-    client.init();
+    client.init(self.repo['master']);
   });
 };
 
