@@ -14,6 +14,7 @@ var SCREEN_H = 600;
 var nc = new NetClient();
 
 var dT = 0;
+var lastdT = 0;
 var dTSpeed = 1;
 
 var players = {};
@@ -90,7 +91,6 @@ function startGame() {
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
-        console.log("connected");
         me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
         me.bind('CashChanged', function() {
             ui.setCashAmount(me.cash);
@@ -115,8 +115,8 @@ function startGame() {
                 Crafty(projectiles[i]).destroy();
             }
             dT = player.dt;
+            lastdT = dT;
             me.setHealth(player.health);
-            console.log("branch");
         }
     });
 
@@ -129,7 +129,6 @@ function startGame() {
     });
 
     nc.bind('spawn', function(type, spawn) {
-        console.log("spawn");
       if (type == 'player') {
         if (me.id !== spawn.id)
             spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color);
@@ -160,12 +159,22 @@ function startGame() {
     });
 
     nc.bind('dt', function(newDT) {
-        var DT_SPEED_MOD = 0.1;
-        if (dT < newDT)
-            dTSpeed *= (1 + DT_SPEED_MOD);
-        else if (dT > newDT)
-            dTSpeed *= (1 - DT_SPEED_MOD);
-        dT = Crafty.math.lerp(dT, newDT, 0.1);
+        dT = Crafty.math.lerp(dT, newDT, 0.1); // move a bit towards the current dT
+
+        // If we're too far or too fast, just "teleport" (we teleport if too fast because we don't want enemies to go reversed)
+        var diff = Math.abs(dT - newDT);
+        if (diff > 30 || dT > newDT)
+        {
+            dT = newDT;
+        }
+
+        // Find a suitable speed to reach the new dT
+        var updatesSinceLast = newDT - lastdT;
+        var desired = newDT - dT;
+        if (updatesSinceLast === 0) updatesSinceLast = 1; // avoid division by zero, just in case
+        dTSpeed = desired / updatesSinceLast;
+
+        lastdT = newDT;
     });
 
     // Create an infinite background illusion with 2 images moving

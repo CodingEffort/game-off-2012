@@ -21,7 +21,8 @@ module.exports = function(sockets, game, path, name, desc) {
   this.votes = {};
   this.dt = 0;
   this.path = path || [];
-  this.wavesTiming = {};
+  this.waveTimer = {};
+  this.waveDelay = 3000;
   this.waveCount = 0;
   this.population = 0;
 
@@ -45,7 +46,7 @@ module.exports = function(sockets, game, path, name, desc) {
 
   this.destroy = function() {
     frameInterval.clear();
-    if (wavesTiming) wavesTiming.clear();
+    if (waveTimer) waveTimer.clear();
   };
 
   this.broadcast = function(event, data) {
@@ -73,7 +74,7 @@ module.exports = function(sockets, game, path, name, desc) {
       }
 
       if (self.population === 1 && isEmpty(self.enemies)) {
-        self.spawnWave();
+        self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
       }
     }
   };
@@ -149,7 +150,7 @@ module.exports = function(sockets, game, path, name, desc) {
         delete self.enemies[id];
         self.broadcast('despawn', { type: 'enemy', id: id });
         if (isEmpty(self.enemies)) {
-          self.spawnWave();
+          self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
         }
       }
     }
@@ -159,7 +160,7 @@ module.exports = function(sockets, game, path, name, desc) {
     ++self.waveCount;
     console.log("Wave #" + self.waveCount);
     var w = wave.waves[Math.floor(Math.random()*wave.waves.length)];
-    self.wavesTiming.pausetime = w.pause;
+    self.waveDelay = w.pause;
     for (var i in w.enemies) {
       var path = wave.getWaveParamValue(w.enemies[i].path);
       var pos = wave.getStartPosForPath(path)();
