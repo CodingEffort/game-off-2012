@@ -230,6 +230,7 @@ function startGame() {
 
     Crafty.bind("EnterFrame", function() {
         dT += dTSpeed;
+        // this is for the fun of it.
     });
 }
 
