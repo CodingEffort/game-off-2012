@@ -8,7 +8,7 @@ module.exports = function(socket, color, gun) {
   this.dt = null;
 
   this.branch = null;
-  this.health = 0;
+  this.health = 100;
   this.pos = { x: 350, y: 300 };
   this.gun = gun;
   this.score = 0;
@@ -34,8 +34,8 @@ module.exports = function(socket, color, gun) {
   };
 
   this.init = function(branch) {
-    branch.addPlayer(self);
     self.socket.emit('setup', { player: self.serialize() });
+    branch.addPlayer(self);
     //this.socket.emit('ping', { t: Number(new Date()) });
   };
 
