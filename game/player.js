@@ -24,12 +24,12 @@ module.exports = function(socket, color, gun) {
       dt: self.dt,
       color: self.color,
       //username: self.user.username,
-      branch: (self.branch) ? self.branch.path : [],
+      //branch: (self.branch) ? self.branch.path : [],
       health: self.health,
       pos: self.pos,
       gun: self.gun/*.serialize()*/,
-      score: self.score,
-      money: self.money
+      //score: self.score,
+      //money: self.money
     };
   };
 
