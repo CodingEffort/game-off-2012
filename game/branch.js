@@ -144,21 +144,29 @@ module.exports = function(sockets, game, path, name, desc) {
     }
   };
 
+  this.enemyHealth = function(enemyId, health, voter) {
+    if (self.hasEnemy(enemyId) && self.hasPlayer(voter)) {
+      self.enemies[enemyId].healthvotes[voter] = health;
+      self.enemies[enemyId].updateHealth();
+    }
+  };
+
   this.voteKill = function(type, id, voter) {
-    if (type == 'player' && self.hasPlayer(id) && self.players[id].killvotes.indexOf(voter) === -1) {
-      self.players[id].killvotes.push(voter);
-      if (self.players[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
-        var b = self.game.makeBranch(self);
-        b.addPlayer(self.players[id]);
-      }
-    } else if (type == 'enemy' && self.hasEnemy(id) && self.enemies[id].killvotes.indexOf(id) === -1) {
-      self.enemies[id].killvotes.push(voter);
-      if (self.enemies[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
-        // TODO: add cash enemy died
-        delete self.enemies[id];
-        self.broadcast('despawn', { type: 'enemy', id: id });
-        if (isEmpty(self.enemies)) {
-          self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
+    if (self.hasPlayer(voter)) {
+      if (type == 'player' && self.hasPlayer(id) && self.players[id].killvotes.indexOf(voter) === -1) {
+        self.players[id].killvotes.push(voter);
+        if (self.players[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
+          var b = self.game.makeBranch(self);
+          b.addPlayer(self.players[id]);
+        }
+      } else if (type == 'enemy' && self.hasEnemy(id) && self.enemies[id].killvotes.indexOf(id) === -1) {
+        self.enemies[id].killvotes.push(voter);
+        if (self.enemies[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
+          // TODO: add cash enemy died
+          self.removeEnemy(id);
+          if (isEmpty(self.enemies)) {
+            self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
+          }
         }
       }
     }

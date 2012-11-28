@@ -14,6 +14,7 @@ module.exports = function(startX, startY, type, gun, path, dtStart) {
   this.speedmod = (Math.random()*(0.2)) + 0.9;
   this.dtStart = dtStart;
   this.killvotes = [];
+  this.healthvotes = {};
 
   this.serialize = function() {
     return {
@@ -27,6 +28,19 @@ module.exports = function(startX, startY, type, gun, path, dtStart) {
       speedmod: self.speedmod,
       dtStart: self.dtStart
     };
+  };
+
+  this.updateHealth = function() {
+    var values = [];
+    for (var i in self.healthvotes) {
+      values.push(self.healthvotes[i]);
+    }
+    if (values.length > 1) {
+      values.sort(function(a, b) { return a - b; });
+      self.health = (values[Math.floor(values.length / 2)] + values[Math.ceil(values.length / 2)]) / 2;
+    } else {
+      self.health = values[0];
+    }
   };
 };
 
