@@ -21,7 +21,8 @@ function NetClient() {
     money: null,
     score: null,
     gun: null,
-    dt: null
+    dt: null,
+    branch: null
   };
 
   // Event management
@@ -85,6 +86,10 @@ function NetClient() {
 
     self.socket.on('gun', function(data) {
       if (self.events.gun) self.events.gun(data.player, data.gun);
+    });
+
+    self.socket.on('branch', function(data) {
+      if (self.events.branch) self.events.branch(data.player);
     });
   };
 

@@ -1,4 +1,4 @@
-module.exports = function(socket) {
+module.exports = function(socket, color, gun) {
   var self = this;
 
   this.id = socket.id;
@@ -10,22 +10,24 @@ module.exports = function(socket) {
   this.branch = null;
   this.health = 0;
   this.pos = { x: 350, y: 300 };
-  this.gun = null;
+  this.gun = gun;
   this.score = 0;
   this.money = 0;
   this.powerups = {};
   this.shooting = false;
   this.killvotes = [];
+  this.color = color;
 
   this.serialize = function() {
     return {
       id: self.id,
       dt: self.dt,
+      color: self.color,
       //username: self.user.username,
       branch: (self.branch) ? self.branch.path : [],
       health: self.health,
       pos: self.pos,
-      gun: (self.gun) ? self.gun.serialize() : null,
+      gun: self.gun/*.serialize()*/,
       score: self.score,
       money: self.money
     };

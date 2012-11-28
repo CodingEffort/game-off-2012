@@ -60,6 +60,7 @@ module.exports = function(sockets, game, path, name, desc) {
       player.killvotes = [];
       self.players[player.id] = player;
       ++self.population;
+      player.socket.emit('branch', { player: player.serialize() });
       self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
       for (var id in self.players) {
         if (id != player.id) player.socket.emit('spawn', { type: 'player', spawn: self.players[id].serialize() });
@@ -159,7 +160,8 @@ module.exports = function(sockets, game, path, name, desc) {
     for (var i in w.enemies) {
       var path = wave.getWaveParamValue(w.enemies[i].path);
       var pos = wave.getStartPosForPath(path)();
-      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), path, self.dt);
+      var gun = wave.getWaveParamValue(w.enemies[i].gun);
+      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt);
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);
     }

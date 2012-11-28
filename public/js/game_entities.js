@@ -184,6 +184,8 @@ Crafty.c("HasHealth", {
   hurt: function(amount) {
     this.hurtAmount = amount;
     this.trigger("Hurt");
+    if (amount >= this.health) // this will kill us
+      this.trigger("WillDie");
     this.setHealth(this.health - amount);
     
     if (this.health === 0)
@@ -350,6 +352,7 @@ Crafty.c("FadedOutAnimation", {
 Crafty.c("Explosion", {
     init: function() {
         this.requires("FadedOutAnimation, explosion")
+            .crop(2,4,46,43)
             .animate('explosion', 3, 12, 7)
             .animate('explosion', 10, 0);
     }
@@ -358,6 +361,7 @@ Crafty.c("Explosion", {
 Crafty.c("Implosion", {
     init: function() {
         this.requires("FadedOutAnimation, teleport")
+            .crop(2,4,46,43)
             .animate('teleport', 0, 13, 4)
             .animate('teleport', 10, 0);
     }
