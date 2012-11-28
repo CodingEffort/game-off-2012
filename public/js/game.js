@@ -144,7 +144,7 @@ function startGame() {
             spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color);
       }
       else if (type == 'enemy') {
-        spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
+        spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id, spawn.health,
             spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart);
       }
       else if (type == 'powerup') {
@@ -259,8 +259,9 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModificator, dTStart) {
+function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart) {
     var enemy = Crafty.e(enemyType);
+    if (health > 0) enemy.setHealth(health);
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)
