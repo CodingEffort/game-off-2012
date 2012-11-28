@@ -457,7 +457,7 @@ Crafty.c("BossHealthBar", {
       this.bossTxt.destroy();
     });
 
-    this.bind("Hurt", function() {
+    this.bind("HealthChanged", function() {
       var percent = this.health / this.maxHealth;
       this.fill.h = fullFillH * percent;
       this.fill.y = fullFillY + fullFillH - this.fill.h;
