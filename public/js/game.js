@@ -270,6 +270,15 @@ function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModif
         enemy.alpha = 0.5;
         this.trigger("KillMe");
     });
+    enemy.framesSinceHpPushed = 0;
+    enemy.bind("EnterFrame", function() {
+        if (enemy.hpchanged && enemy.framesSinceHpPushed >= 15) {
+            enemy.framesSinceHpPushed = 0;
+            enemy.hpchanged = false;
+            nc.health('enemy', enemy.id, enemy.health);
+        }
+        ++enemy.framesSinceHpPushed;
+    });
     enemy.bind('WillDie', function() {
       this.trigger('KillMe');
     });

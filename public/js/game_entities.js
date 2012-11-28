@@ -138,6 +138,7 @@ Crafty.c("FollowPath", {
     init: function() {
         this.requires("NotifyWhenOutOfScreen, Tween");
 
+        this.hpchanged = true;
         this.showRotation = true;
 
         this.bind("EnterFrame", function() {
@@ -184,6 +185,7 @@ Crafty.c("HasHealth", {
   hurt: function(amount) {
     this.hurtAmount = amount;
     this.trigger("Hurt");
+    this.hpchanged = true;
     if (this.health > 0 && amount >= this.health) // this will kill us
       this.trigger("WillDie");
     this.setHealth(this.health - amount);
