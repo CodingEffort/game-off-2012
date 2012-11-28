@@ -8,11 +8,12 @@ function isEmpty(obj) {
   return true;
 }
 
-module.exports = function(sockets, game, path, name, desc) {
+module.exports = function(sockets, game, parent, name, desc) {
   var self = this;
 
   this.sockets = sockets;
   this.game = game;
+  this.parent = parent;
 
   this.id = ++branchId;
   this.players = {};
@@ -20,7 +21,7 @@ module.exports = function(sockets, game, path, name, desc) {
   this.enemies = {};
   this.votes = {};
   this.dt = 0;
-  this.path = (path || []).slice(0);
+  this.path = (parent) ? parent.path.slice(0) : [];
   this.waveTimer = {};
   this.waveDelay = 3000;
   this.waveCount = 0;
@@ -28,11 +29,7 @@ module.exports = function(sockets, game, path, name, desc) {
   this.name = name || 'Issue #' + self.id;
   this.desc = desc || 'Fix Issue #' + self.id;
 
-  this.path.push({
-    id: self.id,
-    name: self.name,
-    desc: self.desc
-  });
+  this.path.push(self);
 
   var p = 'New branch: ';
   for (var i = 0; i < self.path.length; ++i) {
@@ -72,7 +69,15 @@ module.exports = function(sockets, game, path, name, desc) {
       player.killvotes = [];
       self.players[player.id] = player;
       ++self.population;
-      player.socket.emit('branch', { player: player.serialize(), path: self.path });
+      var p = [];
+      for (var i = 0; i < self.path.length; ++i) {
+        p.push({
+          id: self.path[i].id,
+          name: self.path[i].name,
+          desc: self.path[i].desc
+        });
+      }
+      player.socket.emit('branch', { player: player.serialize(), path: p });
       self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
       for (var id in self.players) {
         if (id != player.id) player.socket.emit('spawn', { type: 'player', spawn: self.players[id].serialize() });

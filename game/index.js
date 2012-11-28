@@ -16,7 +16,7 @@ module.exports = function(sockets, db, config) {
   });
 
   this.makeBranch = function(parent) {
-    var b = new Branch(self.sockets, self, parent.path);
+    var b = new Branch(self.sockets, self, parent);
     this.repo[b.id] = b;
     return b;
   }
