@@ -57,6 +57,7 @@ passport.use(new GoogleStrategy({
       done(null, user);
     } else {
       var user = new db.user();
+      user.username = profile.emails[0].value;
       user.email = profile.emails[0].value;
       user.save(function(err) {
         if (!err) {

@@ -11,7 +11,7 @@ module.exports = function(sockets, db, config) {
   this.repo['master'] = new Branch(self.sockets, self, null, 'master', 'Project Nixie');
 
   this.sockets.on('connection', function(socket) {
-    var client = new Player(socket, '#00FF00', 'PlayerFastPewPewSplit5');
+    var client = new Player(socket, '#00FF00', 'PlayerParrallelFastPewPew');
     client.init(self.repo['master']);
   });
 

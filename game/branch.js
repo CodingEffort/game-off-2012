@@ -20,7 +20,7 @@ module.exports = function(sockets, game, path, name, desc) {
   this.enemies = {};
   this.votes = {};
   this.dt = 0;
-  this.path = path || [];
+  this.path = (path || []).slice(0);
   this.waveTimer = {};
   this.waveDelay = 3000;
   this.waveCount = 0;
@@ -166,7 +166,7 @@ module.exports = function(sockets, game, path, name, desc) {
 
   this.spawnWave = function() {
     ++self.waveCount;
-    console.log("Branch" + self.name + ": Wave #" + self.waveCount);
+    console.log("Branch " + self.name + ": Wave #" + self.waveCount);
     var w = wave.waves[Math.floor(Math.random()*wave.waves.length)];
     self.waveDelay = w.pause;
     for (var i in w.enemies) {
