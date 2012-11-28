@@ -35,8 +35,12 @@ module.exports = function(startX, startY, type, gun, path, dtStart) {
     for (var i in self.healthvotes) {
       values.push(self.healthvotes[i]);
     }
-    values.sort(function(a, b) { return a - b; });
-    self.health = (values[Math.floor(values.length / 2)] + values[Math.ceil(values.length / 2)]) / 2;
+    if (values.length > 1) {
+      values.sort(function(a, b) { return a - b; });
+      self.health = (values[Math.floor(values.length / 2)] + values[Math.ceil(values.length / 2)]) / 2;
+    } else {
+      self.health = values[0];
+    }
   };
 };
 
