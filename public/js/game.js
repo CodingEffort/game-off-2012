@@ -90,7 +90,6 @@ function startGame() {
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
-        console.log("connected");
         me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
         me.bind('CashChanged', function() {
             ui.setCashAmount(me.cash);
@@ -116,7 +115,6 @@ function startGame() {
             }
             dT = player.dt;
             me.setHealth(player.health);
-            console.log("branch");
         }
     });
 
@@ -129,7 +127,6 @@ function startGame() {
     });
 
     nc.bind('spawn', function(type, spawn) {
-        console.log("spawn");
       if (type == 'player') {
         if (me.id !== spawn.id)
             spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color);
