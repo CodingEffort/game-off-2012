@@ -171,11 +171,8 @@ function startGame() {
         // Find a suitable speed to reach the new dT
         var updatesSinceLast = newDT - lastdT;
         var desired = newDT - dT;
-        console.log("d:" + desired);
-        console.log("last:" + lastdT);
         if (updatesSinceLast === 0) updatesSinceLast = 1; // avoid division by zero, just in case
         dTSpeed = desired / updatesSinceLast;
-        console.log("s:" + dTSpeed);
 
         lastdT = newDT;
     });
