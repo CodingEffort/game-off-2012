@@ -25,12 +25,20 @@ module.exports = function(sockets, game, path, name, desc) {
   this.waveDelay = 3000;
   this.waveCount = 0;
   this.population = 0;
+  this.name = name || 'Issue #' + self.id;
+  this.desc = desc || 'Fix Issue #' + self.id;
 
   this.path.push({
     id: self.id,
-    name: name || 'Issue #' + self.id,
-    desc: desc || 'Fix Issue #' + self.id
+    name: self.name,
+    desc: self.desc
   });
+
+  var p = 'New branch: ';
+  for (var i = 0; i < self.path.length; ++i) {
+    p += self.path[i].name + ((i < self.path.length - 1) ? ' > ' : '');
+  }
+  console.log(p);
 
   this.doFrame = function() {
     ++self.dt;
@@ -64,7 +72,7 @@ module.exports = function(sockets, game, path, name, desc) {
       player.killvotes = [];
       self.players[player.id] = player;
       ++self.population;
-      player.socket.emit('branch', { player: player.serialize() });
+      player.socket.emit('branch', { player: player.serialize(), path: self.path });
       self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
       for (var id in self.players) {
         if (id != player.id) player.socket.emit('spawn', { type: 'player', spawn: self.players[id].serialize() });
@@ -158,7 +166,7 @@ module.exports = function(sockets, game, path, name, desc) {
 
   this.spawnWave = function() {
     ++self.waveCount;
-    console.log("Wave #" + self.waveCount);
+    console.log("Branch" + self.name + ": Wave #" + self.waveCount);
     var w = wave.waves[Math.floor(Math.random()*wave.waves.length)];
     self.waveDelay = w.pause;
     for (var i in w.enemies) {

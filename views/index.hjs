@@ -1,5 +1,10 @@
     <div class="row">
       <div class="span12">
+        <ul id="path" class="breadcrumb"></ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span12">
         <div id="cr-stage"></div>
       </div>
     </div>

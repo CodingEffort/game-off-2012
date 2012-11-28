@@ -24,7 +24,7 @@ module.exports = function(socket, color, gun) {
       dt: self.dt,
       color: self.color,
       //username: self.user.username,
-      //branch: (self.branch) ? self.branch.path : [],
+      //branch: (self.branch) ? self.branch.serialize() : null,
       health: self.health,
       pos: self.pos,
       gun: self.gun/*.serialize()*/,

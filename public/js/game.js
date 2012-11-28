@@ -98,7 +98,7 @@ function startGame() {
     });
     nc.connect();
 
-    nc.bind("branch", function(player) {
+    nc.bind("branch", function(player, path) {
         if (me) {
             for (var e in enemies) {
                 enemies[e].destroy();
@@ -117,6 +117,16 @@ function startGame() {
             dT = player.dt;
             lastdT = dT;
             me.setHealth(player.health);
+        }
+        var el = $("#path");
+        $(el).empty();
+        for (var j = 0; j < path.length; ++j) {
+          var b = $(document.createElement('li'));
+          $(b).html(path[j].name + ((j < path.length - 1) ? ' <span class="divider">&gt;</span>' : ''));
+          if (j == path.length - 1) {
+            $(b).addClass('active');
+          }
+          $(el).append(b);
         }
     });
 

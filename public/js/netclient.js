@@ -89,7 +89,7 @@ function NetClient() {
     });
 
     self.socket.on('branch', function(data) {
-      if (self.events.branch) self.events.branch(data.player);
+      if (self.events.branch) self.events.branch(data.player, data.path || []);
     });
   };
 
