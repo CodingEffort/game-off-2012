@@ -85,17 +85,25 @@ function hurtPlayer(player, dmg) {
     }
 }
 
+function initMe(player) {
+    dT = player.dt;
+    me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
+    me.bind('CashChanged', function() {
+        ui.setCashAmount(me.cash);
+    });
+}
+
 function startGame() {
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
-      dT = player.dt;
-      me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
-      me.bind('CashChanged', function() {
-            ui.setCashAmount(me.cash);
-        });
+      //initMe(player);
     });
     nc.connect();
+
+    nc.bind("branch", function(player) {
+        initMe(player);
+    });
 
     nc.bind('shooting', function(id, shooting) {
       players[id].shooting = shooting;
@@ -228,6 +236,9 @@ function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModif
     enemy.bind("Dead", function() {
         enemy.explode(Crafty.e("Explosion"));
         enemy.alpha = 0.5;
+        this.trigger("KillMe");
+    });
+    enemy.bind("WillDie", function() {
         this.trigger("KillMe");
     });
     enemy.bind("KillMe", function() {
