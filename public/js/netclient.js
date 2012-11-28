@@ -120,5 +120,9 @@ function NetClient() {
   this.despawn = function(type, id) {
     self.socket.emit('despawn', { type: type, id: id, player: self.player.id });
   };
+
+  this.health = function(type, id, health) {
+    self.socket.emit('life', { type: type, id: id, health: health });
+  }
 };
 

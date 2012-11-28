@@ -71,5 +71,13 @@ module.exports = function(socket, color, gun) {
       self.socket.broadcast.to(self.branch.id).emit('position', { player: self.id, pos: self.pos });
     }
   });
+
+  this.socket.on('health', function(data) {
+    if (self.branch && data.type && data.id && data.health) {
+      if (data.type == 'enemy') {
+        self.branch.enemyHealth(data.id, data.health, self.id);
+      }
+    }
+  });
 };
 
