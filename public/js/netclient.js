@@ -105,15 +105,11 @@ function NetClient() {
     }
   };
   this.shooting = function(shooting) {
-    self.player.shooting = shooting;
-    self.socket.emit('shooting', { shooting: shooting });
+    self.player.shooting = !!shooting;
+    self.socket.emit('shooting', { shooting: !!shooting });
   };
-  // Temp Tx, to be removed
-  this.powerup = function(powerup) {
-    self.socket.emit('powerup', { powerup: powerup });
+  this.despawn = function(type, id, player) {
+    self.socket.emit('despawn', { type: type, id: id, player: player });
   };
-  this.despawn = function(obj) {
-    self.socket.emit('despawn', { despawn: obj });
-  };
-}
+};
 

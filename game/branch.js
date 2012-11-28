@@ -1,15 +1,32 @@
 var Enemy = require('./enemy');
 var wave = require('./waves_content');
 
-module.exports = function(sockets, id) {
+var branchId = 0;
+
+function isEmpty(obj) {
+  for (var key in obj) if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
+  return true;
+}
+
+module.exports = function(sockets, game, path, name, desc) {
   var self = this;
 
   this.sockets = sockets;
-  this.id = id;
+  this.game = game;
+
+  this.id = ++branchId;
   this.players = {};
   this.powerups = {};
   this.enemies = {};
+  this.votes = {};
   this.dt = 0;
+  this.path = path || [];
+
+  this.path.push({
+    id: self.id,
+    name: name || 'Issue #' + self.id,
+    desc: desc || 'Fix Issue #' + self.id
+  });
 
   this.doFrame = function() {
     ++self.dt;
@@ -29,22 +46,23 @@ module.exports = function(sockets, id) {
   };
 
   this.addPlayer = function(player) {
-    if (player.branch)
-      player.branch.removePlayer(player);
-    player.dt = self.dt;
-    player.socket.join(self.id);
-    player.branch = self;
-    self.players[player.id] = player;
-    self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
-    for (var id in self.players) {
-      if (id != player.id) player.socket.emit('spawn', { type: 'player', spawn: self.players[id].serialize() });
+    if (!self.hasPlayer(player.id)) {
+      if (player.branch) {
+        player.branch.removePlayer(player);
+      }
+      player.socket.join(self.id);
+      player.branch = self;
+      player.dt = self.dt;
+      player.killvotes = [];
+      self.players[player.id] = player;
+      self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
+      for (var id in self.players) {
+        if (id != player.id) player.socket.emit('spawn', { type: 'player', spawn: self.players[id].serialize() });
+      }
+      for (var eid in self.enemies) {
+        player.socket.emit('spawn', { type: 'enemy', spawn: self.enemies[eid].serialize() });
+      }
     }
-
-    for (var eid in self.enemies) {
-      player.socket.emit('spawn', { type: 'enemy', spawn: self.enemies[eid].serialize() });
-    }
-    //TESTING ZONE
-    self.spawnWave();
   };
 
   this.hasPlayer = function(playerId) {
@@ -54,9 +72,19 @@ module.exports = function(sockets, id) {
   this.removePlayer = function(player) {
     if (self.hasPlayer(player.id)) {
       player.socket.leave(self.id);
+      for (var id in self.players) {
+        if (id !== player.id) player.socket.emit('despawn', { type: 'player', id: id })
+      }
+      for (var id in self.enemies) {
+        player.socket.emit('despawn', { type: 'enemy', id: id });
+      }
+      for (var id in self.powerups) {
+        player.socket.emit('despawn', { type: 'powerup', id: id });
+      }
       player.branch = null;
+      player.killvotes = [];
       delete self.players[player.id];
-      self.broadcast('despawn', { type: 'player', despawn: player.id });
+      self.broadcast('despawn', { type: 'player', id: player.id });
     }
   };
 
@@ -71,7 +99,7 @@ module.exports = function(sockets, id) {
   this.removePowerup = function(powerupId) {
     if (self.hasPowerup(powerupId)) {
       delete self.powerups[powerupId];
-      self.broadcast('despawn', { type: 'powerup', despawn: powerupId });
+      self.broadcast('despawn', { type: 'powerup', id: powerupId });
     }
   };
 
@@ -87,7 +115,27 @@ module.exports = function(sockets, id) {
   this.removeEnemy = function(enemyId) {
     if (self.hasEnemy(enemyId)) {
       delete self.enemies[enemyId];
-      self.broadcast('despawn', { type: 'enemy', despawn: enemyId });
+      self.broadcast('despawn', { type: 'enemy', id: enemyId });
+    }
+  };
+
+  this.voteKill = function(type, id, voter) {
+    if (type == 'player' && self.hasPlayer(id) && self.players[id].killvotes.indexOf(voter) === -1) {
+      self.players[id].killvotes.push(voter);
+      if (self.players[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
+        var b = self.game.makeBranch(self);
+        b.addPlayer(self.players[id]);
+      }
+    } else if (type == 'enemy' && self.hasEnemy(id) && self.players[id].killvotes.indexOf(id) === -1) {
+      self.enemies[id].killvotes.push(voter);
+      if (self.enemies[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
+        self.broadcast('despawn', { type: 'enemy', id: id });
+        // TODO: add cash enemy died
+        delete self.enemies[id];
+        if (isEmpty(self.enemies)) {
+          self.spawnWave();
+        }
+      }
     }
   };
 
@@ -100,5 +148,7 @@ module.exports = function(sockets, id) {
       self.addEnemy(enemy);
     }
   };
+
+  this.spawnWave();
 };
 

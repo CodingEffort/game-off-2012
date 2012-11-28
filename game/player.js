@@ -5,7 +5,7 @@ module.exports = function(socket) {
   this.socket = socket;
   this.user = {};
   this.latency = 0;
-  this.dt = undefined;
+  this.dt = null;
 
   this.branch = null;
   this.health = 0;
@@ -15,13 +15,14 @@ module.exports = function(socket) {
   this.money = 0;
   this.powerups = {};
   this.shooting = false;
+  this.killvotes = [];
 
   this.serialize = function() {
     return {
       id: self.id,
       dt: self.dt,
       //username: self.user.username,
-      branch: (self.branch) ? self.branch.id : null,
+      branch: (self.branch) ? self.branch.path : [],
       health: self.health,
       pos: self.pos,
       gun: (self.gun) ? self.gun.serialize() : null,
@@ -31,9 +32,8 @@ module.exports = function(socket) {
   };
 
   this.init = function(branch) {
-    this.dt = branch.dt;
-    self.socket.emit('setup', { player: self.serialize() });
     branch.addPlayer(self);
+    self.socket.emit('setup', { player: self.serialize() });
     //this.socket.emit('ping', { t: Number(new Date()) });
   };
 
@@ -43,6 +43,16 @@ module.exports = function(socket) {
 
   this.socket.on('disconnect', function() {
     self.branch.removePlayer(self);
+  });
+
+  this.socket.on('despawn', function(data) {
+    if (data.type && data.id) {
+      if (data.type == 'player' || data.type == 'enemy') {
+        self.branch.voteKill(data.type, data.id, self.id);
+      } else if (data.type == 'powerup' && data.player) {
+        self.branch.voteTakePowerup(data.id, data.playeri, self.id);
+      }
+    }
   });
 
   this.socket.on('shooting', function(data) {

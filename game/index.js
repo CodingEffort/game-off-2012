@@ -7,13 +7,16 @@ module.exports = function(sockets, db, config) {
   this.sockets = sockets;
   this.db = db;
   this.config = config;
-  this.repo = {
-    master: new Branch(self.sockets, 'master')
-  };
+  this.repo = {};
+  this.repo['master'] = new Branch(self.sockets, self, null, 'master', 'Project Nixie');
 
   this.sockets.on('connection', function(socket) {
     var client = new Player(socket);
     client.init(self.repo['master']);
   });
+
+  this.makeBranch = function(player, parent) {
+    
+  }
 };
 

@@ -11,6 +11,7 @@ module.exports = function(startX, startY, type, path, dtStart) {
   this.path = path;
   this.money = 0;
   this.dtStart = dtStart;
+  this.killvotes = [];
 
   this.serialize = function() {
     return {
