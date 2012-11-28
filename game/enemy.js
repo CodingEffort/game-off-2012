@@ -1,8 +1,9 @@
 var enemyId = 0;
+
 module.exports = function(startX, startY, type, gun, path, dtStart) {
   var self = this;
 
-  this.id = enemyId++;
+  this.id = ++enemyId;
 
   this.type = type;
   this.health = 0;
@@ -12,6 +13,7 @@ module.exports = function(startX, startY, type, gun, path, dtStart) {
   this.money = 0;
   this.speedmod = (Math.random()*(0.2)) + 0.9;
   this.dtStart = dtStart;
+  this.killvotes = [];
 
   this.serialize = function() {
     return {

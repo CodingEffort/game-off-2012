@@ -21,7 +21,8 @@ function NetClient() {
     money: null,
     score: null,
     gun: null,
-    dt: null
+    dt: null,
+    branch: null
   };
 
   // Event management
@@ -60,7 +61,7 @@ function NetClient() {
     });
 
     self.socket.on('despawn', function(data) {
-      if (self.events.despawn) self.events.despawn(data.type, data.despawn);
+      if (self.events.despawn) self.events.despawn(data.type, data.id);
     });
 
     self.socket.on('shooting', function(data) {
@@ -86,6 +87,10 @@ function NetClient() {
     self.socket.on('gun', function(data) {
       if (self.events.gun) self.events.gun(data.player, data.gun);
     });
+
+    self.socket.on('branch', function(data) {
+      if (self.events.branch) self.events.branch(data.player);
+    });
   };
 
   // Tx
@@ -106,16 +111,14 @@ function NetClient() {
       }
     }
   };
+
   this.shooting = function(shooting) {
-    self.player.shooting = shooting;
-    self.socket.emit('shooting', { shooting: shooting });
+    self.player.shooting = !!shooting;
+    self.socket.emit('shooting', { shooting: !!shooting });
   };
-  // Temp Tx, to be removed
-  this.powerup = function(powerup) {
-    self.socket.emit('powerup', { powerup: powerup });
+
+  this.despawn = function(type, id) {
+    self.socket.emit('despawn', { type: type, id: id, player: self.player.id });
   };
-  this.despawn = function(despawnType, obj) {
-    self.socket.emit('despawn', { type: despawnType, despawn: obj });
-  };
-}
+};
 

@@ -238,8 +238,8 @@ function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModif
         enemy.alpha = 0.5;
         this.trigger("KillMe");
     });
-    enemy.bind("WillDie", function() {
-        this.trigger("KillMe");
+    enemy.bind('WillDie', function() {
+      this.trigger('KillMe');
     });
     enemy.bind("KillMe", function() {
         nc.despawn('enemy', enemy.id);
@@ -250,3 +250,4 @@ function spawnEnemy(enemyType, startX, startY, id, pathType, gunType, speedModif
 
     return enemy;
 }
+
