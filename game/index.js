@@ -12,7 +12,7 @@ module.exports = function(sockets, db, config) {
   };
 
   this.sockets.on('connection', function(socket) {
-    var client = new Player(socket);
+    var client = new Player(socket, '#00FF00', 'PlayerMelee');
     client.init(self.repo['master']);
   });
 };

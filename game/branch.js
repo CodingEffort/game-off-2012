@@ -119,7 +119,8 @@ module.exports = function(sockets, id) {
     for (var i in w.enemies) {
       var path = wave.getWaveParamValue(w.enemies[i].path);
       var pos = wave.getStartPosForPath(path)();
-      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), path, self.dt);
+      var gun = wave.getWaveParamValue(w.enemies[i].gun);
+      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt);
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);
     }

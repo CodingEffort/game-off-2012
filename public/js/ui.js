@@ -29,7 +29,7 @@ Crafty.c("UI", {
 	},
 
 	setCashAmount: function(amount) {
-        var txt = amount + "$";
+        var txt = Math.floor(amount) + "$";
         var OFFSET = 16;
 		this.cash.text(txt)
             .attr({w: txt.length * this.CASH_FONT_SIZE, h: this.CASH_FONT_SIZE})

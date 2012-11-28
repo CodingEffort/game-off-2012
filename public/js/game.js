@@ -82,9 +82,6 @@ function hurtPlayer(player, dmg) {
     if (dmg > 0) // if we still have damages for the player
     {
         player.hurt(dmg);
-        //TEMP UNTIL SERVER SHOOTS MESSAGES
-        if (player.health <= 0)
-            ui.showClientMessage("Player '" + player.playerID + "' branched a new dimension [C1] where he still lives.");
     }
 }
 
@@ -93,7 +90,7 @@ function startGame() {
 
     nc.bind('connected', function(player) {
       dT = player.dt;
-      me = spawnPlayer(player.pos.x, player.pos.y, player.id, "PlayerParrallelFastPewPew", "#FF0000");
+      me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
       me.bind('CashChanged', function() {
             ui.setCashAmount(me.cash);
         });
@@ -111,11 +108,11 @@ function startGame() {
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
         if (me.id !== spawn.id)
-            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, "PlayerParrallelFastPewPew", "#FF0000");
+            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color);
       }
       else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id,
-            spawn.path, "LameEnemyPewPew", spawn.speedmod, spawn.dtStart);
+            spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart);
       }
       else if (type == 'powerup') {
         // TODO: spawn the powerup
@@ -126,6 +123,9 @@ function startGame() {
       if (type == 'player') {
         if (id === me.id)
             me = null;
+
+        //TEMP UNTIL SERVER SHOOTS MESSAGES
+        ui.showClientMessage("Player '" + id + "' branched 'master' to work on Issue#1: File corruption.");
 
         players[id].destroy();
         delete players[id];
@@ -199,6 +199,8 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     player.bind("Dead", function() {
         player.explode(Crafty.e("Implosion"));
         player.alpha = 0.5;
+    });
+    player.bind("WillDie", function() {
         this.trigger("KillMe");
     });
     player.bind("KillMe", function() {
