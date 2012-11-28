@@ -42,7 +42,7 @@ module.exports = function(socket) {
   });
 
   this.socket.on('disconnect', function() {
-    self.branch.removePlayer(self);
+    if (self.branch) self.branch.removePlayer(self);
   });
 
   this.socket.on('despawn', function(data) {
@@ -63,7 +63,7 @@ module.exports = function(socket) {
   });
 
   this.socket.on('position', function(data) {
-    if (data.pos && data.pos.x !== undefined && data.pos.y !== undefined) {
+    if (self.branch && data.pos && data.pos.x !== undefined && data.pos.y !== undefined) {
       self.pos.x = Math.round(data.pos.x);
       self.pos.y = Math.round(data.pos.y);
       self.socket.broadcast.to(self.branch.id).emit('position', { player: self.id, pos: self.pos });

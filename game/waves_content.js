@@ -14,30 +14,30 @@ module.exports = {
   self: this,
     // The list of all the possible waves, ordered by their difficulty
     waves: [
-         [
-            GRUNT,
-            GRUNT
-         ],
+        {
+            enemies: [GRUNT,GRUNT],
+            pause: 2000
+        },
 
-         [
-            GRUNT,
-            GRUNT,
-            PATROL
-         ],
+        {
+            enemies: [GRUNT,GRUNT,GRUNT],
+            pause: 2000
+        },
 
-         [
-            GRUNT, GRUNT, GRUNT,
-            PATROL, PATROL
-         ],
+        {
+            enemies: [GRUNT,GRUNT,PATROL],
+            pause: 3000
+        },
 
-         [
-            PATROL, PATROL, PATROL, PATROL
-         ],
+        {
+            enemies: [GRUNT,GRUNT,PATROL,PATROL],
+            pause: 3000
+        },
 
-         [
-            GRUNT, GRUNT, GRUNT,
-            PATROL, PATROL, PATROL, PATROL
-         ]
+        {
+            enemies: [GRUNT,GRUNT,GRUNT,PATROL,PATROL],
+            pause: 5000
+        }
     ],
 
     rand: rand,
@@ -49,7 +49,7 @@ module.exports = {
         "LeftRight": function() {return { x: -50, y: rand(50, 550) };},
         "RightLeft": function() {return { x: 650, y: rand(50, 550) };},
         "TopBottom": function() {return { x: rand(50, 650), y: -50 };},
-        "BottomTop": function() {return { x: rand(50, 650), y: 850 };},
+        "BottomTop": function() {return { x: rand(50, 650), y: 600 };},
         "PatrolHorizontalStartLeft": function() {return { x: rand(50, 650), y: -50 };},
         "PatrolHorizontalStartRight": function() {return { x: rand(50, 650), y: -50 };},
         "ZigZagStartLeft": function() {return { x: rand(50, 650), y: -50 };},

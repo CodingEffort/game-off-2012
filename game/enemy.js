@@ -10,6 +10,7 @@ module.exports = function(startX, startY, type, path, dtStart) {
   this.gun = null;
   this.path = path;
   this.money = 0;
+  this.speedmod = (Math.random()*(0.2)) + 0.9;
   this.dtStart = dtStart;
   this.killvotes = [];
 
@@ -22,6 +23,7 @@ module.exports = function(startX, startY, type, path, dtStart) {
       gun: (self.gun) ? self.gun.serialize() : null,
       path: self.path,
       money: self.money,
+      speedmod: self.speedmod,
       dtStart: self.dtStart
     };
   };

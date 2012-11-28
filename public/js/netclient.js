@@ -60,7 +60,7 @@ function NetClient() {
     });
 
     self.socket.on('despawn', function(data) {
-      if (self.events.despawn) self.events.despawn(data.type, data.despawn);
+      if (self.events.despawn) self.events.despawn(data.type, data.id);
     });
 
     self.socket.on('shooting', function(data) {
@@ -90,26 +90,30 @@ function NetClient() {
 
   // Tx
   this.position = function(x, y) {
-    self.player.pos = { x: Math.round(x), y: Math.round(y) };
-    if (self.positionTimeout === null) {
-      self.socket.emit('position', self.player.pos);
-      self.positionTimeout = setTimeout(function() {
-        if (self.positionBuffer) {
-          self.socket.emit('position', { pos: self.positionBuffer });
-          self.positionBuffer = null;
-        }
-        self.positionTimeout = null;
-      }, 100);
-    } else {
-      self.positionBuffer = self.player.pos;
+    if (self.player) {
+      self.player.pos = { x: Math.round(x), y: Math.round(y) };
+      if (self.positionTimeout === null) {
+        self.socket.emit('position', self.player.pos);
+        self.positionTimeout = setTimeout(function() {
+          if (self.positionBuffer) {
+            self.socket.emit('position', { pos: self.positionBuffer });
+            self.positionBuffer = null;
+          }
+          self.positionTimeout = null;
+        }, 100);
+      } else {
+        self.positionBuffer = self.player.pos;
+      }
     }
   };
+
   this.shooting = function(shooting) {
     self.player.shooting = !!shooting;
     self.socket.emit('shooting', { shooting: !!shooting });
   };
-  this.despawn = function(type, id, player) {
-    self.socket.emit('despawn', { type: type, id: id, player: player });
+
+  this.despawn = function(type, id) {
+    self.socket.emit('despawn', { type: type, id: id, player: self.player.id });
   };
 };
 
