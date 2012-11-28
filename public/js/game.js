@@ -26,6 +26,7 @@ var me = null;
 Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.background("#000000");
 Crafty.canvas.init();
+Crafty.settings.modify("autoPause", true);
 
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {
@@ -99,6 +100,20 @@ function startGame() {
 
     nc.bind("branch", function(player) {
         if (me) {
+            for (var e in enemies) {
+                enemies[e].destroy();
+                delete enemies[e];
+            }
+            for (var p in players) {
+                if (players[p].id !== me.id) {
+                    players[p].destroy();
+                    delete players[p];
+                }
+            }
+            var projectiles = Crafty("Projectile");
+            for (var i = 0; i < projectiles.length; ++i) {
+                Crafty(projectiles[i]).destroy();
+            }
             dT = player.dt;
             me.setHealth(player.health);
             console.log("branch");
@@ -205,7 +220,6 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     player.y = y - player.h/2;
     player.bind("Dead", function() {
         player.explode(Crafty.e("Implosion"));
-        player.alpha = 0.5;
     });
     player.bind("WillDie", function() {
         this.trigger("KillMe");

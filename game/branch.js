@@ -81,11 +81,11 @@ module.exports = function(sockets, game, path, name, desc) {
 
   this.removePlayer = function(player) {
     if (self.hasPlayer(player.id)) {
-      self.broadcast('despawn', { type: 'player', despawn: player.id });
+      self.broadcast('despawn', { type: 'player', id: player.id });
       delete self.players[player.id];
       player.socket.leave(self.id);
       for (var id in self.players) {
-        if (id !== player.id) player.socket.emit('despawn', { type: 'player', id: id })
+        if (id !== player.id) player.socket.emit('despawn', { type: 'player', id: id });
       }
       for (var id in self.enemies) {
         player.socket.emit('despawn', { type: 'enemy', id: id });
