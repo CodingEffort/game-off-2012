@@ -122,7 +122,7 @@ function NetClient() {
   };
 
   this.health = function(type, id, health) {
-    self.socket.emit('life', { type: type, id: id, health: health });
+    self.socket.emit('health', { type: type, id: id, health: health });
   }
 };
 

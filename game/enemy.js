@@ -37,9 +37,9 @@ module.exports = function(startX, startY, type, gun, path, dtStart) {
     }
     if (values.length > 1) {
       values.sort(function(a, b) { return a - b; });
-      self.health = (values[Math.floor(values.length / 2)] + values[Math.ceil(values.length / 2)]) / 2;
+      self.health = Math.round((values[Math.floor(values.length / 2)] + values[Math.ceil(values.length / 2)]) / 2);
     } else {
-      self.health = values[0];
+      self.health = Math.round(values[0]);
     }
   };
 };

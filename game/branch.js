@@ -100,6 +100,7 @@ module.exports = function(sockets, game, path, name, desc) {
         if (id !== player.id) player.socket.emit('despawn', { type: 'player', id: id });
       }
       for (var id in self.enemies) {
+        if (self.enemies[id].healthvotes[player.id] !== undefined) delete self.enemies[id].healthvotes[player.id];
         player.socket.emit('despawn', { type: 'enemy', id: id });
       }
       for (var id in self.powerups) {
