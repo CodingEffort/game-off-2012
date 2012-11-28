@@ -35,6 +35,9 @@ module.exports = function(sockets, game, path, name, desc) {
     ++self.dt;
     if (self.dt % 10 === 0) { // broad cast every n frames the current dt (refucktor me please, just makin' it work for now)
       self.broadcast('dt', { dt: self.dt });
+      var c = 0;
+      for (var id in self.players) ++c;
+      self.population = c;
     }
   };
 
@@ -84,15 +87,6 @@ module.exports = function(sockets, game, path, name, desc) {
       self.broadcast('despawn', { type: 'player', despawn: player.id });
       delete self.players[player.id];
       player.socket.leave(self.id);
-      for (var id in self.players) {
-        if (id !== player.id) player.socket.emit('despawn', { type: 'player', id: id })
-      }
-      for (var id in self.enemies) {
-        player.socket.emit('despawn', { type: 'enemy', id: id });
-      }
-      for (var id in self.powerups) {
-        player.socket.emit('despawn', { type: 'powerup', id: id });
-      }
       player.branch = null;
       player.killvotes = [];
       delete self.players[player.id];
