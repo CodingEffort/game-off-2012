@@ -34,8 +34,8 @@ module.exports = function(socket, color, gun) {
   };
 
   this.init = function(branch) {
-    branch.addPlayer(self);
     self.socket.emit('setup', { player: self.serialize() });
+    branch.addPlayer(self);
     //this.socket.emit('ping', { t: Number(new Date()) });
   };
 

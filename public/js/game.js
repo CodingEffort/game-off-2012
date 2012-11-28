@@ -85,24 +85,24 @@ function hurtPlayer(player, dmg) {
     }
 }
 
-function initMe(player) {
-    dT = player.dt;
-    me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
-    me.bind('CashChanged', function() {
-        ui.setCashAmount(me.cash);
-    });
-}
-
 function startGame() {
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
-      //initMe(player);
+        console.log("connected");
+        me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
+        me.bind('CashChanged', function() {
+            ui.setCashAmount(me.cash);
+        });
     });
     nc.connect();
 
     nc.bind("branch", function(player) {
-        initMe(player);
+        if (me) {
+            dT = player.dt;
+            me.setHealth(player.health);
+            console.log("branch");
+        }
     });
 
     nc.bind('shooting', function(id, shooting) {
@@ -114,6 +114,7 @@ function startGame() {
     });
 
     nc.bind('spawn', function(type, spawn) {
+        console.log("spawn");
       if (type == 'player') {
         if (me.id !== spawn.id)
             spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color);
@@ -129,14 +130,12 @@ function startGame() {
 
     nc.bind('despawn', function(type, id) {
       if (type == 'player') {
-        if (id === me.id)
-            me = null;
-
         //TEMP UNTIL SERVER SHOOTS MESSAGES
         ui.showClientMessage("Player '" + id + "' branched 'master' to work on Issue#1: File corruption.");
-
-        players[id].destroy();
-        delete players[id];
+        if (id !== me.id) {
+            players[id].destroy();
+            delete players[id];
+        }
       } else if (type == 'enemy') {
         enemies[id].destroy();
         delete enemies[id];
