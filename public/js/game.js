@@ -260,6 +260,7 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart) {
+    console.log(health);
     var enemy = Crafty.e(enemyType);
     if (health > 0) enemy.setHealth(health);
     enemy.attr({x:startX, y:startY})
@@ -278,6 +279,7 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
             enemy.framesSinceHpPushed = 0;
             enemy.hpchanged = false;
             nc.health('enemy', enemy.id, enemy.health);
+            console.log("SEND");
         }
         ++enemy.framesSinceHpPushed;
     });
