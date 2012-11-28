@@ -9,6 +9,11 @@
 Crafty.c("Enemy", {
     init: function() {
         this.requires("FollowPath, 2D, Canvas, Collision, Living");
+
+        this.removed = false;
+        this.bind("Remove", function() {
+            this.removed = true;
+        });
     },
     setGun: function(gunName) {
         var gun = Crafty.e(gunName);
@@ -21,7 +26,7 @@ Crafty.c("Enemy", {
         return this;
     },
     shoot: function() {
-        if (this.health > 0 && this.gun !== undefined && this.gun.projectileName !== undefined) { // we're alive
+        if (!this.removed && this.health > 0 && this.gun !== undefined && this.gun.projectileName !== undefined) { // we're alive
             for (var angleDiff in this.gun.shootAngles) {
                 // shoot the ammo
                 var pew = Crafty.e(this.gun.projectileName);

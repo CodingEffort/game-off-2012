@@ -184,7 +184,7 @@ Crafty.c("HasHealth", {
   hurt: function(amount) {
     this.hurtAmount = amount;
     this.trigger("Hurt");
-    if (amount >= this.health) // this will kill us
+    if (this.health > 0 && amount >= this.health) // this will kill us
       this.trigger("WillDie");
     this.setHealth(this.health - amount);
     
