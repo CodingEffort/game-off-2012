@@ -25,7 +25,7 @@ var me = null;
 
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
-Crafty.background("#000000");
+Crafty.background("#FFF");//"#000000");
 Crafty.canvas.init();
 Crafty.settings.modify("autoPause", true);
 
@@ -201,18 +201,18 @@ function startGame() {
     });
 
     // Create an infinite background illusion with 2 images moving
-    var background1 = Crafty.e("ParralaxBackground");
-    var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // 2 backgrounds for the effect: the other one starts above the first
+    //var background1 = Crafty.e("ParralaxBackground");
+    //var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // 2 backgrounds for the effect: the other one starts above the first
 
     // Update the player according to the movement
-    Crafty.addEvent(this, Crafty.stage.elem, "mousemove", function(e) {
+    $("#cr-stage").mousemove(function(e) {
         if (me) {
             var MOVE_LERP_SPEED = 0.9;
 
-            var position = $("#cr-stage").position();
+            var position = $(this).position();
 
-            var targetX = Crafty.math.clamp(e.x - position.left - me.w/2, 0, SCREEN_W - me.w);
-            var targetY = Crafty.math.clamp(e.y - position.top - me.h/2, 0, SCREEN_H - me.h);
+            var targetX = Crafty.math.clamp(e.pageX - position.left - me.w/2, 0, SCREEN_W - me.w);
+            var targetY = Crafty.math.clamp(e.pageY - position.top - me.h/2, 0, SCREEN_H - me.h);
             me.x = Crafty.math.lerp(me.x, targetX, MOVE_LERP_SPEED);
             me.y = Crafty.math.lerp(me.y, targetY, MOVE_LERP_SPEED);
             nc.position(me.x, me.y);
@@ -273,7 +273,6 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart) {
-    console.log(health);
     var enemy = Crafty.e(enemyType);
     if (health > 0) enemy.setHealth(health);
     enemy.attr({x:startX, y:startY})
