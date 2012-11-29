@@ -199,8 +199,8 @@ module.exports = function(sockets, game, parent, name, desc) {
   // The maths are a little special with this one, but it handles the even distribution
   // of the wave spawning chances, as the game goes further ahead.
   this.getWaveIndex = function() {
-    var PROBABILITY_PEAK = 0.5; // the peak of the highest probability (the probability of the most likely wave)
-    var AVERAGE_TOTAL_WAVES = 15; // the desired amount of waves on average to reach the last wave
+    var PROBABILITY_PEAK = 100; // the peak of the highest probability (the probability of the most likely wave). The probabilities are not "normalized" (they're not really probabilities), so any number works here
+    var AVERAGE_TOTAL_WAVES = 20; // the desired amount of waves on average to reach the last wave
 
     var wavesSoFar = this.waveCount; // the amount of waves that we have encountred so far
     var wavesCount = wave.waves.length; // the total amount of possible waves
@@ -213,7 +213,8 @@ module.exports = function(sockets, game, parent, name, desc) {
       var b = Math.PI / wavesCount; // We use 2(totalwaves) as the Frequence, p = 1/F = 1/2n. p = 2PI/b, b = 2PI(2n)
       var k = PROBABILITY_PEAK/2; // k = (max+min)/2, or (peak+0)/2, peak/2
       var h = totalAverageProgress * wavesCount; // the more we advance towards the average, the more chance we have to get the last wave
-      return a * Math.cos(b * (waveIndex-h)) + k;
+      return -1/(wavesCount*2) * (waveIndex * waveIndex - h) + 1.0 * // The multiplier to encourage wave indices close to the peak
+        a * Math.cos(b * (waveIndex-h)) + k;
     };
 
     // Right now we want fast branch gameplay. So, if we busted the max waves count, simply throw the last wave
@@ -223,6 +224,7 @@ module.exports = function(sockets, game, parent, name, desc) {
     var probabilitySum = 0;
     for (var i = 0; i < wavesCount; ++i)
     {
+      //console.log("Prob("+i+")="+probabilityFunc(i)); // To observe the probability distribution
       probabilitySum += probabilityFunc(i);
     }
 
