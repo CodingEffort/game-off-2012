@@ -4,8 +4,27 @@
       </div>
     </div>
     <div class="row">
-      <div class="span12">
+      <div class="span9">
         <div id="cr-stage"></div>
+      </div>
+      <div class="span3">
+        <div class="well well-small" style="padding-left: 0; padding-right: 0;">
+          <ul class="nav nav-list">
+            <li class="nav-header">Upgrades</li>
+            <li><a href="#">Max Health +10 - 200$</a></li>
+            <li class="nav-header">Guns</li>
+            <li><a href="#">PewPew - Free</a></li>
+            <li><a href="#">Dual - 200$</a></li>
+            <li><a href="#">Spread 3 - 500$</a></li>
+            <li><a href="#">Spread 5 - 650$</a></li>
+            <li><a href="#">Melee - 750$</a></li>
+            <li><a href="#">LAZOR - 1337$</a></li>
+            <li class="active"><a href="#">Fork You - 9001$</a></li>
+            <li class="nav-header">Powerups</li>
+            <li><a href="#">Heal - 300$</a></li>
+            <li><a href="#">Shield - 250$</a></li>
+          </ul>
+        </div>
       </div>
     </div>
     <script src="{{prefix}}/socket.io/socket.io.js"></script>
