@@ -261,9 +261,9 @@ module.exports = function(sockets, game, parent, name, desc) {
       var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt, cash);
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);
-      if (self.bossWave && self.parent) {
-        self.broadcast('msg', { msg: "IT'S MERGING TIME!", merge: true });
-      }
+    }
+    if (self.bossWave && self.parent) {
+      self.broadcast('msg', { msg: "IT'S MERGING TIME!", merge: true });
     }
   };
 };
