@@ -193,6 +193,7 @@ function startGame() {
     });
 
     nc.bind('msg', function(msg, merge) {
+      console.log(msg);
       ui.showClientMessage(msg);
       if (merge) {
         ui.mergeTime();

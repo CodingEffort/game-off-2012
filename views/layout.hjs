@@ -3,6 +3,7 @@
   <title>{{title}}</title>
   <link rel="stylesheet" href="{{prefix}}/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{prefix}}/css/zocial.css">
+  <link rel="stylesheet" href="{{prefix}}/css/style.css">
   <script src="{{prefix}}/js/jquery.min.js"></script>
   <script src="{{prefix}}/js/bootstrap.min.js"></script>
 </head>

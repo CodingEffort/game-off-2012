@@ -174,7 +174,6 @@ module.exports = function(sockets, game, parent, name, desc) {
         if (self.enemies[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
           if (killed) {
             for (var pid in self.players) {
-              console.log("Branch " + self.name + ": Giving " + self.enemies[id].cash + "$ to " + pid);
               self.players[pid].gainCash(self.enemies[id].cash);
             }
           }
@@ -184,7 +183,7 @@ module.exports = function(sockets, game, parent, name, desc) {
               for (var idp in self.players) {
                 self.parent.addPlayer(self.players[idp]);
               }
-              self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!', merge: true });
+              self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
               self.game.garbageCollectBranch(self);
             } else {
               self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
@@ -262,6 +261,9 @@ module.exports = function(sockets, game, parent, name, desc) {
       var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt, cash);
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);
+    }
+    if (self.bossWave && self.parent) {
+      self.broadcast('msg', { msg: "IT'S MERGING TIME!", merge: true });
     }
   };
 };
