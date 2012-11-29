@@ -466,3 +466,19 @@ Crafty.c("BossHealthBar", {
     });
   }
 });
+
+Crafty.c("CentralMessage", {
+  init: function() {
+    this.requires("2D, Canvas, FadeOut")
+      .attr({z:10000});
+    this.timeout(this.startFade, 1500);
+  },
+  center: function() {
+    var b = this.mbr();
+    this.x = SCREEN_W/2 - b._w/2;
+    this.y = SCREEN_H/2 - b._h/2;
+  },
+  startFade: function() {
+    this.fadeOut(0.05);
+  }
+});
