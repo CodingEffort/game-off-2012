@@ -53,7 +53,8 @@ Crafty.sprite(50, "assets/back.png", {
     normalboss: [6, 13],
     bigboss: [15,12],
     bosshealthbarbg: [1,12],
-    bosshealthbarfill: [1, 12]
+    bosshealthbarfill: [1, 12],
+    mergemsg: [9, 13, 6, 1]
     });
 
 // Called when an enemy is hit by a pewpewlazors
@@ -100,6 +101,7 @@ function startGame() {
 
     nc.bind("branch", function(player, path) {
         if (me) {
+            mergeWaveStarted();
             for (var e in enemies) {
                 enemies[e].destroy();
                 delete enemies[e];
@@ -258,6 +260,11 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
     players[playerID].tween({x:xPos, y:yPos}, tweenTime);
 }
 
+function mergeWaveStarted() {
+    Crafty.e("CentralMessage, mergemsg")
+        .center();
+}
+
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart) {
     console.log(health);
@@ -279,7 +286,6 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
             enemy.framesSinceHpPushed = 0;
             enemy.hpchanged = false;
             nc.health('enemy', enemy.id, enemy.health);
-            console.log("SEND");
         }
         ++enemy.framesSinceHpPushed;
     });
