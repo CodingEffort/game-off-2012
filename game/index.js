@@ -11,14 +11,18 @@ module.exports = function(sockets, db, config) {
   this.repo['master'] = new Branch(self.sockets, self, null, 'master', 'Project Nixie');
 
   this.sockets.on('connection', function(socket) {
-    var client = new Player(socket, '#00FF00', 'PlayerParrallelFastPewPew');
+    var client = new Player(socket, '#00FF00', 'PlayerForkYou');
     client.init(self.repo['master']);
   });
 
   this.makeBranch = function(parent) {
-    var b = new Branch(self.sockets, self, parent.path);
+    var b = new Branch(self.sockets, self, parent);
     this.repo[b.id] = b;
     return b;
-  }
+  };
+
+  this.garbageCollectBranch = function(branch) {
+    // TODO: check dependencies, delete branch if orphan
+  };
 };
 

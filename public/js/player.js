@@ -128,6 +128,10 @@ Crafty.c("Spaceship", {
         this.cash += amount;
         this.trigger("CashChanged");
     },
+    setCash: function(amount) {
+        this.cash = amount;
+        this.trigger("CashChanged");
+    },
     setPlayerID: function(playerID) {
         this.playerID = playerID;
         return this;

@@ -155,9 +155,11 @@ Crafty.c("FollowPath", {
                 this.tween({rotation: targetAngle}, 5);
             }
         });
+        /*
         this.bind("OutOfScreen", function () {
             this.trigger("KillMe");
         });
+        */
     },
     setDeltaTStart: function(deltaT) { this.dTStart = deltaT; return this; },
     followPath: function(func, speedModificator) { this.path = func; this.speedModificator = speedModificator; return this; },

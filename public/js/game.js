@@ -157,7 +157,7 @@ function startGame() {
     nc.bind('despawn', function(type, id) {
       if (type == 'player') {
         //TEMP UNTIL SERVER SHOOTS MESSAGES
-        ui.showClientMessage("Player '" + id + "' branched 'master' to work on Issue#1: File corruption.");
+        //ui.showClientMessage("Player '" + id + "' branched 'master' to work on Issue#1: File corruption.");
         if (id !== me.id) {
             players[id].destroy();
             delete players[id];
@@ -187,6 +187,17 @@ function startGame() {
         dTSpeed = desired / updatesSinceLast;
 
         lastdT = newDT;
+    });
+
+    nc.bind('cash', function(amount) {
+      if (me) me.setCash(amount);
+    });
+
+    nc.bind('msg', function(msg, merge) {
+      ui.showClientMessage(msg);
+      if (merge) {
+        ui.mergeTime();
+      }
     });
 
     // Create an infinite background illusion with 2 images moving
@@ -247,7 +258,7 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
         this.trigger("KillMe");
     });
     player.bind("KillMe", function() {
-        nc.despawn('player', player.id);
+        nc.despawn('player', player.id, true);
     });
     player.setPlayerColor(color);
     player.setGun(currentGun);
@@ -288,7 +299,10 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
       this.trigger('KillMe');
     });
     enemy.bind("KillMe", function() {
-        nc.despawn('enemy', enemy.id);
+        nc.despawn('enemy', enemy.id, true);
+    });
+    enemy.bind('OutOfScreen', function() {
+        nc.despawn('enemy', enemy.id, false);
     });
     enemy.setGun(gunType);
     enemy.id = id;
