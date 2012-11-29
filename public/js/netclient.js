@@ -18,11 +18,12 @@ function NetClient() {
     position: null,
     powerup: null,
     health: null,
-    money: null,
+    cash: null,
     score: null,
     gun: null,
     dt: null,
-    branch: null
+    branch: null,
+    msg: null
   };
 
   // Event management
@@ -76,8 +77,8 @@ function NetClient() {
       if (self.events.powerup) self.events.powerup(data.player, data.powerup);
     });
 
-    self.socket.on('money', function(data) {
-      if (self.events.money) self.events.money(data.money);
+    self.socket.on('cash', function(data) {
+      if (self.events.cash) self.events.cash(data.cash);
     });
 
     self.socket.on('score', function(data) {
@@ -89,7 +90,11 @@ function NetClient() {
     });
 
     self.socket.on('branch', function(data) {
-      if (self.events.branch) self.events.branch(data.player, data.path || []);
+      if (self.events.branch) self.events.branch(data.player, data.path);
+    });
+
+    self.socket.on('msg', function(data) {
+      if (self.events.msg) self.events.msg(data.msg);
     });
   };
 
@@ -117,8 +122,8 @@ function NetClient() {
     self.socket.emit('shooting', { shooting: !!shooting });
   };
 
-  this.despawn = function(type, id) {
-    self.socket.emit('despawn', { type: type, id: id, player: self.player.id });
+  this.despawn = function(type, id, killed) {
+    self.socket.emit('despawn', { type: type, id: id, player: self.player.id, killed: killed });
   };
 
   this.health = function(type, id, health) {

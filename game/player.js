@@ -12,7 +12,7 @@ module.exports = function(socket, color, gun) {
   this.pos = { x: 350, y: 300 };
   this.gun = gun;
   this.score = 0;
-  this.money = 0;
+  this.cash = 0;
   this.powerups = {};
   this.shooting = false;
   this.killvotes = [];
@@ -29,7 +29,7 @@ module.exports = function(socket, color, gun) {
       pos: self.pos,
       gun: self.gun/*.serialize()*/,
       //score: self.score,
-      //money: self.money
+      cash: self.cash
     };
   };
 
@@ -37,6 +37,11 @@ module.exports = function(socket, color, gun) {
     self.socket.emit('setup', { player: self.serialize() });
     branch.addPlayer(self);
     //this.socket.emit('ping', { t: Number(new Date()) });
+  };
+
+  this.gainCash = function(amount) {
+    self.cash += amount;
+    self.socket.emit('cash', { cash: self.cash });
   };
 
   this.socket.on('pong', function(data) {
@@ -50,9 +55,9 @@ module.exports = function(socket, color, gun) {
   this.socket.on('despawn', function(data) {
     if (data.type && data.id) {
       if (data.type == 'player' || data.type == 'enemy') {
-        self.branch.voteKill(data.type, data.id, self.id);
+        self.branch.voteKill(data.type, data.id, self.id, !!data.killed);
       } else if (data.type == 'powerup' && data.player) {
-        self.branch.voteTakePowerup(data.id, data.playeri, self.id);
+        self.branch.voteTakePowerup(data.id, data.playeri, self.id, !!data.killed);
       }
     }
   });

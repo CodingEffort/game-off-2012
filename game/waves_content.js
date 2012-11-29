@@ -21,17 +21,17 @@ var BOSS2_GUNS = "CircularEnemyPewPew";
 var BOSS3_GUNS = "PulseEnemyPewPew";
 var LAST_BOSS_GUNS = "HighPulseEnemyPewPew";
 
-var GRUNT = { type: 'Grunt', gun: GRUNT_GUNS, path: GRUNT_PATHS };
-var PATROL = { type: 'Patrol', gun: PATROL_GUNS, path: PATROL_PATHS };
-var TRAPEZE = { type: 'Trapeze', gun: TRAPEZE_GUNS, path: TRAPEZE_PATHS};
-var DELTOID = { type: 'Trapeze', gun: DELTOID_GUNS, path: DELTOID_PATHS };
-var RECTBOX = { type: 'RectBox', gun: RECTBOX_GUNS, path: RECTBOX_PATHS };
-var HALFCIRCLE = { type: 'HalfCircle', gun: HALFCIRCLE_GUNS, path: HALFCIRCLE_PATHS};
-var BOSS1_A = { type: 'EasiestBoss', gun: BOSS1_GUNS, path: BOSS1_A_PATHS};
-var BOSS1_B = { type: 'EasiestBossAiming', gun: BOSS1_GUNS, path: BOSS1_B_PATHS};
-var BOSS2 = { type: 'EasyBoss', gun: BOSS2_GUNS, path: BOSS2_PATHS};
-var BOSS3 = { type: 'NormalBoss', gun: BOSS3_GUNS, path: BOSS3_PATHS};
-var LAST_BOSS = { type: 'BigBoss', gun:LAST_BOSS_GUNS, path: LAST_BOSS_PATHS};
+var GRUNT = { type: 'Grunt', gun: GRUNT_GUNS, path: GRUNT_PATHS, cash: 5 };
+var PATROL = { type: 'Patrol', gun: PATROL_GUNS, path: PATROL_PATHS, cash: 10 };
+var TRAPEZE = { type: 'Trapeze', gun: TRAPEZE_GUNS, path: TRAPEZE_PATHS, cash: 15 };
+var DELTOID = { type: 'Trapeze', gun: DELTOID_GUNS, path: DELTOID_PATHS, cash: 25 };
+var RECTBOX = { type: 'RectBox', gun: RECTBOX_GUNS, path: RECTBOX_PATHS, cash: 50 };
+var HALFCIRCLE = { type: 'HalfCircle', gun: HALFCIRCLE_GUNS, path: HALFCIRCLE_PATHS, cash: 65 };
+var BOSS1_A = { type: 'EasiestBoss', gun: BOSS1_GUNS, path: BOSS1_A_PATHS, cash: 100 };
+var BOSS1_B = { type: 'EasiestBossAiming', gun: BOSS1_GUNS, path: BOSS1_B_PATHS, cash: 150 };
+var BOSS2 = { type: 'EasyBoss', gun: BOSS2_GUNS, path: BOSS2_PATHS, cash: 200 };
+var BOSS3 = { type: 'NormalBoss', gun: BOSS3_GUNS, path: BOSS3_PATHS, cash: 300 };
+var LAST_BOSS = { type: 'BigBoss', gun:LAST_BOSS_GUNS, path: LAST_BOSS_PATHS, cash: 500 };
 
 var SMALL_PAUSE = 1000;
 var NORMAL_PAUSE = 2000;
@@ -111,12 +111,14 @@ module.exports = {
 
         {
             enemies: [BOSS1_A, GRUNT, GRUNT],
-            pause:NORMAL_PAUSE
+            pause:NORMAL_PAUSE,
+            boss: true
         },
 
         {
             enemies: [BOSS1_B, PATROL, PATROL],
-            pause:NORMAL_PAUSE
+            pause:NORMAL_PAUSE,
+            boss: true
         },
 
         {
@@ -136,7 +138,8 @@ module.exports = {
 
         {
             enemies: [BOSS2],
-            pause:NORMAL_PAUSE
+            pause:NORMAL_PAUSE,
+            boss: true
         },
 
         {
@@ -161,12 +164,14 @@ module.exports = {
 
         {
             enemies: [BOSS3],
-            pause:NORMAL_PAUSE
+            pause:NORMAL_PAUSE,
+            boss: true
         },
 
         {
             enemies: [LAST_BOSS],
-            pause: 0
+            pause: 0,
+            boss: true
         }
     ],
 

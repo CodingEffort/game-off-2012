@@ -28,6 +28,7 @@ module.exports = function(sockets, game, parent, name, desc) {
   this.population = 0;
   this.name = name || 'Issue #' + self.id;
   this.desc = desc || 'Fix Issue #' + self.id;
+  this.bossWave = false;
 
   this.path.push(self);
 
@@ -38,12 +39,14 @@ module.exports = function(sockets, game, parent, name, desc) {
   console.log(p);
 
   this.doFrame = function() {
-    ++self.dt;
-    if (self.dt % 10 === 0) { // broad cast every n frames the current dt (refucktor me please, just makin' it work for now)
-      self.broadcast('dt', { dt: self.dt });
-      var c = 0;
-      for (var id in self.players) ++c;
-      self.population = c;
+    if (self.population > 0) {
+      ++self.dt;
+      if (self.dt % 10 === 0) { // broad cast every n frames the current dt (refucktor me please, just makin' it work for now)
+        self.broadcast('dt', { dt: self.dt });
+        var c = 0;
+        for (var id in self.players) ++c;
+        self.population = c;
+      }
     }
   };
 
@@ -157,21 +160,35 @@ module.exports = function(sockets, game, parent, name, desc) {
     }
   };
 
-  this.voteKill = function(type, id, voter) {
+  this.voteKill = function(type, id, voter, killed) {
     if (self.hasPlayer(voter)) {
       if (type == 'player' && self.hasPlayer(id) && self.players[id].killvotes.indexOf(voter) === -1) {
         self.players[id].killvotes.push(voter);
         if (self.players[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
           var b = self.game.makeBranch(self);
+          self.broadcast('msg', { msg: self.players[id].id + ' made a branch to work on ' + b.name });
           b.addPlayer(self.players[id]);
         }
       } else if (type == 'enemy' && self.hasEnemy(id) && self.enemies[id].killvotes.indexOf(id) === -1) {
         self.enemies[id].killvotes.push(voter);
         if (self.enemies[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
-          // TODO: add cash enemy died
+          if (killed) {
+            for (var pid in self.players) {
+              console.log("Branch " + self.name + ": Giving " + self.enemies[id].cash + "$ to " + pid);
+              self.players[pid].gainCash(self.enemies[id].cash);
+            }
+          }
           self.removeEnemy(id);
           if (isEmpty(self.enemies)) {
-            self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
+            if (self.bossWave && self.parent) {
+              for (var idp in self.players) {
+                self.parent.addPlayer(self.players[idp]);
+              }
+              self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
+              self.game.garbageCollectBranch(self);
+            } else {
+              self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
+            }
           }
         }
       }
@@ -187,7 +204,9 @@ module.exports = function(sockets, game, parent, name, desc) {
       var path = wave.getWaveParamValue(w.enemies[i].path);
       var pos = wave.getStartPosForPath(path)();
       var gun = wave.getWaveParamValue(w.enemies[i].gun);
-      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt);
+      var cash = wave.getWaveParamValue(w.enemies[i].cash);
+      self.bossWave = !!w.boss;
+      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt, cash);
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);
     }
