@@ -19,7 +19,7 @@ var HALFCIRCLE_GUNS = ["LameConeEnemyPewPew", "LameShotgunEnemyPewPew"];
 var BOSS1_GUNS = "LameLargeShotgunEnemyPewPew";
 var BOSS2_GUNS = "CircularEnemyPewPew";
 var BOSS3_GUNS = "PulseEnemyPewPew";
-var LAST_BOSS_GUNS = "HighPulseEnemyPewPew";
+var LAST_BOSS_GUNS = "HighlyCircularEnemyPewPew";
 
 var GRUNT = { type: 'Grunt', gun: GRUNT_GUNS, path: GRUNT_PATHS, cash: 5 };
 var PATROL = { type: 'Patrol', gun: PATROL_GUNS, path: PATROL_PATHS, cash: 10 };

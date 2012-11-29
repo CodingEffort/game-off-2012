@@ -101,7 +101,6 @@ function startGame() {
 
     nc.bind("branch", function(player, path) {
         if (me) {
-            mergeWaveStarted();
             for (var e in enemies) {
                 enemies[e].destroy();
                 delete enemies[e];
