@@ -180,6 +180,7 @@ module.exports = function(sockets, game, parent, name, desc) {
           self.removeEnemy(id);
           if (isEmpty(self.enemies)) {
             if (self.bossWave && self.parent) {
+              self.waveCount = 0;
               for (var idp in self.players) {
                 self.parent.addPlayer(self.players[idp]);
               }
