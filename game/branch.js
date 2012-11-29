@@ -184,7 +184,7 @@ module.exports = function(sockets, game, parent, name, desc) {
               for (var idp in self.players) {
                 self.parent.addPlayer(self.players[idp]);
               }
-              self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
+              self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!', merge: true });
               self.game.garbageCollectBranch(self);
             } else {
               self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);

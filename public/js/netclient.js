@@ -94,7 +94,7 @@ function NetClient() {
     });
 
     self.socket.on('msg', function(data) {
-      if (self.events.msg) self.events.msg(data.msg);
+      if (self.events.msg) self.events.msg(data.msg, !!data.merge);
     });
   };
 

@@ -191,8 +191,11 @@ function startGame() {
       if (me) me.setCash(amount);
     });
 
-    nc.bind('msg', function(msg) {
+    nc.bind('msg', function(msg, merge) {
       ui.showClientMessage(msg);
+      if (merge) {
+        ui.mergeTime();
+      }
     });
 
     // Create an infinite background illusion with 2 images moving
