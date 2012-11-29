@@ -164,7 +164,17 @@ Crafty.c("CircularEnemyPewPew", {
 			.setDamage(2)
 			.setShootDelay(1000)
 			.setProjectileType("EnemySmallLazor")
-			.setProjectilesAngleDeltas([-150,-135,-120,-105,-90,-75,-60,-45,-30,-15,0,15,30,45,60,75,90,105,120,135,150,165,180]);
+			.setProjectilesAngleDeltas([-165,-150,-135,-120,-105,-90,-75,-60,-45,-30,-15,0,15,30,45,60,75,90,105,120,135,150,165,180]);
+	}
+});
+Crafty.c("HighlyCircularEnemyPewPew", {
+	init: function() {
+		this.requires("Gun")
+			.setDamage(2)
+			.setShootDelay(1000)
+			.setProjectileType("EnemyRegularLazor")
+			.setProjectilesAngleDeltas([-172,-165,-157,-150,-142,-135,-127,-120,-112,-105,-97,-90,-82,-75,-67,-60,-52,-45,-37,-30,-22,-15,-7,
+				0,7,15,22,30,37,45,52,60,67,75,82,90,97,105,112,120,127,135,142,150,157,165,172,180]);
 	}
 });
 Crafty.c("PulseEnemyPewPew", {
