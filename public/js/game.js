@@ -260,11 +260,6 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
     players[playerID].tween({x:xPos, y:yPos}, tweenTime);
 }
 
-function mergeWaveStarted() {
-    Crafty.e("CentralMessage, mergemsg")
-        .center();
-}
-
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart) {
     console.log(health);

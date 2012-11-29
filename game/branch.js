@@ -173,10 +173,61 @@ module.exports = function(sockets, game, path, name, desc) {
     }
   };
 
+  // Returns the index of the wave that we should pick.
+  // The maths are a little special with this one, but it handles the even distribution
+  // of the wave spawning chances, as the game goes further ahead.
+  this.getWaveIndex = function() {
+    var PROBABILITY_PEAK = 0.5; // the peak of the highest probability (the probability of the most likely wave)
+    var AVERAGE_TOTAL_WAVES = 15; // the desired amount of waves on average to reach the last wave
+
+    var wavesSoFar = this.waveCount; // the amount of waves that we have encountred so far
+    var wavesCount = wave.waves.length; // the total amount of possible waves
+
+    // We find we've reached what progress (percentage) of the waves to hit the desired average total waves
+    var totalAverageProgress = wavesSoFar / AVERAGE_TOTAL_WAVES;
+
+    var probabilityFunc = function(waveIndex) {
+      var a = PROBABILITY_PEAK/2; // our max is peak, our min is 0. A = max-min, or peak. |a| = A/2 = peak/2. a is positive (start high)
+      var b = Math.PI / wavesCount; // We use 2(totalwaves) as the Frequence, p = 1/F = 1/2n. p = 2PI/b, b = 2PI(2n)
+      var k = PROBABILITY_PEAK/2; // k = (max+min)/2, or (peak+0)/2, peak/2
+      var h = totalAverageProgress * wavesCount; // the more we advance towards the average, the more chance we have to get the last wave
+      return a * Math.cos(b * (waveIndex-h)) + k;
+    };
+
+    // Right now we want fast branch gameplay. So, if we busted the max waves count, simply throw the last wave
+    if (totalAverageProgress >= 1) return wavesCount-1;
+
+    // Otherwise, we go and find the sum of all the possible waves, to be able to scale our random number accordingly up to the highest probability
+    var probabilitySum = 0;
+    for (var i = 0; i < wavesCount; ++i)
+    {
+      probabilitySum += probabilityFunc(i);
+    }
+
+    // We then choose our probability sum at random from all the possible sums.
+    var desiredProbabilitySum = Math.random() * probabilitySum;
+
+    // And find the right wave accordingly:
+    for (var w = 0; w < wavesCount; ++w)
+    {
+      var waveProbability = probabilityFunc(w);
+      if (desiredProbabilitySum <= waveProbability) // is this the wave?
+        return w;
+      else
+        desiredProbabilitySum -= waveProbability; // keep checking with the other waves
+    }
+
+    // Couldn't find anything? Well, that's weird. Here, take a final boss.
+    return wavesCount-1;
+  };
+
   this.spawnWave = function() {
+    var waveIndex = self.getWaveIndex(self.waveCount);
+
     ++self.waveCount;
-    console.log("Branch " + self.name + ": Wave #" + self.waveCount);
-    var w = wave.waves[Math.floor(Math.random()*wave.waves.length)];
+    console.log("Branch " + self.name + ": Wave #" + self.waveCount + " (index " + waveIndex + ")");
+
+    var w = wave.waves[waveIndex];
     self.waveDelay = w.pause;
     for (var i in w.enemies) {
       var path = wave.getWaveParamValue(w.enemies[i].path);

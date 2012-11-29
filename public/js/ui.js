@@ -66,6 +66,10 @@ Crafty.c("UI", {
 	},
 	removeClientMessage: function() {
 		_clientMessages.shift();
+	},
+	mergeTime: function() {
+		Crafty.e("CentralMessage, mergemsg")
+            .center();
 	}
 });
 
