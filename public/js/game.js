@@ -76,7 +76,7 @@ function onProjectileHitPlayer(e) {
 }
 
 function shieldSyncLife() {
-    nc.health('shield', this.owner.id, this.health);
+    nc.health('shield', this.player.id, this.health);
 }
 
 function hurtPlayer(player, dmg) {
