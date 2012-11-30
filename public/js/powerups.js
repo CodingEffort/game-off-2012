@@ -127,11 +127,9 @@ Crafty.c("ShieldPowerupItem", {
 Crafty.c("ShieldPowerup", {
 	init: function() {
 		this.requires("Living, PowerupObject, shieldObject")
-			.setMaxHealth(50)
-			.setHpBarYOffset(10);
+			.setMaxHealth(50);
 
 		this.bind("OwnerSet", function() {
-			this.setHpBarFollow(this.player);
 			this.positionShield();
 		});
 
