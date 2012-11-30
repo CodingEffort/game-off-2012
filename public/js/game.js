@@ -201,8 +201,8 @@ function startGame() {
     });
 
     // Create an infinite background illusion with 2 images moving
-    //var background1 = Crafty.e("ParralaxBackground");
-    //var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // 2 backgrounds for the effect: the other one starts above the first
+    var background1 = Crafty.e("ParralaxBackground");
+    var background2 = Crafty.e("ParralaxBackground").y = -SCREEN_H; // 2 backgrounds for the effect: the other one starts above the first
 
     // Update the player according to the movement
     $("#cr-stage").mousemove(function(e) {

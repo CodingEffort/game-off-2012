@@ -9,12 +9,12 @@
  // Main spaceship object
 Crafty.c("Spaceship", {
     init: function() {
-        this.requires("2D, Canvas, ship, SpriteColor, Living, Tween, Collision, HealthBar, SolidHitBox")
+        this.requires("2D, Canvas, ship, SpriteColor, Living, Tween, Collision, HealthBar")
             .setMaxHealth(100)
             .setIsPlayer(true)
             .crop(0,0,35,35)
             .attr({z:this.z+10})
-            .collision();
+            .collision(new Crafty.circle(this.w/2,this.h/2,this.w*0.4));
         this.canShoot = true;
         this.powerups = {};
         this.playerID = null;

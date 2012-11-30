@@ -170,7 +170,7 @@ Crafty.c("CircularEnemyPewPew", {
 Crafty.c("HighlyCircularEnemyPewPew", {
 	init: function() {
 		this.requires("Gun")
-			.setDamage(2)
+			.setDamage(4)
 			.setShootDelay(1000)
 			.setProjectileType("EnemyRegularLazor")
 			.setProjectilesAngleDeltas([-172,-165,-157,-150,-142,-135,-127,-120,-112,-105,-97,-90,-82,-75,-67,-60,-52,-45,-37,-30,-22,-15,-7,
