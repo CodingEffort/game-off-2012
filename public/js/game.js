@@ -76,7 +76,7 @@ function onProjectileHitPlayer(e) {
 }
 
 function shieldSyncLife() {
-    nc.health('shield', this.id, this.health);
+    nc.health('shield', this.owner.id, this.health);
 }
 
 function hurtPlayer(player, dmg) {
@@ -157,6 +157,21 @@ function startGame() {
       else if (type == 'powerup') {
         spawnPowerup(spawn.type, spawn.pos.x, spawn.pos.y);
       }
+    });
+
+    nc.bind('health', function(type, id, health, maxhealth) {
+        if (type === 'player' && players[id]) {
+            players[id].setMaxHealth(maxhealth);
+            players[id].setHealth(health);
+        }
+        else if (type === 'enemy' && enemies[id]) {
+            enemies[id].setMaxHealth(maxhealth);
+            enemies[id].setHealth(health);
+        }
+        else if (type === 'shield' && players[id].powerups["ShieldPowerup"]) {
+            players[id].powerups["ShieldPowerup"].setMaxHealth(maxhealth);
+            players[id].powerups["ShieldPowerup"].setHealth(health);
+        }
     });
 
     nc.bind('despawn', function(type, id) {

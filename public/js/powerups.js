@@ -25,6 +25,8 @@ function givePowerupEffectToPlayer(powerupItem, player) {
 		.fadeIn(0.05)
 		.setPowerupName(powerupItem.powerupObject);
 
+	powerup.owner = player;
+
 	player.powerups[powerupItem.powerupObject] = powerup;
 }
 
