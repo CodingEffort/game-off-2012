@@ -231,6 +231,12 @@ function startGame() {
       }
     });
 
+    nc.bind('gun', function(gun, playerID) {
+        if (players[playerID]) {
+            players[playerID].setGun(gun);
+        }
+    });
+
     nc.bind('powerup', function(powerup, playerID) {
         if (players[playerID]) {
             applyPowerup(powerup, players[playerID]);
