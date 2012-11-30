@@ -188,9 +188,5 @@ Crafty.c("HealPowerup", {
 			this.player.setHealth(this.player.health + HEAL_AMOUNT);
 			this.destroy();
 		});
-
-		this.bind("EffectReset", function () {
-			this.shouldPickPowerup = false; // don't pick a heal if we're already getting healed
-		});
 	}
 });
