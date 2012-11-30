@@ -74,7 +74,7 @@ function NetClient() {
     });
 
     self.socket.on('powerup', function(data) {
-      if (self.events.powerup) self.events.powerup(data.player, data.powerup);
+      if (self.events.powerup) self.events.powerup(data.type, data.player);
     });
 
     self.socket.on('health', function(data) {
@@ -90,7 +90,7 @@ function NetClient() {
     });
 
     self.socket.on('gun', function(data) {
-      if (self.events.gun) self.events.gun(data.player, data.gun);
+      if (self.events.gun) self.events.gun(data.gun, data.player);
     });
 
     self.socket.on('branch', function(data) {
@@ -132,6 +132,10 @@ function NetClient() {
 
   this.health = function(type, id, health) {
     self.socket.emit('health', { type: type, id: id, health: health });
-  }
+  };
+
+  this.shop = function(item) {
+    self.socket.emit('shop', { item: item });
+  };
 };
 

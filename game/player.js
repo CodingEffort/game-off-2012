@@ -1,8 +1,9 @@
-module.exports = function(socket) {
+module.exports = function(socket, game) {
   var self = this;
 
   this.id = socket.handshake.user.id;
   this.socket = socket;
+  this.game = game;
   this.user = socket.handshake.user;
   this.latency = 0;
   this.dt = null;
@@ -26,6 +27,7 @@ module.exports = function(socket) {
       maxhealth: self.user.health,
       pos: self.pos,
       gun: self.user.gun,
+      guns: self.user.guns,
       //score: self.user.score,
       cash: self.user.cash
     };
@@ -70,8 +72,6 @@ module.exports = function(socket) {
       if (data.type && data.id) {
         if (data.type == 'player' || data.type == 'enemy') {
           self.branch.voteKill(data.type, data.id, self.id, !!data.killed);
-        } else if (data.type == 'powerup' && data.player) {
-          self.branch.voteTakePowerup(data.id, data.playeri, self.id, !!data.killed);
         }
       }
     });
@@ -97,6 +97,26 @@ module.exports = function(socket) {
           self.branch.enemyHealth(data.id, data.health, self.id);
         } else if (data.type == 'player') {
           self.branch.playerHealth(data.id, data.health, self.id);
+        }
+      }
+    });
+
+    self.socket.on('shop', function(data) {
+      if (data.item) {
+        if (data.item in self.game.config.powerups && self.user.cash >= self.game.config.powerups[data.item]) {
+          self.gainCash(-self.game.config.powerups[data.item]);
+          self.branch.broadcast('powerup', { type: data.item, player: self.id });
+        } else if (data.item in self.game.config.guns) {
+          if (self.user.guns.indexOf(data.item) === -1) {
+            if (self.user.cash >= self.game.config.guns[data.item]) {
+              self.gainCash(-self.game.config.guns[data.item]);
+              self.user.guns.push(data.item);
+              self.user.save();
+            } else {
+              return;
+            }
+          }
+          self.branch.broadcast('gun', { gun: data.item, player: self.id });
         }
       }
     });

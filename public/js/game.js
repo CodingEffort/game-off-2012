@@ -101,6 +101,13 @@ function startGame() {
         me.bind('CashChanged', function() {
             ui.setCashAmount(me.cash);
         });
+        for (var i in player.guns) {
+          var g = $("#" + player.guns[i]);
+          if (g) {
+            $(g).find('.label').remove();
+            $(g).parent().removeClass('disabled');
+          }
+        }
     });
     nc.connect();
 
@@ -234,6 +241,11 @@ function startGame() {
     nc.bind('gun', function(gun, playerID) {
         if (players[playerID]) {
             players[playerID].setGun(gun);
+            if (playerID == me.id) {
+              $("#" + gun).find('.label').remove();
+              $("#shoptab .active").removeClass('active disabled');
+              $("#" + gun).parent().addClass('active');
+            }
         }
     });
 
@@ -249,6 +261,12 @@ function startGame() {
       if (merge) {
         ui.mergeTime();
       }
+    });
+
+    $("#shoptab a").click(function(e) {
+      e.preventDefault();
+      nc.shop($(this).attr('id'));
+      return false;
     });
 
     // Create an infinite background illusion with 2 images moving
