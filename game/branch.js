@@ -179,13 +179,15 @@ module.exports = function(sockets, game, parent, name, desc) {
           }
           self.removeEnemy(id);
           if (isEmpty(self.enemies)) {
-            if (self.bossWave && self.parent) {
+            if (self.bossWave) {
               self.waveCount = 0;
-              for (var idp in self.players) {
-                self.parent.addPlayer(self.players[idp]);
+              if (self.parent) {
+                for (var idp in self.players) {
+                  self.parent.addPlayer(self.players[idp]);
+                }
+                self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
+                self.game.garbageCollectBranch(self);
               }
-              self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
-              self.game.garbageCollectBranch(self);
             } else {
               self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
             }
