@@ -75,6 +75,10 @@ function onProjectileHitPlayer(e) {
     if (this.destroyedOnContact) this.destroy();
 }
 
+function shieldSyncLife() {
+    nc.health('shield', this.id, this.health);
+}
+
 function hurtPlayer(player, dmg) {
     if (player.powerups["ShieldPowerup"] !== undefined) // if we're shielded
     {
@@ -151,7 +155,7 @@ function startGame() {
             spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart, spawn.difficultymod);
       }
       else if (type == 'powerup') {
-        // TODO: spawn the powerup
+        spawnPowerup(spawn.type, spawn.pos.x, spawn.pos.y);
       }
     });
 
@@ -166,8 +170,9 @@ function startGame() {
       } else if (type == 'enemy' && enemies[id]) {
         enemies[id].destroy();
         delete enemies[id];
-      } else if (type == 'powerup') {
-        // TODO: destroy the powerup
+      } else if (type == 'powerup' && powerups[id]) {
+        powerups[id].destroy();
+        delete powerups[id];
       }
     });
 
@@ -176,7 +181,7 @@ function startGame() {
 
         // If we're too far or too fast, just "teleport" (we teleport if too fast because we don't want enemies to go reversed)
         var diff = Math.abs(dT - newDT);
-        if (diff > 30 || dT > newDT)
+        if (diff > 20 || dT > newDT)
         {
             dT = newDT;
         }
@@ -211,6 +216,12 @@ function startGame() {
           }
         });
       }
+    });
+
+    nc.bind('powerup', function(powerup, playerID) {
+        if (players[playerID]) {
+            applyPowerup(powerup, players[playerID]);
+        }
     });
 
     nc.bind('msg', function(msg, merge) {
@@ -264,7 +275,6 @@ function startGame() {
 
     Crafty.bind("EnterFrame", function() {
         dT += dTSpeed;
-        // this is for the fun of it.
     });
 }
 
@@ -292,6 +302,36 @@ function spawnPlayer(x, y, playerID, hp, maxhp, currentGun, color, shooting) {
     players[playerID] = player;
     player.shooting = shooting || false;
     return player;
+}
+
+// Spawns a powerup that can be picked at the specified x and y.
+function spawnPowerup(id, powerUpName, startX, startY) {
+    var powerup = getPowerupItem(powerUpName);
+    powerup.id = id;
+
+    powerup.fadeIn(0.03)
+        .collision()
+        .onHit("Spaceship", onPlayerPickedPowerup)
+        .attr({x: startX, y: startY});
+
+    powerup.bind("PickedUp", function() {
+        nc.despawn('powerup', powerup.id);
+    });
+
+    powerups[powerup.id] = powerup;
+}
+
+function applyPowerup(powerUpName, player) {
+    var powerup = getPowerupItem(powerUpName); // temp powerup
+
+    if (player.powerups[powerup.powerupObject] !== undefined) { // effect already on? just reset it
+        player.powerups[powerup.powerupObject].resetEffect();
+    }
+    else {
+        givePowerupEffectToPlayer(powerup, player);
+    }
+
+    powerup.destroy();
 }
 
 function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {

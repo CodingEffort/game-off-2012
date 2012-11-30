@@ -6,8 +6,7 @@
 Holds the powerups that can be picked through the game.
 **/
 
-// Spawns a powerup that can be picked at the specified x and y.
-function spawnPowerup(powerUpName, startX, startY) {
+function getPowerupItem(powerUpName) {
 	var powerup;
 	if (powerUpName === "ShieldPowerup") {
 		powerup = Crafty.e("ShieldPowerupItem");
@@ -17,35 +16,39 @@ function spawnPowerup(powerUpName, startX, startY) {
 	}
 	else
 		throw ("The power up '" + powerUpName + "' is not implemented while spawning it.");
+	return powerup;
+}
 
-	powerup.fadeIn(0.03)
-		.collision()
-		.onHit("Spaceship", onPlayerPickedPowerup)
-		.attr({x: startX, y: startY});
+function givePowerupEffectToPlayer(powerupItem, player) {
+	var powerup = Crafty.e(powerupItem.powerupObject)
+		.setOwner(player)
+		.fadeIn(0.05)
+		.setPowerupName(powerupItem.powerupObject);
+
+	player.powerups[powerupItem.powerupObject] = powerup;
+}
+
+function applyPowerupItem(powerupItem, player) {
+	var shouldRemovePowerup = true;
+	if (e[i].obj.powerups[powerupItem.powerupObject] !== undefined) // effect already on? just reset it
+	{
+		shouldRemovePowerup = e[i].obj.powerups[powerupItem.powerupObject].resetEffect();
+	}
+	else if (powerupItem.shouldPickPowerup(e[i].obj)) // new effect to add
+	{
+		givePowerupEffectToPlayer(powerupItem, player);
+	}
+	if (shouldRemovePowerup)
+		powerupItem.destroy();
 }
 
 // Called when a player picks a powerup.
 function onPlayerPickedPowerup(e) {
-	var shouldRemovePowerup = true;
-	for (var i = 0; i < e.length; ++i)
-	{
-		if (e[i].obj.powerups[this.powerupObject] !== undefined) // effect already on? just reset it
-		{
-			shouldRemovePowerup = e[i].obj.powerups[this.powerupObject].resetEffect();
+	for (var i = 0; i < e.length; ++i) {
+		if (this.shouldPickPowerup(e[i].obj)) {
+			this.trigger("PickedUp");
 		}
-		else if (this.shouldPickPowerup(e[i].obj)) // new effect to add
-		{
-			var powerup = Crafty.e(this.powerupObject)
-				.setOwner(e[i].obj)
-				.fadeIn(0.05)
-				.setPowerupName(this.powerupObject);
-
-			e[i].obj.powerups[this.powerupObject] = powerup;
-		}
-
 	}
-	if (shouldRemovePowerup)
-		this.destroy();
 }
 
 // Represents a powerup item that must be picked to activate the real powerup effect.
@@ -149,6 +152,8 @@ Crafty.c("ShieldPowerup", {
 		this.bind("Dead", function() {
 			this.explode(Crafty.e("Explosion"));
 		});
+
+		this.bind("SyncLife", shieldSyncLife);
 	},
 	positionShield: function() {
 		var playerBounds = this.player.mbr();
