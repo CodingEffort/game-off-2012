@@ -92,7 +92,8 @@ function startGame() {
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
-        me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
+        me = spawnPlayer(player.pos.x, player.pos.y, player.id,
+            player.health, player.maxhealth, player.gun, player.color);
         me.bind('CashChanged', function() {
             ui.setCashAmount(me.cash);
         });
@@ -142,7 +143,8 @@ function startGame() {
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
         if (me.id !== spawn.id)
-            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color, spawn.shooting);
+            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.health, spawn.maxhealth,
+             spawn.gun, spawn.color, spawn.shooting);
       }
       else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id, spawn.health,
@@ -266,10 +268,12 @@ function startGame() {
     });
 }
 
-function spawnPlayer(x, y, playerID, currentGun, color, shooting) {
+function spawnPlayer(x, y, playerID, hp, maxhp, currentGun, color, shooting) {
     var player = Crafty.e("Spaceship").setPlayerID(playerID);
     player.x = x - player.w/2;
     player.y = y - player.h/2;
+    player.setMaxHealth(maxhp);
+    player.setHealth(hp);
     player.bind("Dead", function() {
         player.explode(Crafty.e("Implosion"));
     });
@@ -278,6 +282,9 @@ function spawnPlayer(x, y, playerID, currentGun, color, shooting) {
     });
     player.bind("KillMe", function() {
         nc.despawn('player', player.id, true);
+    });
+    player.bind("SyncLife", function() {
+        nc.health('player', player.id, player.health);
     });
     player.setPlayerColor(color);
     player.setGun(currentGun);
@@ -312,14 +319,8 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
         enemy.alpha = 0.5;
         this.trigger("KillMe");
     });
-    enemy.framesSinceHpPushed = 0;
-    enemy.bind("EnterFrame", function() {
-        if (enemy.hpchanged && enemy.framesSinceHpPushed >= 15) {
-            enemy.framesSinceHpPushed = 0;
-            enemy.hpchanged = false;
-            nc.health('enemy', enemy.id, enemy.health);
-        }
-        ++enemy.framesSinceHpPushed;
+    enemy.bind("SyncLife", function() {
+        nc.health('enemy', enemy.id, enemy.health);
     });
     enemy.bind('WillDie', function() {
       this.trigger('KillMe');

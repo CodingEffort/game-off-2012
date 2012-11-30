@@ -173,6 +173,16 @@ Crafty.c("HasHealth", {
   init: function() {
     this.health = 0;
     this.maxHealth = 0;
+    this.framesSinceHpPushed = 0;
+
+    this.bind("EnterFrame", function() {
+      if (this.hpchanged && this.framesSinceHpPushed >= 15) {
+            this.framesSinceHpPushed = 0;
+            this.hpchanged = false;
+            this.trigger("SyncLife");
+        }
+        ++this.framesSinceHpPushed;
+    });
   },
   setMaxHealth: function(amount) {
     this.maxHealth = amount;
