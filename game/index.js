@@ -38,7 +38,7 @@ module.exports = function(sockets, db, config) {
       id = md5.digest('hex');
     }
     var b = new Branch(self.sockets, self, parent, id);
-    this.repo[b.id] = b;
+    self.repo[b.id] = b;
     return b;
   };
 
