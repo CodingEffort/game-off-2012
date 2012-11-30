@@ -111,12 +111,13 @@ module.exports = function(socket, game) {
             if (self.user.cash >= self.game.config.guns[data.item]) {
               self.gainCash(-self.game.config.guns[data.item]);
               self.user.guns.push(data.item);
-              self.user.save();
             } else {
               return;
             }
           }
+          self.user.gun = data.item;
           self.branch.broadcast('gun', { gun: data.item, player: self.id });
+          self.user.save();
         }
       }
     });

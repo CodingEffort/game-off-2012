@@ -108,6 +108,7 @@ function startGame() {
             $(g).parent().removeClass('disabled');
           }
         }
+        $("#" + player.gun).parent().addClass('active');
     });
     nc.connect();
 
