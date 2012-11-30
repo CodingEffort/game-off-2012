@@ -67,7 +67,7 @@ function onLazorHitEnemy(e) {
 
 function onPlayerHitEnemy(e) {
     // hurt the player by our current health value
-    hurtPlayer(e[0].obj, this.health/100);
+    hurtPlayer(e[0].obj, Math.ceil(this.health/100));
 }
 
 function onProjectileHitPlayer(e) {
@@ -146,7 +146,7 @@ function startGame() {
       }
       else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id, spawn.health,
-            spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart);
+            spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart, 100);
       }
       else if (type == 'powerup') {
         // TODO: spawn the powerup
@@ -272,9 +272,18 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart) {
+function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart, difficultymod) {
     var enemy = Crafty.e(enemyType);
-    if (health > 0) enemy.setHealth(health);
+    console.log("d"+difficultymod);
+    console.log("h"+health);
+    console.log("eh"+enemy.health);
+    console.log("dh"+health * difficultymod);
+    if (health > 0) // If we're creating an existing enemy
+        enemy.setHealth(health);
+    else // if we're creating a new one: use the difficulty mod
+        enemy.health *= difficultymod;
+    console.log("eh"+enemy.health);
+    console.log("end");
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)
@@ -306,6 +315,8 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
     enemy.setGun(gunType);
     enemy.id = id;
     enemies[id] = enemy;
+
+    enemy.gun.damage *= difficultymod;
 
     return enemy;
 }

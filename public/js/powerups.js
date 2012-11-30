@@ -176,14 +176,10 @@ Crafty.c("HealPowerup", {
 		this.requires("PowerupObject");
 
 		var HEAL_AMOUNT = 25;
-		var HEAL_TIME = 30;
 
 		this.bind("OwnerSet", function() {
-			var targetHealth = Math.min(this.player.health + HEAL_AMOUNT, this.player.maxHealth);
-			this.player.tween({health: targetHealth}, HEAL_TIME);
-			this.timeout(function() {
-				this.destroy();
-			}, HEAL_TIME);
+			this.player.setHealth(this.player.health + HEAL_AMOUNT);
+			this.destroy();
 		});
 
 		this.bind("EffectReset", function () {
