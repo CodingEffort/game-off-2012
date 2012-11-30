@@ -9,21 +9,59 @@
       </div>
       <div class="span3">
         <div class="well well-small" style="padding-left: 0; padding-right: 0;">
-          <ul class="nav nav-list">
-            <li class="nav-header">Upgrades</li>
-            <li><a href="#">Max Health +10 - 200$</a></li>
-            <li class="nav-header">Guns</li>
-            <li><a href="#">PewPew - Free</a></li>
-            <li><a href="#">Dual - 200$</a></li>
-            <li><a href="#">Spread 3 - 500$</a></li>
-            <li><a href="#">Spread 5 - 650$</a></li>
-            <li><a href="#">Melee - 750$</a></li>
-            <li><a href="#">LAZOR - 1337$</a></li>
-            <li class="active"><a href="#">Fork You - 9001$</a></li>
-            <li class="nav-header">Powerups</li>
-            <li><a href="#">Heal - 300$</a></li>
-            <li><a href="#">Shield - 250$</a></li>
-          </ul>
+          <div class="tabbable">
+            <ul class="nav nav-pills well-small" style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;">
+              <li class="active"><a href="#shoptab" data-toggle="tab">Shop</a></li>
+              <li><a href="#branchestab" data-toggle="tab">Branches</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="shoptab" class="tab-pane active">
+                <ul class="nav nav-list">
+                  <li class="nav-header">Upgrades</li>
+                  <li data-price="200">
+                    <a href="#">Max Health +10 <span class="label pull-right">200$</span></a>
+                  </li>
+
+                  <li class="nav-header">Guns</li>
+                  <li class="active" data-price="-1">
+                    <a href="#">PewPew</a>
+                  </li>
+                  <li data-price="200">
+                    <a href="#">Dual <span class="label pull-right">200$</span></a>
+                  </li>
+                  <li data-price="500">
+                    <a href="#">Spread 3 <span class="label pull-right">500$</span></a>
+                  </li>
+                  <li data-price="650">
+                    <a href="#">Spread 5 <span class="label pull-right">650$</span></a>
+                  </li>
+                  <li data-price="750">
+                    <a href="#">Melee <span class="label pull-right">750$</span></a>
+                  </li>
+                  <li data-price="1337">
+                    <a href="#">LAZOR <span class="label pull-right">1337$</span></a>
+                  </li>
+                  <li data-price="9001">
+                    <a href="#">Fork You <span class="label pull-right">9001$</span></a>
+                  </li>
+
+                  <li class="nav-header">Powerups</li>
+                  <li data-price="300">
+                    <a href="#">Heal <span class="label pull-right">300$</span></a>
+                  </li>
+                  <li data-price="250">
+                    <a href="#">Shield <span class="label pull-right">250$</a>
+                  </li>
+                </ul>
+              </div>
+              <div id="branchestab" class="tab-pane">
+                <ul class="nav nav-list">
+                  <li class="nav-header">Checkout branch</li>
+
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

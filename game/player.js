@@ -35,6 +35,7 @@ module.exports = function(socket, color, gun) {
 
   this.init = function(branch) {
     self.socket.emit('setup', { player: self.serialize() });
+    self.gainCash(0);
     branch.addPlayer(self);
     //this.socket.emit('ping', { t: Number(new Date()) });
   };

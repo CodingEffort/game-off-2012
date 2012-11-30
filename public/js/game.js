@@ -189,7 +189,27 @@ function startGame() {
     });
 
     nc.bind('cash', function(amount) {
-      if (me) me.setCash(amount);
+      if (me) {
+        me.setCash(amount);
+        $('#shoptab li').each(function(i, e) {
+          var price = Number($(e).attr('data-price'));
+          console.log(price);
+          if (price) {
+            var tag = $(e).find('.label')[0];
+            if (price <= amount) {
+              if (tag) {
+                if (!$(tag).hasClass('label-success')) $(tag).addClass('label-success');
+                $(e).removeClass('disabled');
+              }
+            } else {
+              if (tag) {
+                $(tag).removeClass('label-success');
+                if (!$(e).hasClass('disabled')) $(e).addClass('disabled');
+              }
+            }
+          }
+        });
+      }
     });
 
     nc.bind('msg', function(msg, merge) {
