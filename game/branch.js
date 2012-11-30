@@ -8,14 +8,15 @@ function isEmpty(obj) {
   return true;
 }
 
-module.exports = function(sockets, game, parent, name, desc) {
+module.exports = function(sockets, game, parent, id, name, desc) {
   var self = this;
 
   this.sockets = sockets;
   this.game = game;
   this.parent = parent;
 
-  this.id = ++branchId;
+  ++branchId;
+  this.id = id;
   this.players = {};
   this.powerups = {};
   this.enemies = {};
@@ -26,8 +27,8 @@ module.exports = function(sockets, game, parent, name, desc) {
   this.waveDelay = 3000;
   this.waveCount = 0;
   this.population = 0;
-  this.name = name || 'Issue #' + self.id;
-  this.desc = desc || 'Fix Issue #' + self.id;
+  this.name = name || 'Issue #' + branchId;
+  this.desc = desc || 'Fix Issue #' + branchId;
   this.bossWave = false;
   this.finalBoss = false;
 
@@ -69,6 +70,11 @@ module.exports = function(sockets, game, parent, name, desc) {
       }
       player.socket.join(self.id);
       player.branch = self;
+      player.user.branch = self.id;
+      if (player.user.lockout.indexOf(self.id) !== -1) {
+        delete player.user.lockout[player.user.lockout.indexOf(self.id)];
+      }
+      player.user.save();
       player.dt = self.dt;
       player.killvotes = [];
       self.players[player.id] = player;
@@ -116,6 +122,8 @@ module.exports = function(sockets, game, parent, name, desc) {
         player.socket.emit('despawn', { type: 'powerup', id: id });
       }
       player.branch = null;
+      player.user.branch = null;
+      player.user.save();
       player.killvotes = [];
       delete self.players[player.id];
       --self.population;

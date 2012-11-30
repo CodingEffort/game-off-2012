@@ -77,6 +77,10 @@ function NetClient() {
       if (self.events.powerup) self.events.powerup(data.player, data.powerup);
     });
 
+    self.socket.on('health', function(data) {
+      if (self.events.health) self.events.health(data.type, data.id, data.health, data.maxhealth);
+    });
+
     self.socket.on('cash', function(data) {
       if (self.events.cash) self.events.cash(data.cash);
     });
