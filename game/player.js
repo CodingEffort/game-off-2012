@@ -118,6 +118,14 @@ module.exports = function(socket, game) {
           self.user.gun = data.item;
           self.branch.broadcast('gun', { gun: data.item, player: self.id });
           self.user.save();
+        } else if (data.item === "MaxHealthPlus") {
+          if (self.user.cash >= 500) {
+            self.gainCash(-500);
+            self.user.health += 10;
+            self.user.save();
+            self.health += 10;
+            self.branch.broadcast('health', { type: 'player', id: self.id, health: self.health, maxhealth: self.user.health });
+          }
         }
       }
     });

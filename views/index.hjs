@@ -19,7 +19,7 @@
                 <ul class="nav nav-list">
                   <li class="nav-header">Upgrades</li>
                   <li data-price="200">
-                    <a href="#">Max Health +10 <span class="label pull-right">200$</span></a>
+                    <a id="MaxHealthPlus" href="#">Max Health +10 <span class="label pull-right">200$</span></a>
                   </li>
 
                   <li class="nav-header">Guns</li>
