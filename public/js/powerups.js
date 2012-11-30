@@ -126,14 +126,13 @@ Crafty.c("ShieldPowerupItem", {
 // Powerup that blocks incoming projectiles and collisions until it is destroyed.
 Crafty.c("ShieldPowerup", {
 	init: function() {
-		this.requires("Living, PowerupObject, shieldObject, HealthBar")
+		this.requires("Living, PowerupObject, shieldObject")
 			.setMaxHealth(50)
 			.setHpBarYOffset(10);
 
 		this.bind("OwnerSet", function() {
 			this.setHpBarFollow(this.player);
 			this.positionShield();
-			this.setHpBarFont("ShieldHealthFont");
 		});
 
 		this.bind("EnterFrame", function() {
