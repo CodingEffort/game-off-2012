@@ -27,6 +27,7 @@ module.exports = function(socket, game) {
       maxhealth: self.user.health,
       pos: self.pos,
       gun: self.user.gun,
+      guns: self.user.guns,
       //score: self.user.score,
       cash: self.user.cash
     };
@@ -72,6 +73,7 @@ module.exports = function(socket, game) {
         if (data.type == 'player' || data.type == 'enemy') {
           self.branch.voteKill(data.type, data.id, self.id, !!data.killed);
         }
+      }
     });
 
     self.socket.on('shooting', function(data) {
@@ -101,14 +103,18 @@ module.exports = function(socket, game) {
 
     self.socket.on('shop', function(data) {
       if (data.item) {
-        if (data.item in self.game.config.powerups) {
+        if (data.item in self.game.config.powerups && self.user.cash >= self.game.config.powerups[data.item]) {
           self.gainCash(-self.game.config.powerups[data.item]);
           self.branch.broadcast('powerup', { type: data.item, player: self.id });
         } else if (data.item in self.game.config.guns) {
           if (self.user.guns.indexOf(data.item) === -1) {
-            self.gainCash(-self.game.config.guns[data.item]);
-            self.user.guns.push(data.item);
-            self.user.save();
+            if (self.user.cash >= self.game.config.guns[data.item]) {
+              self.gainCash(-self.game.config.guns[data.item]);
+              self.user.guns.push(data.item);
+              self.user.save();
+            } else {
+              return;
+            }
           }
           self.branch.broadcast('gun', { gun: data.item, player: self.id });
         }

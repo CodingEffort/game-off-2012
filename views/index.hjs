@@ -50,10 +50,10 @@
 
                   <li class="nav-header">Powerups</li>
                   <li data-price="300">
-                    <a href="#">Heal <span class="label pull-right">300$</span></a>
+                    <a id="HealPowerup" href="#">Heal <span class="label pull-right">300$</span></a>
                   </li>
                   <li data-price="250">
-                    <a href="#">Shield <span class="label pull-right">250$</a>
+                    <a id="ShieldPowerup" href="#">Shield <span class="label pull-right">250$</a>
                   </li>
                 </ul>
               </div>
