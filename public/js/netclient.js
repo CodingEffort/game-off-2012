@@ -23,6 +23,7 @@ function NetClient() {
     gun: null,
     dt: null,
     branch: null,
+    branches: null,
     msg: null
   };
 
@@ -97,6 +98,10 @@ function NetClient() {
       if (self.events.branch) self.events.branch(data.player, data.path);
     });
 
+    self.socket.on('branches', function(data) {
+      if (self.events.branches) self.events.branches(data.branches, data.current);
+    });
+
     self.socket.on('msg', function(data) {
       if (self.events.msg) self.events.msg(data.msg, !!data.merge);
     });
@@ -137,5 +142,13 @@ function NetClient() {
   this.shop = function(item) {
     self.socket.emit('shop', { item: item });
   };
+
+  this.branch = function(branch) {
+    self.socket.emit('branch', { branch: branch });
+  }
+
+  this.branches = function() {
+    self.socket.emit('branches');
+  }
 };
 

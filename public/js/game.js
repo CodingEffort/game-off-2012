@@ -263,10 +263,43 @@ function startGame() {
       }
     });
 
+    nc.bind('branches', function(branches, current) {
+      $("#branchestab ul").empty();
+      for (var i = 0; i < branches.length; ++i) {
+        var a = $(document.createElement('a'))
+                .attr('id', branches[i].id)
+                .attr('href', '#')
+                .html(branches[i].name);
+        if (branches[i].pop) {
+          var span = $(document.createElement('span'))
+                     .addClass('badge pull-right')
+                     .html(branches[i].pop);
+          $(a).append(span);
+        }
+        var li = $(document.createElement('li'));
+        if (branches[i].id == current) {
+          $(li).addClass('active');
+        } else if (branches[i].lockout) {
+          $(li).addClass('disabled');
+        }
+        $(li).append(a);
+        $("#branchestab ul").append(li);
+      }
+      $("#branchestab a").click(function(e) {
+        e.preventDefault();
+        nc.branch($(this).attr('id'));
+        return false;
+      });
+    });
+
     $("#shoptab a").click(function(e) {
       e.preventDefault();
       nc.shop($(this).attr('id'));
       return false;
+    });
+
+    $("#branchesbtn").click(function(e) {
+      nc.branches();
     });
 
     // Create an infinite background illusion with 2 images moving

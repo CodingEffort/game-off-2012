@@ -41,7 +41,7 @@ module.exports = function(socket, game) {
   };
 
   this.gainCash = function(amount) {
-    self.user.cash += amount;
+    self.user.cash += Math.floor(amount);
     self.socket.emit('cash', { cash: self.user.cash });
     self.user.save();
   };
@@ -70,7 +70,7 @@ module.exports = function(socket, game) {
 
     self.socket.on('despawn', function(data) {
       if (data.type && data.id) {
-        if (data.type == 'player' || data.type == 'enemy') {
+        if (data.type == 'player' || data.type == 'enemy' && self.branch) {
           self.branch.voteKill(data.type, data.id, self.id, !!data.killed);
         }
       }
@@ -120,6 +120,24 @@ module.exports = function(socket, game) {
           self.user.save();
         }
       }
+    });
+
+    self.socket.on('branch', function(data) {
+      if (data.branch) {
+        if (data.branch in self.game.repo && self.user.lockout.indexOf(data.branch) === -1) {
+          self.game.repo[data.branch].addPlayer(self);
+        }
+      }
+    });
+
+    self.socket.on('branches', function() {
+      var branches = [];
+      for (var i in self.game.repo) {
+        var b = self.game.repo[i].serialize();
+        b.lockout = (self.user.lockout.indexOf(b.id) !== -1);
+        if (!(i in self.user.lockout)) branches.push(b);
+      }
+      self.socket.emit('branches', { branches: branches, current: self.user.branch });
     });
   };
 

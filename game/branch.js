@@ -41,6 +41,15 @@ module.exports = function(sockets, game, parent, id, name, desc) {
   }
   console.log(p);
 
+  this.serialize = function() {
+    return {
+      id: self.id,
+      name: self.name,
+      desc: self.desc,
+      pop: self.population
+    };
+  };
+
   this.doFrame = function() {
     if (self.population > 0) {
       ++self.dt;
@@ -83,11 +92,7 @@ module.exports = function(sockets, game, parent, id, name, desc) {
       ++self.population;
       var p = [];
       for (var i = 0; i < self.path.length; ++i) {
-        p.push({
-          id: self.path[i].id,
-          name: self.path[i].name,
-          desc: self.path[i].desc
-        });
+        p.push(self.path[i].serialize());
       }
       player.socket.emit('branch', { player: player.serialize(), path: p });
       self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
@@ -188,6 +193,8 @@ module.exports = function(sockets, game, parent, id, name, desc) {
         if (self.players[id].killvotes.indexOf(voter) === -1) self.players[id].killvotes.push(voter);
         if (self.players[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
           self.players[id].health = self.players[id].user.health;
+          self.players[id].user.lockout.push(self.id);
+          self.players[id].user.save();
           var b = self.game.makeBranch(self);
           self.broadcast('msg', { msg: self.players[id].user.username + ' made a branch to work on issue "' + b.desc + '"'});
           b.addPlayer(self.players[id]);
@@ -203,10 +210,12 @@ module.exports = function(sockets, game, parent, id, name, desc) {
           self.removeEnemy(id);
           if (isEmpty(self.enemies)) {
             if (self.bossWave && self.parent) {
+              
               for (var idp in self.players) {
                 self.parent.addPlayer(self.players[idp]);
               }
               self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
+              self.waveCount = 0;
               self.game.garbageCollectBranch(self);
             } else {
               if (self.finalBoss) {

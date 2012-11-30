@@ -11,8 +11,8 @@
         <div class="well well-small" style="padding-left: 0; padding-right: 0;">
           <div class="tabbable">
             <ul class="nav nav-pills well-small" style="padding-top: 0; padding-bottom: 0; margin-bottom: 0;">
-              <li class="active"><a href="#shoptab" data-toggle="tab">Shop</a></li>
-              <li><a href="#branchestab" data-toggle="tab">Branches</a></li>
+              <li class="active"><a id="shopbtn" href="#shoptab" data-toggle="tab">Shop</a></li>
+              <li><a id="branchesbtn" href="#branchestab" data-toggle="tab">Branches</a></li>
             </ul>
             <div class="tab-content">
               <div id="shoptab" class="tab-pane active">
@@ -59,8 +59,6 @@
               </div>
               <div id="branchestab" class="tab-pane">
                 <ul class="nav nav-list">
-                  <li class="nav-header">Checkout branch</li>
-
                 </ul>
               </div>
             </div>
