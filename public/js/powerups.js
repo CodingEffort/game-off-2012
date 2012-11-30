@@ -93,9 +93,7 @@ Crafty.c("PowerupObject", {
 			.attr({z:900});
 
 		this.bind("Remove", function() {
-			console.log("powerup removed");
 			delete this.player.powerups[this.powerupName];
-			console.log("powerup after: " + this.player.powerups[this.powerupName]);
 		});
 	},
 	setOwner: function(player) {
