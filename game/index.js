@@ -37,7 +37,8 @@ module.exports = function(sockets, db, config) {
       md5.update(Math.random().toString());
       id = md5.digest('hex');
     }
-    var b = new Branch(self.sockets, self, parent, id);
+    var b = new Branch(self.sockets, self, parent, id, null,
+      config.issues[Math.floor(Math.random()*(config.issues.length))]);
     this.repo[b.id] = b;
     return b;
   };

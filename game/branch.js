@@ -183,7 +183,7 @@ module.exports = function(sockets, game, parent, id, name, desc) {
         self.players[id].killvotes.push(voter);
         if (self.players[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
           var b = self.game.makeBranch(self);
-          self.broadcast('msg', { msg: self.players[id].id + ' made a branch to work on ' + b.name });
+          self.broadcast('msg', { msg: self.players[id].id + ' made a branch to work on issue "' + b.desc + '"'});
           b.addPlayer(self.players[id]);
         }
       } else if (type == 'enemy' && self.hasEnemy(id) && self.enemies[id].killvotes.indexOf(id) === -1) {
