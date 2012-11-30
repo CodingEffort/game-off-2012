@@ -128,12 +128,12 @@ Crafty.c("ShieldPowerup", {
 	init: function() {
 		this.requires("Living, PowerupObject, shieldObject, HealthBar")
 			.setMaxHealth(50)
-			.setHpBarYOffset(10)
-			.setHpBarFont("ShieldHealthFont");
+			.setHpBarYOffset(10);
 
 		this.bind("OwnerSet", function() {
 			this.setHpBarFollow(this.player);
 			this.positionShield();
+			this.setHpBarFont("ShieldHealthFont");
 		});
 
 		this.bind("EnterFrame", function() {
