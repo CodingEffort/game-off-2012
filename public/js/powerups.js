@@ -21,13 +21,12 @@ function getPowerupItem(powerUpName) {
 
 function givePowerupEffectToPlayer(powerupItem, player) {
 	var powerup = Crafty.e(powerupItem.powerupObject)
-		.setOwner(player)
 		.fadeIn(0.05)
 		.setPowerupName(powerupItem.powerupObject);
 
-	powerup.setOwner(player);
-
 	player.powerups[powerupItem.powerupObject] = powerup;
+
+	powerup.setOwner(player);
 }
 
 function applyPowerupItem(powerupItem, player) {
@@ -40,7 +39,6 @@ function applyPowerupItem(powerupItem, player) {
 	{
 		givePowerupEffectToPlayer(powerupItem, player);
 	}
-	if (shouldRemovePowerup)
 		powerupItem.destroy();
 }
 
