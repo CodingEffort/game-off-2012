@@ -24,25 +24,28 @@
 
                   <li class="nav-header">Guns</li>
                   <li class="active" data-price="-1">
-                    <a href="#">PewPew</a>
+                    <a id="PlayerFastPewPew" href="#">PewPew</a>
                   </li>
-                  <li data-price="200">
-                    <a href="#">Dual <span class="label pull-right">200$</span></a>
+                  <li data-price="250">
+                    <a id="PlayerParrallelFastPewPew" href="#">Dual <span class="label pull-right">250$</span></a>
                   </li>
                   <li data-price="500">
-                    <a href="#">Spread 3 <span class="label pull-right">500$</span></a>
-                  </li>
-                  <li data-price="650">
-                    <a href="#">Spread 5 <span class="label pull-right">650$</span></a>
+                    <a id="PlayerFastPewPewSplit3" href="#">Spread 3 <span class="label pull-right">500$</span></a>
                   </li>
                   <li data-price="750">
-                    <a href="#">Melee <span class="label pull-right">750$</span></a>
+                    <a id="PlayerFastPewPewSplit5" href="#">Spread 5 <span class="label pull-right">750$</span></a>
+                  </li>
+                  <li data-price="1000">
+                    <a id="PlayerMelee" href="#">Melee <span class="label pull-right">1000$</span></a>
                   </li>
                   <li data-price="1337">
-                    <a href="#">LAZOR <span class="label pull-right">1337$</span></a>
+                    <a id="PlayerHomingPewPew" href="#">Homing<span class="label pull-right">1337$</span></a>
+                  </li>
+                  <li data-price="3000">
+                    <a id="PlayerFireBigPewPew" href="#">LAZOR <span class="label pull-right">3000$</span></a>
                   </li>
                   <li data-price="9001">
-                    <a href="#">Fork You <span class="label pull-right">9001$</span></a>
+                    <a id="PlayerForkYou" href="#">Fork You <span class="label pull-right">9001$</span></a>
                   </li>
 
                   <li class="nav-header">Powerups</li>
