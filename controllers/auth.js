@@ -29,4 +29,8 @@ module.exports = function(app, db, prefix, passport) {
     failureRedirect: prefix + '/login',
     failureFlash: true
   }));
+  
+  app.get(prefix + '/auth/finish', function(req, res) {
+    
+  });
 };

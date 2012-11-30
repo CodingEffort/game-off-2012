@@ -24,7 +24,7 @@ module.exports = function(sockets, db, config) {
       client.socket = socket;
       client.bindSocket();
     } else {
-      client = new Player(socket);
+      client = new Player(socket, self);
       self.players[client.id] = client;
     }
     client.init(self.repo[client.user.branch] || self.repo['master']);
