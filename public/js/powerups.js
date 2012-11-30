@@ -25,7 +25,7 @@ function givePowerupEffectToPlayer(powerupItem, player) {
 		.fadeIn(0.05)
 		.setPowerupName(powerupItem.powerupObject);
 
-	powerup.owner = player;
+	powerup.setOwner(player);
 
 	player.powerups[powerupItem.powerupObject] = powerup;
 }
@@ -96,6 +96,7 @@ Crafty.c("PowerupObject", {
 			.attr({z:900});
 
 		this.bind("Remove", function() {
+			console.log("powerup removed");
 			delete this.player.powerups[this.powerupName];
 		});
 	},
@@ -141,7 +142,7 @@ Crafty.c("ShieldPowerup", {
 			this.positionShield();
 		});
 
-		this.bind("Hurt", function() {
+		this.bind("HealthChanged", function() {
 			var percent = this.health / this.maxHealth;
 			this.alpha = percent;
 		});
