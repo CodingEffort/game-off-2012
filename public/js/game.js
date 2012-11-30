@@ -155,7 +155,7 @@ function startGame() {
             spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart, spawn.difficultymod);
       }
       else if (type == 'powerup') {
-        spawnPowerup(spawn.type, spawn.pos.x, spawn.pos.y);
+        //spawnPowerup(spawn.type, spawn.pos.x, spawn.pos.y); // Depleted, not enough time.
       }
     });
 
@@ -329,9 +329,9 @@ function spawnPowerup(id, powerUpName, startX, startY) {
         .onHit("Spaceship", onPlayerPickedPowerup)
         .attr({x: startX, y: startY});
 
-    powerup.bind("PickedUp", function() {
+    /*powerup.bind("PickedUp", function() {
         nc.despawn('powerup', powerup.id);
-    });
+    });*/
 
     powerups[powerup.id] = powerup;
 }
