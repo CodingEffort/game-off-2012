@@ -155,7 +155,7 @@ function startGame() {
             spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart, spawn.difficultymod);
       }
       else if (type == 'powerup') {
-        spawnPowerup(spawn.type, spawn.pos.x, spawn.pos.y);
+        //spawnPowerup(spawn.type, spawn.pos.x, spawn.pos.y); // Depleted, not enough time.
       }
     });
 
@@ -165,11 +165,9 @@ function startGame() {
             players[id].setHealth(health);
         }
         else if (type === 'enemy' && enemies[id]) {
-            enemies[id].setMaxHealth(maxhealth);
             enemies[id].setHealth(health);
         }
         else if (type === 'shield' && players[id].powerups["ShieldPowerup"]) {
-            players[id].powerups["ShieldPowerup"].setMaxHealth(maxhealth);
             players[id].powerups["ShieldPowerup"].setHealth(health);
         }
     });
@@ -231,6 +229,12 @@ function startGame() {
           }
         });
       }
+    });
+
+    nc.bind('gun', function(gun, playerID) {
+        if (players[playerID]) {
+            players[playerID].setGun(gun);
+        }
     });
 
     nc.bind('powerup', function(powerup, playerID) {
@@ -329,9 +333,9 @@ function spawnPowerup(id, powerUpName, startX, startY) {
         .onHit("Spaceship", onPlayerPickedPowerup)
         .attr({x: startX, y: startY});
 
-    powerup.bind("PickedUp", function() {
+    /*powerup.bind("PickedUp", function() {
         nc.despawn('powerup', powerup.id);
-    });
+    });*/
 
     powerups[powerup.id] = powerup;
 }

@@ -35,6 +35,22 @@ module.exports = {
     "Race conditions",
     "Compiler warnings",
     "This wasn't supposed to happen"
-    ]
+    ],
+
+    guns: {
+      PlayerFastPewPew: 0,
+      PlayerParrallelFastPewPew: 250,
+      PlayerFastPewPewSplit3: 500,
+      PlayerFastPewPewSplit5: 750,
+      PlayerMelee: 1000,
+      PlayerHomingPewPew: 1337,
+      PlayerFireBigPewPew: 3000,
+      PlayerForkYou: 9001
+    },
+
+    powerups: {
+      HealPowerup: 300,
+      ShieldPowerup: 250
+    }
   }
 };
