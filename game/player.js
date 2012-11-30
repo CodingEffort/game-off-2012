@@ -96,7 +96,7 @@ module.exports = function(socket) {
         if (data.type == 'enemy') {
           self.branch.enemyHealth(data.id, data.health, self.id);
         } else if (data.type == 'player') {
-          
+          self.branch.playerHealth(data.id, data.health, self.id);
         }
       }
     });

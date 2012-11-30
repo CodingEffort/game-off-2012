@@ -67,12 +67,16 @@ function onLazorHitEnemy(e) {
 
 function onPlayerHitEnemy(e) {
     // hurt the player by our current health value
-    hurtPlayer(e[0].obj, this.health/100);
+    hurtPlayer(e[0].obj, Math.ceil(this.health/100));
 }
 
 function onProjectileHitPlayer(e) {
     hurtPlayer(e[0].obj, this.damage);
     if (this.destroyedOnContact) this.destroy();
+}
+
+function shieldSyncLife() {
+    nc.health('shield', this.owner.id, this.health);
 }
 
 function hurtPlayer(player, dmg) {
@@ -92,7 +96,8 @@ function startGame() {
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
-        me = spawnPlayer(player.pos.x, player.pos.y, player.id, player.gun, player.color);
+        me = spawnPlayer(player.pos.x, player.pos.y, player.id,
+            player.health, player.maxhealth, player.gun, player.color);
         me.bind('CashChanged', function() {
             ui.setCashAmount(me.cash);
         });
@@ -142,30 +147,47 @@ function startGame() {
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
         if (me.id !== spawn.id)
-            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color);
+            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.health, spawn.maxhealth,
+             spawn.gun, spawn.color, spawn.shooting);
       }
       else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id, spawn.health,
-            spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart);
+            spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart, spawn.difficultymod);
       }
       else if (type == 'powerup') {
-        // TODO: spawn the powerup
+        spawnPowerup(spawn.type, spawn.pos.x, spawn.pos.y);
       }
+    });
+
+    nc.bind('health', function(type, id, health, maxhealth) {
+        if (type === 'player' && players[id]) {
+            players[id].setMaxHealth(maxhealth);
+            players[id].setHealth(health);
+        }
+        else if (type === 'enemy' && enemies[id]) {
+            enemies[id].setMaxHealth(maxhealth);
+            enemies[id].setHealth(health);
+        }
+        else if (type === 'shield' && players[id].powerups["ShieldPowerup"]) {
+            players[id].powerups["ShieldPowerup"].setMaxHealth(maxhealth);
+            players[id].powerups["ShieldPowerup"].setHealth(health);
+        }
     });
 
     nc.bind('despawn', function(type, id) {
       if (type == 'player') {
         //TEMP UNTIL SERVER SHOOTS MESSAGES
         //ui.showClientMessage("Player '" + id + "' branched 'master' to work on Issue#1: File corruption.");
-        if (id !== me.id) {
+        if (id !== me.id && players[id]) {
             players[id].destroy();
             delete players[id];
         }
-      } else if (type == 'enemy') {
+      } else if (type == 'enemy' && enemies[id]) {
         enemies[id].destroy();
         delete enemies[id];
-      } else if (type == 'powerup') {
-        // TODO: destroy the powerup
+      } else if (type == 'powerup' && powerups[id]) {
+        powerups[id].destroy();
+        delete powerups[id];
       }
     });
 
@@ -174,7 +196,7 @@ function startGame() {
 
         // If we're too far or too fast, just "teleport" (we teleport if too fast because we don't want enemies to go reversed)
         var diff = Math.abs(dT - newDT);
-        if (diff > 30 || dT > newDT)
+        if (diff > 20 || dT > newDT)
         {
             dT = newDT;
         }
@@ -193,7 +215,6 @@ function startGame() {
         me.setCash(amount);
         $('#shoptab li').each(function(i, e) {
           var price = Number($(e).attr('data-price'));
-          console.log(price);
           if (price) {
             var tag = $(e).find('.label')[0];
             if (price <= amount) {
@@ -210,6 +231,12 @@ function startGame() {
           }
         });
       }
+    });
+
+    nc.bind('powerup', function(powerup, playerID) {
+        if (players[playerID]) {
+            applyPowerup(powerup, players[playerID]);
+        }
     });
 
     nc.bind('msg', function(msg, merge) {
@@ -263,14 +290,15 @@ function startGame() {
 
     Crafty.bind("EnterFrame", function() {
         dT += dTSpeed;
-        // this is for the fun of it.
     });
 }
 
-function spawnPlayer(x, y, playerID, currentGun, color) {
+function spawnPlayer(x, y, playerID, hp, maxhp, currentGun, color, shooting) {
     var player = Crafty.e("Spaceship").setPlayerID(playerID);
     player.x = x - player.w/2;
     player.y = y - player.h/2;
+    player.setMaxHealth(maxhp);
+    player.setHealth(hp);
     player.bind("Dead", function() {
         player.explode(Crafty.e("Implosion"));
     });
@@ -280,11 +308,45 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     player.bind("KillMe", function() {
         nc.despawn('player', player.id, true);
     });
+    player.bind("SyncLife", function() {
+        nc.health('player', player.id, player.health);
+    });
     player.setPlayerColor(color);
     player.setGun(currentGun);
     player.id = playerID;
     players[playerID] = player;
+    player.shooting = shooting || false;
     return player;
+}
+
+// Spawns a powerup that can be picked at the specified x and y.
+function spawnPowerup(id, powerUpName, startX, startY) {
+    var powerup = getPowerupItem(powerUpName);
+    powerup.id = id;
+
+    powerup.fadeIn(0.03)
+        .collision()
+        .onHit("Spaceship", onPlayerPickedPowerup)
+        .attr({x: startX, y: startY});
+
+    powerup.bind("PickedUp", function() {
+        nc.despawn('powerup', powerup.id);
+    });
+
+    powerups[powerup.id] = powerup;
+}
+
+function applyPowerup(powerUpName, player) {
+    var powerup = getPowerupItem(powerUpName); // temp powerup
+
+    if (player.powerups[powerup.powerupObject] !== undefined) { // effect already on? just reset it
+        player.powerups[powerup.powerupObject].resetEffect();
+    }
+    else {
+        givePowerupEffectToPlayer(powerup, player);
+    }
+
+    powerup.destroy();
 }
 
 function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
@@ -292,9 +354,16 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 }
 
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
-function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart) {
+function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart, difficultymod) {
     var enemy = Crafty.e(enemyType);
-    if (health > 0) enemy.setHealth(health);
+    if (health > 0) { // If we're creating an existing enemy
+        enemy.setMaxHealth(enemy.maxHealth * difficultymod);
+        enemy.setHealth(health);
+    }
+    else { // if we're creating a new one: use the difficulty mod
+        enemy.setMaxHealth(enemy.maxHealth * difficultymod);
+        enemy.setHealth(enemy.maxHealth);
+    }
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)
@@ -305,14 +374,8 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
         enemy.alpha = 0.5;
         this.trigger("KillMe");
     });
-    enemy.framesSinceHpPushed = 0;
-    enemy.bind("EnterFrame", function() {
-        if (enemy.hpchanged && enemy.framesSinceHpPushed >= 15) {
-            enemy.framesSinceHpPushed = 0;
-            enemy.hpchanged = false;
-            nc.health('enemy', enemy.id, enemy.health);
-        }
-        ++enemy.framesSinceHpPushed;
+    enemy.bind("SyncLife", function() {
+        nc.health('enemy', enemy.id, enemy.health);
     });
     enemy.bind('WillDie', function() {
       this.trigger('KillMe');
@@ -326,6 +389,8 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
     enemy.setGun(gunType);
     enemy.id = id;
     enemies[id] = enemy;
+
+    enemy.gun.damage *= difficultymod;
 
     return enemy;
 }

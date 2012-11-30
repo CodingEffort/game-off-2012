@@ -11,6 +11,9 @@ module.exports = function(sockets, db, config) {
   this.config = config;
   this.repo = {};
   this.players = {};
+  this.major = 0;
+  this.minor = 0;
+  this.revision = 0;
 
   this.repo['master'] = new Branch(self.sockets, self, null, 'master', 'master', 'Project Nixie');
 
@@ -37,6 +40,17 @@ module.exports = function(sockets, db, config) {
     var b = new Branch(self.sockets, self, parent, id);
     this.repo[b.id] = b;
     return b;
+  };
+
+  this.increaseDifficulty = function() {
+    for (var b in self.repo) {
+      self.repo[b].difficultymod += 0.05;
+    }
+    self.revision++;
+    if (self.revision > 9) { self.revision = 0; self.minor++; }
+    if (self.minor > 9) { self.minor = 0; self.major++; }
+    self.sockets.emit('msg', {msg: "Brace yourselves,"});
+    self.sockets.emit('msg', {msg: "You're now working on the new release version " + self.major + "." + self.minor + "." + self.revision});
   };
 
   this.garbageCollectBranch = function(branch) {

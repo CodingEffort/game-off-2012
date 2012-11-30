@@ -12,6 +12,29 @@ module.exports = {
   },
   github: require((process.env.OPENSHIFT_DATA_DIR || '') + './keys.js').github,
   game: {
-  
+    issues: [
+    "StackOverflow",
+    "File corrupted",
+    "Index out of range",
+    "Make it crossplatform",
+    "Fix the internet",
+    "Port from Java",
+    "Port from VB.net",
+    "Port from Lisp",
+    "Stack corrupted",
+    "Memory leak",
+    "Optimize",
+    "Javascript",
+    "Single letter variables refactoring",
+    "Refactor",
+    "Debugging",
+    "SQL injection",
+    "Runtime error",
+    "Segfault",
+    "Make it IE6 compatible",
+    "Race conditions",
+    "Compiler warnings",
+    "This wasn't supposed to happen"
+    ]
   }
 };
