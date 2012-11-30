@@ -343,7 +343,7 @@ function spawnPlayer(x, y, playerID, hp, maxhp, currentGun, color, shooting) {
 }
 
 // Spawns a powerup that can be picked at the specified x and y.
-function spawnPowerup(id, powerUpName, startX, startY) {
+function spawnPowerup(id, powerUpName, stageartX, startY) {
     var powerup = getPowerupItem(powerUpName);
     powerup.id = id;
 

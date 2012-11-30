@@ -22,11 +22,10 @@ function getPowerupItem(powerUpName) {
 function givePowerupEffectToPlayer(powerupItem, player) {
 	var powerup = Crafty.e(powerupItem.powerupObject)
 		.fadeIn(0.05)
-		.setPowerupName(powerupItem.powerupObject);
+		.setPowerupName(powerupItem.powerupObject)
+		.setOwner(player);
 
 	player.powerups[powerupItem.powerupObject] = powerup;
-
-	powerup.setOwner(player);
 }
 
 function applyPowerupItem(powerupItem, player) {
@@ -185,8 +184,7 @@ Crafty.c("HealPowerup", {
 
 		var HEAL_AMOUNT = 25;
 
-		this.bind("OwnerSet", function() {
-			console.log("heal!");
+		this.bind("EnterFrame", function() {
 			this.player.setHealth(this.player.health + HEAL_AMOUNT);
 			this.destroy();
 		});
