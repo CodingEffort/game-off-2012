@@ -253,6 +253,7 @@ Crafty.c("HealthBar", {
 
         this.setHpBarFont("HighHealthFont");
         this.hpBarColor = null;
+        this.bar.oldFont = null;
         
         this.bind("Change", function() {
             var rect = this.barFollow.mbr();
