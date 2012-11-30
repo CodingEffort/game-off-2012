@@ -313,8 +313,10 @@ Crafty.c("PlayerForkYou", {
 	init: function() {
 		this.requires("Gun")
 			.setProjectileType("PlayerForkLazor")
-			.setDamage(20)
-			.setShootDelay(30);
+			.setDamage(15)
+			.setShootDelay(30)
+			.setProjectilesXDeltas([-7,0,7])
+			.setProjectilesAngleDeltas([-5,0,5]);
 	}
 });
 

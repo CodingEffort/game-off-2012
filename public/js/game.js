@@ -142,11 +142,11 @@ function startGame() {
     nc.bind('spawn', function(type, spawn) {
       if (type == 'player') {
         if (me.id !== spawn.id)
-            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color);
+            spawnPlayer(spawn.pos.x, spawn.pos.y, spawn.id, spawn.gun, spawn.color, spawn.shooting);
       }
       else if (type == 'enemy') {
         spawnEnemy(spawn.type, spawn.pos.x, spawn.pos.y, spawn.id, spawn.health,
-            spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart, 100);
+            spawn.path, spawn.gun, spawn.speedmod, spawn.dtStart, spawn.difficultymod);
       }
       else if (type == 'powerup') {
         // TODO: spawn the powerup
@@ -157,11 +157,11 @@ function startGame() {
       if (type == 'player') {
         //TEMP UNTIL SERVER SHOOTS MESSAGES
         //ui.showClientMessage("Player '" + id + "' branched 'master' to work on Issue#1: File corruption.");
-        if (id !== me.id) {
+        if (id !== me.id && players[id]) {
             players[id].destroy();
             delete players[id];
         }
-      } else if (type == 'enemy') {
+      } else if (type == 'enemy' && enemies[id]) {
         enemies[id].destroy();
         delete enemies[id];
       } else if (type == 'powerup') {
@@ -193,7 +193,6 @@ function startGame() {
         me.setCash(amount);
         $('#shoptab li').each(function(i, e) {
           var price = Number($(e).attr('data-price'));
-          console.log(price);
           if (price) {
             var tag = $(e).find('.label')[0];
             if (price <= amount) {
@@ -267,7 +266,7 @@ function startGame() {
     });
 }
 
-function spawnPlayer(x, y, playerID, currentGun, color) {
+function spawnPlayer(x, y, playerID, currentGun, color, shooting) {
     var player = Crafty.e("Spaceship").setPlayerID(playerID);
     player.x = x - player.w/2;
     player.y = y - player.h/2;
@@ -284,6 +283,7 @@ function spawnPlayer(x, y, playerID, currentGun, color) {
     player.setGun(currentGun);
     player.id = playerID;
     players[playerID] = player;
+    player.shooting = shooting || false;
     return player;
 }
 
@@ -294,16 +294,14 @@ function forcePlayerPosition(playerID, xPos, yPos, tweenTime) {
 // Spawns the specified enemy, at the specified starting x and y position with the specified path type to follow.
 function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, speedModificator, dTStart, difficultymod) {
     var enemy = Crafty.e(enemyType);
-    console.log("d"+difficultymod);
-    console.log("h"+health);
-    console.log("eh"+enemy.health);
-    console.log("dh"+health * difficultymod);
-    if (health > 0) // If we're creating an existing enemy
+    if (health > 0) { // If we're creating an existing enemy
+        enemy.setMaxHealth(enemy.maxHealth * difficultymod);
         enemy.setHealth(health);
-    else // if we're creating a new one: use the difficulty mod
-        enemy.health *= difficultymod;
-    console.log("eh"+enemy.health);
-    console.log("end");
+    }
+    else { // if we're creating a new one: use the difficulty mod
+        enemy.setMaxHealth(enemy.maxHealth * difficultymod);
+        enemy.setHealth(enemy.maxHealth);
+    }
     enemy.attr({x:startX, y:startY})
         .collision()
         .onHit("Spaceship", onPlayerHitEnemy)

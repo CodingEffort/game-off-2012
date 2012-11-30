@@ -1,6 +1,6 @@
 var enemyId = 0;
 
-module.exports = function(startX, startY, type, gun, path, dtStart, cash) {
+module.exports = function(startX, startY, type, gun, path, dtStart, cash, difficultymod) {
   var self = this;
 
   this.id = ++enemyId;
@@ -15,6 +15,7 @@ module.exports = function(startX, startY, type, gun, path, dtStart, cash) {
   this.dtStart = dtStart;
   this.killvotes = [];
   this.healthvotes = {};
+  this.difficultymod = difficultymod;
 
   this.serialize = function() {
     return {
@@ -26,7 +27,8 @@ module.exports = function(startX, startY, type, gun, path, dtStart, cash) {
       path: self.path,
       cash: self.cash,
       speedmod: self.speedmod,
-      dtStart: self.dtStart
+      dtStart: self.dtStart,
+      difficultymod: self.difficultymod
     };
   };
 

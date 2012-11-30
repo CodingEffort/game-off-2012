@@ -30,6 +30,7 @@ module.exports = function(sockets, game, parent, name, desc) {
   this.desc = desc || 'Fix Issue #' + self.id;
   this.bossWave = false;
   this.finalBoss = false;
+  this.difficultymod = (parent) ? parent.difficultymod * 0.9 : 1;
 
   this.path.push(self);
 
@@ -189,7 +190,7 @@ module.exports = function(sockets, game, parent, name, desc) {
             } else {
               if (self.finalBoss) {
                 self.waveCount = 0;
-                //TODO: increase difficulty for all
+                self.game.increaseDifficulty();
               }
               self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
             }
@@ -264,7 +265,8 @@ module.exports = function(sockets, game, parent, name, desc) {
       var cash = wave.getWaveParamValue(w.enemies[i].cash);
       self.bossWave = !!w.boss;
       self.finalBoss = !!w.finalBoss;
-      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt, cash);
+      var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path,
+        self.dt, cash*self.difficultymod, self.difficultymod);
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);
     }
