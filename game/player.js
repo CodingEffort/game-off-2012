@@ -59,6 +59,16 @@ module.exports = function(socket, game) {
     }
   };
 
+  this.updateBranches = function() {
+    var branches = [];
+    for (var i in self.game.repo) {
+      var b = self.game.repo[i].serialize();
+      b.lockout = (self.user.lockout.indexOf(b.id) !== -1);
+      if (!(i in self.user.lockout)) branches.push(b);
+    }
+    self.socket.volatile.emit('branches', { branches: branches, current: self.user.branch });
+  };
+
   this.bindSocket = function() {
     self.socket.on('pong', function(data) {
       // TODO
@@ -139,13 +149,7 @@ module.exports = function(socket, game) {
     });
 
     self.socket.on('branches', function() {
-      var branches = [];
-      for (var i in self.game.repo) {
-        var b = self.game.repo[i].serialize();
-        b.lockout = (self.user.lockout.indexOf(b.id) !== -1);
-        if (!(i in self.user.lockout)) branches.push(b);
-      }
-      self.socket.emit('branches', { branches: branches, current: self.user.branch });
+      self.updateBranches();
     });
   };
 

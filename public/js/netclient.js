@@ -23,6 +23,7 @@ function NetClient() {
     gun: null,
     dt: null,
     branch: null,
+    path: null,
     branches: null,
     msg: null
   };
@@ -96,6 +97,10 @@ function NetClient() {
 
     self.socket.on('branch', function(data) {
       if (self.events.branch) self.events.branch(data.player, data.path);
+    });
+
+    self.socket.on('path', function(data) {
+      if (self.events.path) self.events.path(data.path);
     });
 
     self.socket.on('branches', function(data) {

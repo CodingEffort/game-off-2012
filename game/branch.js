@@ -50,6 +50,14 @@ module.exports = function(sockets, game, parent, id, name, desc) {
     };
   };
 
+  this.serializePath = function() {
+    var p = [];
+    for (var i = 0; i < self.path.length; ++i) {
+      p.push(self.path[i].serialize());
+    }
+    return p;
+  };
+
   this.doFrame = function() {
     if (self.population > 0) {
       ++self.dt;
@@ -62,11 +70,11 @@ module.exports = function(sockets, game, parent, id, name, desc) {
     }
   };
 
-  var frameInterval = setInterval(self.doFrame, 1000/30);
+  this.frameInterval = setInterval(self.doFrame, 1000/30);
 
   this.destroy = function() {
-    frameInterval.clear();
-    if (waveTimer) waveTimer.clear();
+    clearInterval(self.frameInterval);
+    if (self.waveTimer) clearTimeout(self.waveTimer);
   };
 
   this.broadcast = function(event, data) {
@@ -82,7 +90,7 @@ module.exports = function(sockets, game, parent, id, name, desc) {
       player.branch = self;
       player.user.branch = self.id;
       if (player.user.lockout.indexOf(self.id) !== -1) {
-        delete player.user.lockout[player.user.lockout.indexOf(self.id)];
+        player.user.lockout.splice(player.user.lockout.indexOf(self.id), 1);
       }
       player.user.save();
       player.dt = self.dt;
@@ -90,11 +98,8 @@ module.exports = function(sockets, game, parent, id, name, desc) {
       player.healthvotes = {};
       self.players[player.id] = player;
       ++self.population;
-      var p = [];
-      for (var i = 0; i < self.path.length; ++i) {
-        p.push(self.path[i].serialize());
-      }
-      player.socket.emit('branch', { player: player.serialize(), path: p });
+      player.socket.emit('branch', { player: player.serialize() });
+      player.socket.emit('path', { path: self.serializePath() });
       self.broadcast('spawn', { type: 'player', spawn: player.serialize() });
       for (var id in self.players) {
         if (id != player.id) player.socket.emit('spawn', { type: 'player', spawn: self.players[id].serialize() });
@@ -198,6 +203,7 @@ module.exports = function(sockets, game, parent, id, name, desc) {
           var b = self.game.makeBranch(self);
           self.broadcast('msg', { msg: self.players[id].user.username + ' made a branch to work on issue "' + b.desc + '"'});
           b.addPlayer(self.players[id]);
+          self.game.broadcastBranches();
         }
       } else if (type == 'enemy' && self.hasEnemy(id) && self.enemies[id].killvotes.indexOf(id) === -1) {
         self.enemies[id].killvotes.push(voter);
@@ -210,13 +216,12 @@ module.exports = function(sockets, game, parent, id, name, desc) {
           self.removeEnemy(id);
           if (isEmpty(self.enemies)) {
             if (self.bossWave && self.parent) {
-              
               for (var idp in self.players) {
                 self.parent.addPlayer(self.players[idp]);
               }
               self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
               self.waveCount = 0;
-              self.game.garbageCollectBranch(self);
+              self.game.removeBranch(self);
             } else {
               if (self.finalBoss) {
                 self.waveCount = 0;

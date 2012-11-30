@@ -22,5 +22,13 @@ module.exports = function(User) {
       } else if (callback) callback(null);
     });
   };
+
+  User.statics.getByBranch = function(branch, callback) {
+    this.find({ branch: branch }).exec(function(err, docs) {
+      if (!err && docs && docs.length) {
+        if (callback) callback(docs);
+      } else if (callback) callback([]);
+    });
+  };
 };
 

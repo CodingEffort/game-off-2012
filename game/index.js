@@ -38,7 +38,7 @@ module.exports = function(sockets, db, config) {
       id = md5.digest('hex');
     }
     var b = new Branch(self.sockets, self, parent, id, null, config.issues[Math.floor(Math.random()*(config.issues.length))]);
-    this.repo[b.id] = b;
+    self.repo[b.id] = b;
     return b;
   };
 
@@ -53,8 +53,38 @@ module.exports = function(sockets, db, config) {
     self.sockets.emit('msg', {msg: "You're now working on the new release version " + self.major + "." + self.minor + "." + self.revision});
   };
 
-  this.garbageCollectBranch = function(branch) {
-    // TODO: check dependencies, delete branch if orphan
+  this.broadcastBranches = function() {
+    for (var id in self.players) {
+      self.players[id].updateBranches();
+    }
+  };
+
+  this.removeBranch = function(branch) {
+    for (var id in self.repo) {
+      if (self.repo[id].parent && self.repo[id].parent.id == branch.id) {
+        self.repo[id].parent = branch.parent;
+      }
+      for (var i = self.repo[id].path.length - 1; i >= 0; --i) {
+        if (self.repo[id].path[i].id == branch.id) {
+          self.repo[id].path.splice(i, 1);
+          self.repo[id].broadcast('path', { path: self.repo[id].serializePath() });
+          break;
+        }
+      }
+    }
+    for (var id in self.players) {
+      if (self.players[id].user.branch == branch.id) {
+        self.players[id].user.branch = branch.parent.id;
+        if (self.players[id].user.lockout.indexOf(branch.parent.id) !== -1) {
+          self.players[id].user.lockout.splice(self.players[id].user.lockout.indexOf(branch.parent.id), 1);
+        }
+        self.players[id].user.save();
+      }
+    }
+    branch.destroy();
+    delete self.repo[branch.id];
+    delete branch;
+    self.broadcastBranches();
   };
 };
 

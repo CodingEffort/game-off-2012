@@ -132,16 +132,21 @@ function startGame() {
             lastdT = dT;
             me.setHealth(player.health);
         }
-        var el = $("#path");
-        $(el).empty();
-        for (var j = 0; j < path.length; ++j) {
-          var b = $(document.createElement('li'));
-          $(b).html(path[j].name + ((j < path.length - 1) ? ' <span class="divider">&gt;</span>' : ''));
-          if (j == path.length - 1) {
-            $(b).addClass('active');
-          }
-          $(el).append(b);
+    });
+
+    nc.bind('path', function(path) {
+      var el = $("#path");
+      $(el).empty();
+      for (var j = 0; j < path.length; ++j) {
+        var b = $(document.createElement('li'));
+        $(b).html(path[j].name + ((j < path.length - 1) ? ' <span class="divider">&gt;</span>' : ''));
+        if (j == path.length - 1) {
+          $(b).addClass('active');
         }
+        $(el).append(b);
+      }
+      $("#branchestab .active").removeClass('active');
+      $("#" + path[path.length - 1].id).parent().addClass('active');
     });
 
     nc.bind('shooting', function(id, shooting) {
@@ -263,7 +268,7 @@ function startGame() {
       }
     });
 
-    nc.bind('branches', function(branches, current) {
+    nc.bind('branches', function(branches, current, clear) {
       $("#branchestab ul").empty();
       for (var i = 0; i < branches.length; ++i) {
         var a = $(document.createElement('a'))

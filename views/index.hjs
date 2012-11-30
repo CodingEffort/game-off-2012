@@ -58,7 +58,7 @@
                 </ul>
               </div>
               <div id="branchestab" class="tab-pane">
-                <ul class="nav nav-list">
+                <ul class="nav nav-list" style="overflow-y: auto; max-height: 525px;">
                 </ul>
               </div>
             </div>
