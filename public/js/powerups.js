@@ -98,6 +98,7 @@ Crafty.c("PowerupObject", {
 		this.bind("Remove", function() {
 			console.log("powerup removed");
 			delete this.player.powerups[this.powerupName];
+			console.log("powerup after: " + this.player.powerups[this.powerupName]);
 		});
 	},
 	setOwner: function(player) {
@@ -154,6 +155,7 @@ Crafty.c("ShieldPowerup", {
 
 		this.bind("Dead", function() {
 			this.explode(Crafty.e("Explosion"));
+			this.destroy();
 		});
 
 		this.bind("SyncLife", shieldSyncLife);
@@ -186,6 +188,7 @@ Crafty.c("HealPowerup", {
 		var HEAL_AMOUNT = 25;
 
 		this.bind("OwnerSet", function() {
+			console.log("heal!");
 			this.player.setHealth(this.player.health + HEAL_AMOUNT);
 			this.destroy();
 		});
