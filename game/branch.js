@@ -29,6 +29,7 @@ module.exports = function(sockets, game, parent, name, desc) {
   this.name = name || 'Issue #' + self.id;
   this.desc = desc || 'Fix Issue #' + self.id;
   this.bossWave = false;
+  this.finalBoss = false;
 
   this.path.push(self);
 
@@ -179,16 +180,17 @@ module.exports = function(sockets, game, parent, name, desc) {
           }
           self.removeEnemy(id);
           if (isEmpty(self.enemies)) {
-            if (self.bossWave) {
-              self.waveCount = 0;
-              if (self.parent) {
-                for (var idp in self.players) {
-                  self.parent.addPlayer(self.players[idp]);
-                }
-                self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
-                self.game.garbageCollectBranch(self);
+            if (self.bossWave && self.parent) {
+              for (var idp in self.players) {
+                self.parent.addPlayer(self.players[idp]);
               }
+              self.parent.broadcast('msg', { msg: self.name + ' was merged back into ' + self.parent.name + '!' });
+              self.game.garbageCollectBranch(self);
             } else {
+              if (self.finalBoss) {
+                self.waveCount = 0;
+                //TODO: increase difficulty for all
+              }
               self.waveTimer = setTimeout(self.spawnWave, self.waveDelay);
             }
           }
@@ -261,6 +263,7 @@ module.exports = function(sockets, game, parent, name, desc) {
       var gun = wave.getWaveParamValue(w.enemies[i].gun);
       var cash = wave.getWaveParamValue(w.enemies[i].cash);
       self.bossWave = !!w.boss;
+      self.finalBoss = !!w.finalBoss;
       var enemy = new Enemy(pos.x, pos.y, wave.getWaveParamValue(w.enemies[i].type), gun, path, self.dt, cash);
       console.log(enemy.type + ", (" + pos.x + "," + pos.y + "), " + path);
       self.addEnemy(enemy);

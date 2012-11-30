@@ -171,7 +171,8 @@ module.exports = {
         {
             enemies: [LAST_BOSS],
             pause: 0,
-            boss: true
+            boss: true,
+            finalBoss: true
         }
     ],
 
