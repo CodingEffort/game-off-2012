@@ -18,8 +18,8 @@
               <div id="shoptab" class="tab-pane active">
                 <ul class="nav nav-list">
                   <li class="nav-header">Upgrades</li>
-                  <li data-price="200">
-                    <a id="MaxHealthPlus" href="#">Max Health +10 <span class="label pull-right">200$</span></a>
+                  <li data-price="500">
+                    <a id="MaxHealthPlus" href="#">Max Health +10 <span class="label pull-right">500$</span></a>
                   </li>
 
                   <li class="nav-header">Guns</li>
