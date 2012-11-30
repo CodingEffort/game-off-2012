@@ -78,6 +78,7 @@ module.exports = function(sockets, game, parent, id, name, desc) {
       player.user.save();
       player.dt = self.dt;
       player.killvotes = [];
+      player.healthvotes = {};
       self.players[player.id] = player;
       ++self.population;
       var p = [];
@@ -123,8 +124,6 @@ module.exports = function(sockets, game, parent, id, name, desc) {
         player.socket.emit('despawn', { type: 'powerup', id: id });
       }
       player.branch = null;
-      player.user.branch = null;
-      player.user.save();
       player.killvotes = [];
       delete self.players[player.id];
       --self.population;
@@ -136,6 +135,9 @@ module.exports = function(sockets, game, parent, id, name, desc) {
     if (self.hasPlayer(playerId) && self.hasPlayer(voter)) {
       self.players[playerId].healthvotes[voter] = health;
       self.players[playerId].updateHealth();
+      if (health <= 0) {
+        self.voteKill('player', playerId, voter);
+      }
     }
   }
 
@@ -174,14 +176,18 @@ module.exports = function(sockets, game, parent, id, name, desc) {
     if (self.hasEnemy(enemyId) && self.hasPlayer(voter)) {
       self.enemies[enemyId].healthvotes[voter] = health;
       self.enemies[enemyId].updateHealth();
+      if (health <= 0) {
+        self.voteKill('enemy', enemyId, voter, true);
+      }
     }
   };
 
   this.voteKill = function(type, id, voter, killed) {
     if (self.hasPlayer(voter)) {
-      if (type == 'player' && self.hasPlayer(id) && self.players[id].killvotes.indexOf(voter) === -1) {
-        self.players[id].killvotes.push(voter);
+      if (type == 'player' && self.hasPlayer(id)) {
+        if (self.players[id].killvotes.indexOf(voter) === -1) self.players[id].killvotes.push(voter);
         if (self.players[id].killvotes.length >= Math.floor(self.population / 2) + 1) {
+          self.players[id].health = self.players[id].user.health;
           var b = self.game.makeBranch(self);
           self.broadcast('msg', { msg: self.players[id].id + ' made a branch to work on issue "' + b.desc + '"'});
           b.addPlayer(self.players[id]);
