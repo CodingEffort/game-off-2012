@@ -5,19 +5,19 @@ var mongoose = require('mongoose'),
     Schema   = mongoose.Schema;
 
 var User = new Schema({
-  username : { type: String, index: { unique: true } },
+  username : { type: String, index: { unique: true, sparse: true } },
   password : String,
-  email    : { type: String, index: { unique: true } },
+  email    : { type: String, index: { unique: true, sparse: true } },
   cash     : { type: Number, 'default': 0 },
   health   : { type: Number, 'default': 100 },
   gun      : { type: String, 'default': 'PlayerFastPewPew' },
   guns     : { type: [String], 'default': ['PlayerFastPewPew'] },
-  color    : { type: String, 'default': '#00FF00' },
+  color    : String,
   branch   : { type: String, 'default': 'master' },
   lockout  : [String],
   score    : { type: Number, 'default': 0 }
 });
-require('./user')(User);
+require('./user')(User, config);
 
 exports.user = mongo.model('user', User);
 

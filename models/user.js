@@ -1,4 +1,16 @@
-module.exports = function(User) {
+var crypto = require('crypto');
+
+module.exports = function(User, config) {
+  User.path('password').set(function(password) {
+    return this.model('user').hashPassword(password);
+  });
+
+  User.statics.hashPassword = function(password) {
+    var shasum = crypto.createHash('sha512');
+    shasum.update(config.salt + password + config.salt);
+    return shasum.digest('hex');
+  };
+
   User.statics.getById = function(id, callback) {
     this.findOne({ _id: id }).exec(function(err, doc) {
       if (!err && doc) {

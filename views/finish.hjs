@@ -1,0 +1,40 @@
+    <div class="row">
+     <div class="span12">
+        <form action="{{prefix}}/auth/finish" method="post" class="form-horizontal">
+          <fieldset>
+            <legend>Create a new account (Step 2)</legend>
+            <div class="control-group{{#usererror}} error{{/usererror}}">
+              <label class="control-label" for="username">Username</label>
+              <div class="controls">
+                <input type="text" id="username" name="username" placeholder="Username" value="{{username}}" required="required">
+{{#usererror}}                <span class="help-inline">{{msg}}</span>{{/usererror}}
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="color">Color</label>
+              <div class="controls">
+                <input type="color" id="color" class="input-small" name="color" value="{{color}}" placeholder="#00FF00" required="required">
+                <a href="#" class="color btn" data-color="#FF0000"><span style="background: #F00">&nbsp;</span></a>
+                <a href="#" class="color btn" data-color="#00FF00"><span style="background: #0F0">&nbsp;</span></a>
+                <a href="#" class="color btn" data-color="#0000FF"><span style="background: #00F">&nbsp;</span></a>
+                <a href="#" class="color btn" data-color="#00FFFF"><span style="background: #0FF">&nbsp;</span></a>
+                <a href="#" class="color btn" data-color="#FF00FF"><span style="background: #F0F">&nbsp;</span></a>
+                <a href="#" class="color btn" data-color="#FFFF00"><span style="background: #FF0">&nbsp;</span></a>
+                <a href="#" class="color btn" data-color="#FFFFFF"><span style="background: #FFF">&nbsp;</span></a>
+{{#colorerror}}                <span class="help-inline">{{msg}}</span>{{/colorerror}}
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Continue</button>
+            </div>
+          </fieldset>
+        </form>
+        <script>
+          $(".color").click(function(e) {
+            e.preventDefault();
+            $("#color").val($(this).attr('data-color'));
+            return false;
+          });
+        </script>
+      </div>
+   </div>

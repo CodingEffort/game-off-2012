@@ -7,7 +7,7 @@
   <script src="{{prefix}}/js/jquery.min.js"></script>
   <script src="{{prefix}}/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body style="{{bodystyle}}">
   <div class="container">
 {{>content}}
   </div>

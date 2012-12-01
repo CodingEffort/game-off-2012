@@ -9,6 +9,7 @@ var parseCookie = require('connect').utils.parseCookie,
       https = require('https'),
       path = require('path'),
       cons = require('consolidate'),
+      flash = require('connect-flash'),
       passport = require('passport'),
         LocalStrategy = require('passport-local').Strategy,
         GoogleStrategy = require('passport-google').Strategy,
@@ -23,30 +24,32 @@ var config = require('./config');
 var app = express();
 var sessions = new express.session.MemoryStore();
 
+/*
 passport.use(new LocalStrategy(function(username, password, done) {
+  password = db.user.hashPassword(password);
   db.user.getByUsername(username, function(user) {
     if (user) {
-      // I find the lack of encryption disturbing
-      if (user.password === password) {
+      if (password && user.password === password) {
         done(null, user);
       } else {
-        done(null, false);
+        done(null, false, { loginerror: true });
       }
     } else {
       db.user.getByEmail(username, function(user) {
         if (user) {
-          if (user.password == password) {
+          if (password && user.password === password) {
             done(null, user);
           } else {
-            done(null, false);
+            done(null, false, { loginerror: true });
           }
         } else {
-          done(null, false);
+          done(null, false, { loginerror: true });
         }
       });
     }
   });
 }));
+*/
 
 passport.use(new GoogleStrategy({
   returnURL: 'http://' + config.host + config.prefix + '/auth/google/callback',
@@ -57,14 +60,9 @@ passport.use(new GoogleStrategy({
       done(null, user);
     } else {
       var user = new db.user();
-      user.username = profile.emails[0].value;
       user.email = profile.emails[0].value;
       user.save(function(err) {
-        if (!err) {
-          done(null, user);
-        } else {
-          done(null, false);
-        }
+        done(null, (!err) ? user : false, (!err) ? { oautherror: true } : null);
       });
     }
   });
@@ -91,20 +89,15 @@ passport.use(new GitHubStrategy({
             done(null, user);
           } else {
             var user = new db.user();
-            user.username = profile.username;
             user.email = profile.emails[0].value;
             user.save(function(err) {
-              if (!err) {
-                done(null, user);
-              } else {
-                done(null, false);
-              }
+              done(null, (!err) ? user : false, (!err) ? { oautherror: true } : null);
             });
           }
         });
       });
     } else {
-      done(null, false);
+      done(null, false, { githuberror: true });
     }
   });
 }));
@@ -126,13 +119,14 @@ app.configure(function(){
   app.engine('hjs', cons.hogan);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'hjs');
-  app.locals({ title: config.title || '', subtitle: config.subtitle || '', prefix: config.prefix || '' });
+  app.locals({ title: config.title || '', prefix: config.prefix || '', bodytags: '' });
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser(config.secret));
   app.use(express.session({ store: sessions, secret: config.secret, key: 'express.sid' }));
+  app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);

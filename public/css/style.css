@@ -1,4 +1,6 @@
-body {
-  background: #000000;
+.color span {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
 }
 

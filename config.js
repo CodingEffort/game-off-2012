@@ -1,8 +1,8 @@
 module.exports = {
-  title    : 'Nixie',
-  subtitle : '',
+  title    : 'RepoRage',
   prefix   : '',
-  secret   : 'IMMA CHARGIN MAH LAZORS',
+  secret   : process.env.SECRET || 'IMMA CHARGIN MAH L4Z0R$',
+  salt     : process.env.SALT || 'PEW PEW L4Z0R$',
   host     : (process.env.SUBDOMAIN) ? process.env.SUBDOMAIN + '.jit.su' : 'localhost:3000',
   listen   : '0.0.0.0',
   port     : (process.env.NODE_ENV == 'production') ? 80 : 3000,

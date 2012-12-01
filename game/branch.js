@@ -45,7 +45,6 @@ module.exports = function(sockets, game, parent, id, name, desc) {
     return {
       id: self.id,
       name: self.name,
-      desc: self.desc,
       pop: self.population
     };
   };

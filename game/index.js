@@ -22,6 +22,7 @@ module.exports = function(sockets, db, config) {
     if (self.players[socket.handshake.user.id]) {
       client = self.players[socket.handshake.user.id];
       client.socket = socket;
+      client.user = socket.handshake.user;
       client.bindSocket();
     } else {
       client = new Player(socket, self);

@@ -22,13 +22,12 @@ module.exports = function(socket, game) {
       dt: self.dt,
       color: self.user.color,
       username: self.user.username,
-      //branch: (self.branch) ? self.branch.serialize() : null,
       health: self.health,
       maxhealth: self.user.health,
       pos: self.pos,
       gun: self.user.gun,
       guns: self.user.guns,
-      //score: self.user.score,
+      score: self.user.score,
       cash: self.user.cash
     };
   };
@@ -43,6 +42,7 @@ module.exports = function(socket, game) {
   this.gainCash = function(amount) {
     self.user.cash += Math.floor(amount);
     self.socket.emit('cash', { cash: self.user.cash });
+    if (amount > 0) self.user.score += Math.floor(amount);
     self.user.save();
   };
 
@@ -144,6 +144,7 @@ module.exports = function(socket, game) {
       if (data.branch) {
         if (data.branch in self.game.repo && self.user.lockout.indexOf(data.branch) === -1) {
           self.game.repo[data.branch].addPlayer(self);
+          self.updateBranches();
         }
       }
     });

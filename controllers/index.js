@@ -3,9 +3,9 @@ module.exports = function(app, db, prefix, passport) {
 
   app.get(prefix + '/', function(req, res) {
     if (!req.user) {
-      res.redirect(prefix + '/login')
-    } else {
-      res.render('layout', { partials: { content: 'index' } });
+      res.redirect(prefix + '/auth/login')
+    }  else {
+      res.render('layout', { partials: { content: 'index' }, bodystyle: 'background: #000000;' });
     }
   });
 };
