@@ -25,7 +25,7 @@ var me = null;
 
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
-Crafty.background("#FFF");//"#000000");
+Crafty.background("#000");
 Crafty.canvas.init();
 
 // Load the spritesheet
@@ -55,6 +55,10 @@ Crafty.sprite(50, "assets/back.png", {
     bosshealthbarfill: [1, 12],
     mergemsg: [9, 13, 6, 1]
     });
+
+Crafty.audio.add({
+    music: ["assets/bgm.mp3", "assets/bgm.ogg", "assets/bgm.wav"]
+});
 
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
@@ -93,6 +97,8 @@ function hurtPlayer(player, dmg) {
 
 function startGame() {
     ui = Crafty.e('UI');
+
+    Crafty.audio.play("music", -1, 0.5);
 
     nc.bind('connected', function(player) {
         me = spawnPlayer(player.pos.x, player.pos.y, player.id,
@@ -347,6 +353,12 @@ function startGame() {
         }
     });
 
+    Crafty.bind("KeyUp", function(e) {
+        if (e.key === Crafty.keys["M"]) {
+            Crafty.audio.toggleMute();
+        }
+    });
+
     Crafty.bind("EnterFrame", function() {
         dT += dTSpeed;
     });
@@ -453,4 +465,3 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
 
     return enemy;
 }
-
