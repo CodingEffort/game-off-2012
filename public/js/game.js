@@ -25,9 +25,8 @@ var me = null;
 
 // Initialize the game screen
 Crafty.init(SCREEN_W, SCREEN_H);
-Crafty.background("#FFF");//"#000000");
+Crafty.background("#000");
 Crafty.canvas.init();
-Crafty.settings.modify("autoPause", true);
 
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {
@@ -58,7 +57,7 @@ Crafty.sprite(50, "assets/back.png", {
     });
 
 Crafty.audio.add({
-    music: ["assets/music.mp3"]
+    music: ["assets/bgm.mp3", "assets/bgm.ogg", "assets/bgm.wav"]
 });
 
 // Called when an enemy is hit by a pewpewlazors
@@ -97,9 +96,9 @@ function hurtPlayer(player, dmg) {
 }
 
 function startGame() {
-    Crafty.audio.play("music", -1, 0.5);
-
     ui = Crafty.e('UI');
+
+    Crafty.audio.play("music", -1, 0.5);
 
     nc.bind('connected', function(player) {
         me = spawnPlayer(player.pos.x, player.pos.y, player.id,
@@ -347,16 +346,16 @@ function startGame() {
         }
     });
 
-    Crafty.bind("KeyUp", function(e) {
-        if (e.key === Crafty.keys["M"]) {
-            Crafty.audio.toggleMute();
-        }
-    });
-
     Crafty.addEvent(this, Crafty.stage.elem, "mouseout", function(e) {
         if (me) {
             me.shooting = false;
             nc.shooting(false);
+        }
+    });
+
+    Crafty.bind("KeyUp", function(e) {
+        if (e.key === Crafty.keys["M"]) {
+            Crafty.audio.toggleMute();
         }
     });
 
@@ -466,4 +465,3 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
 
     return enemy;
 }
-
