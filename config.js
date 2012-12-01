@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 module.exports = {
   title    : 'RepoRage',
   prefix   : '',
