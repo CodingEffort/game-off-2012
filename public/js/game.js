@@ -97,7 +97,7 @@ function hurtPlayer(player, dmg) {
 }
 
 function startGame() {
-    Crafty.audio.play("music", -1);
+    Crafty.audio.play("music", -1, 0.5);
 
     ui = Crafty.e('UI');
 
@@ -344,6 +344,12 @@ function startGame() {
         if (me) {
             me.shooting = false;
             nc.shooting(false);
+        }
+    });
+
+    Crafty.bind("KeyUp", function(e) {
+        if (e.key === Crafty.keys["M"]) {
+            Crafty.audio.toggleMute();
         }
     });
 
