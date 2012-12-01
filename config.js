@@ -45,10 +45,10 @@ module.exports = {
       PlayerParrallelFastPewPew: 250,
       PlayerFastPewPewSplit3: 500,
       PlayerFastPewPewSplit5: 750,
-      PlayerMelee: 1000,
-      PlayerHomingPewPew: 1337,
-      PlayerFireBigPewPew: 3000,
-      PlayerForkYou: 9001
+      PlayerMelee: 1337,
+      PlayerHomingPewPew: 2500,
+      PlayerFireBigPewPew: 9001,
+      PlayerForkYou: 25000
     },
 
     powerups: {

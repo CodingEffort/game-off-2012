@@ -432,6 +432,7 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
         enemy.setHealth(health);
     }
     else { // if we're creating a new one: use the difficulty mod
+        console.log("diff mod: " + difficultymod);
         enemy.setMaxHealth(enemy.maxHealth * difficultymod);
         enemy.setHealth(enemy.maxHealth);
     }
