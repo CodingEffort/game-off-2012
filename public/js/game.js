@@ -27,7 +27,6 @@ var me = null;
 Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.background("#FFF");//"#000000");
 Crafty.canvas.init();
-Crafty.settings.modify("autoPause", true);
 
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {

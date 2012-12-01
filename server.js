@@ -151,6 +151,9 @@ var server = http.createServer(app).listen(config.port || 3000, config.listen ||
 });
 
 var io = sio.listen(server);
+io.enable('browser client minification');  // send minified client
+io.enable('browser client etag');          // apply etag caching logic based on version number
+io.enable('browser client gzip');    
 io.set('authorization', passportSio.authorize({
   sessionKey: 'express.sid',
   sessionStore: sessions,
@@ -162,7 +165,7 @@ io.set('authorization', passportSio.authorize({
     accept(null, true);
   }
 }));
-io.set('trasports', ['websocket', 'flash']);
+io.set('transports', ['websocket', 'flashsocket']);
 io.set('log level', 1);
 
 var game = new Game(io.sockets, db, config.game);
