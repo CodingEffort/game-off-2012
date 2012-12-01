@@ -292,6 +292,7 @@ function startGame() {
           $(li).addClass('active');
         } else if (branches[i].lockout) {
           $(li).addClass('disabled');
+          $(li).tooltip({title: "Merge a sub-branch to work on this branch", placement: "bottom"});
         }
         $(li).append(a);
         $("#branchestab ul").append(li);
