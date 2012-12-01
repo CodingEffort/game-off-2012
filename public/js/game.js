@@ -27,6 +27,7 @@ var me = null;
 Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.background("#000");
 Crafty.canvas.init();
+Crafty.settings.modify("autoPause", true);
 
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {
@@ -291,6 +292,7 @@ function startGame() {
           $(li).addClass('active');
         } else if (branches[i].lockout) {
           $(li).addClass('disabled');
+          $(li).tooltip({title: "Merge a sub-branch to work on this branch", placement: "bottom"});
         }
         $(li).append(a);
         $("#branchestab ul").append(li);

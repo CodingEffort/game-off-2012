@@ -45,7 +45,7 @@ module.exports = function(sockets, db, config) {
 
   this.increaseDifficulty = function() {
     for (var b in self.repo) {
-      self.repo[b].difficultymod += 0.05;
+      self.repo[b].difficultymod += 1.05;
     }
     self.revision++;
     if (self.revision > 9) { self.revision = 0; self.minor++; }

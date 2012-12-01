@@ -35,17 +35,17 @@
                   <li data-price="750">
                     <a id="PlayerFastPewPewSplit5" href="#">Spread 5 <span class="label pull-right">750$</span></a>
                   </li>
-                  <li data-price="1000">
-                    <a id="PlayerMelee" href="#">Melee <span class="label pull-right">1000$</span></a>
-                  </li>
                   <li data-price="1337">
-                    <a id="PlayerHomingPewPew" href="#">Homing<span class="label pull-right">1337$</span></a>
+                    <a id="PlayerMelee" href="#">Melee <span class="label pull-right">1337$</span></a>
                   </li>
-                  <li data-price="3000">
-                    <a id="PlayerFireBigPewPew" href="#">LAZOR <span class="label pull-right">3000$</span></a>
+                  <li data-price="2500">
+                    <a id="PlayerHomingPewPew" href="#">Homing<span class="label pull-right">2500$</span></a>
                   </li>
                   <li data-price="9001">
-                    <a id="PlayerForkYou" href="#">Fork You <span class="label pull-right">9001$</span></a>
+                    <a id="PlayerFireBigPewPew" href="#">LAZOR <span class="label pull-right">9001$</span></a>
+                  </li>
+                  <li data-price="25000">
+                    <a id="PlayerForkYou" href="#">Fork You <span class="label pull-right">25000$</span></a>
                   </li>
 
                   <li class="nav-header">Powerups</li>

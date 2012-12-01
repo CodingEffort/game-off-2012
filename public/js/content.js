@@ -170,7 +170,7 @@ Crafty.c("CircularEnemyPewPew", {
 Crafty.c("HighlyCircularEnemyPewPew", {
 	init: function() {
 		this.requires("Gun")
-			.setDamage(4)
+			.setDamage(10)
 			.setShootDelay(1000)
 			.setProjectileType("EnemyRegularLazor")
 			.setProjectilesAngleDeltas([-172,-165,-157,-150,-142,-135,-127,-120,-112,-105,-97,-90,-82,-75,-67,-60,-52,-45,-37,-30,-22,-15,-7,
@@ -314,9 +314,7 @@ Crafty.c("PlayerForkYou", {
 		this.requires("Gun")
 			.setProjectileType("PlayerForkLazor")
 			.setDamage(15)
-			.setShootDelay(30)
-			.setProjectilesXDeltas([-7,0,7])
-			.setProjectilesAngleDeltas([-5,0,5]);
+			.setShootDelay(35);
 	}
 });
 
