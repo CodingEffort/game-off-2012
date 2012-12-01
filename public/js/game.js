@@ -27,6 +27,7 @@ var me = null;
 Crafty.init(SCREEN_W, SCREEN_H);
 Crafty.background("#000");
 Crafty.canvas.init();
+Crafty.settings.modify("autoPause", true);
 
 // Load the spritesheet
 Crafty.sprite(50, "assets/back.png", {
@@ -432,7 +433,6 @@ function spawnEnemy(enemyType, startX, startY, id, health, pathType, gunType, sp
         enemy.setHealth(health);
     }
     else { // if we're creating a new one: use the difficulty mod
-        console.log("diff mod: " + difficultymod);
         enemy.setMaxHealth(enemy.maxHealth * difficultymod);
         enemy.setHealth(enemy.maxHealth);
     }
