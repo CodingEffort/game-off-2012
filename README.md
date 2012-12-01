@@ -25,4 +25,6 @@ Players can upgrade their weapons, their defenses, or even use special powerups.
 * [Connect](http://www.senchalabs.org/connect/)
 * [jQuery](http://jquery.com/)
 
+* [music used](http://teknoaxe.com/cgi-bin/link_code_2.pl?247)
+
 ## Screenshot of the gameplay

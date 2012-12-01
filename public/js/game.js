@@ -57,6 +57,10 @@ Crafty.sprite(50, "assets/back.png", {
     mergemsg: [9, 13, 6, 1]
     });
 
+Crafty.audio.add({
+    music: ["assets/music.mp3"]
+});
+
 // Called when an enemy is hit by a pewpewlazors
 function onLazorHitEnemy(e) {
     e[0].obj.hurt(this.damage); // hurt the enemy
@@ -93,6 +97,8 @@ function hurtPlayer(player, dmg) {
 }
 
 function startGame() {
+    Crafty.audio.play("music", -1);
+
     ui = Crafty.e('UI');
 
     nc.bind('connected', function(player) {
