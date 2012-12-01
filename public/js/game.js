@@ -348,8 +348,8 @@ function startGame() {
 
     Crafty.addEvent(this, Crafty.stage.elem, "mouseout", function(e) {
         if (me) {
-            me.shooting = false;
-            nc.shooting(false);
+            //me.shooting = false;
+            //nc.shooting(false);
         }
     });
 
