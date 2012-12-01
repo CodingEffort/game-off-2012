@@ -1,9 +1,9 @@
 {
   "name": "nixie",
-  "version": "0.0.1",
+  "version": "0.0.1-2",
   "private": true,
   "scripts": {
-    "start": "node server"
+    "start": "server.js"
   },
   "dependencies": {
     "express": "3.0.x",
@@ -18,5 +18,9 @@
     "passport-google": "0.2.x",
     "passport-github": "0.1.x",
     "passport.socketio": "0.0.x"
+  },
+  "subdomain": "nixie",
+  "engines": {
+    "node": "0.8.x"
   }
 }

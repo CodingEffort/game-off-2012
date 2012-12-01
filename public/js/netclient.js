@@ -68,11 +68,11 @@ function NetClient() {
     });
 
     self.socket.on('shooting', function(data) {
-      if (data.player !== self.player.id && self.events.shooting) self.events.shooting(data.player, data.shooting);
+      if (self.player && data.player !== self.player.id && self.events.shooting) self.events.shooting(data.player, data.shooting);
     });
 
     self.socket.on('position', function(data) {
-      if (data.player !== self.player.id && self.events.position) self.events.position(data.player, data.pos);
+      if (self.player && data.player !== self.player.id && self.events.position) self.events.position(data.player, data.pos);
     });
 
     self.socket.on('powerup', function(data) {
